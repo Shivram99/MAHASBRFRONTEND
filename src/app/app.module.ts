@@ -17,6 +17,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { LoginComponent } from './login/login.component';
 import { AuthInterceptor } from './auth-interceptor.interceptor';
 import { authGuard } from './auth.guard';
+import { UnauthorizedComponent } from './component/unauthorized/unauthorized.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { authGuard } from './auth.guard';
     DashboardComponent,
     AboutusComponent,
     ContactusComponent,
-    LoginComponent
+    LoginComponent,
+    UnauthorizedComponent
   ],
   imports: [
     BrowserModule,

@@ -1,1 +1,9 @@
 <p>dashboard works!</p>
+
+
+<button (click)="fetchUnsecure()" mat-raised-button>Fetch unsecure</button>
+<div>{{unsecure}}</div>
+<button (click)="fetchSecure()" mat-raised-button>Fetch secure</button>
+<div>{{secure}}</div>
+<button (click)="fetchSecureAdmin()" mat-raised-button>Fetch data for admin</button>
+<div>{{secureAdmin}}</div>

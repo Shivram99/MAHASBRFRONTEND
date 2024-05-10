@@ -8,6 +8,10 @@
     "Email": "Email address",
  
     "PhoneNo": "Phone No",
+
+    "signUpPageHeading":"Sign in",
+
+    "username":"Username",
  
     "Password": "Password",
  
@@ -27,5 +31,8 @@
 
 
     "contactusTitle":"Contact Us"
+
+   
+
 
  }

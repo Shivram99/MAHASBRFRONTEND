@@ -38,7 +38,7 @@ export class HeaderComponent  implements OnInit{
 
    // alert(environment.apiUrl);
 
-    alert(lang);
+  //  alert(lang);
     this.translate.use(lang);
   }
 

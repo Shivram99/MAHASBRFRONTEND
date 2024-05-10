@@ -2,6 +2,10 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../services/login.service';
 import { take } from 'rxjs';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
+import { LanguageService } from '../language.service';
 
 @Component({
   selector: 'app-login',
@@ -10,6 +14,8 @@ import { take } from 'rxjs';
 })
 export class LoginComponent implements OnInit {
   appService = inject(LoginService);
+
+ // authService = inject(AuthService);
 
   loginForm!: FormGroup;
   registrationForm!: FormGroup;
@@ -23,12 +29,20 @@ export class LoginComponent implements OnInit {
   showRegistration = false;
   responseData: any;
 
+  username: string = '';
+  password: string = '';
+  errorMessage: string | null = null; // Explicitly define errorMessage property
+
+  currentLanguage: string="en";
+
+ constructor(private authService: AuthService,private router: Router,private languageService:LanguageService) { }
+
   ngOnInit(): void {
-   
-   /* if (localStorage.getItem('accessToken') !== '') {
-      this.isLoggedIn = true;
-      this.setName();
-    }*/
+
+    this.currentLanguage = this.languageService.getCurrentLanguage();
+    this.languageService.getLanguageObservable().subscribe(language => {
+      this.currentLanguage = language;
+    });
     
     this.loginForm = new FormGroup({
       username: new FormControl('', [Validators.required]),
@@ -41,7 +55,23 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  login() {
+
+
+  login(): void {
+
+    this.authService.logout();
+    this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe(() => {
+      this.router.navigate(['/dashboard']);
+    }, (error: HttpErrorResponse) => {
+      if (error.status === 401) {
+        this.errorMessage = 'Invalid username or password';
+      } else {
+        this.errorMessage = 'An error occurred. Please try again later.';
+      }
+    });
+  }
+
+  /*login() {
     alert(localStorage);
     this.appService
       .login(this.loginForm.value.username, this.loginForm.value.password)
@@ -65,7 +95,7 @@ export class LoginComponent implements OnInit {
           this.setName();
         }
       });
-  }
+  }*/
 
   register() {
     this.appService
