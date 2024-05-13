@@ -10,7 +10,7 @@ import { DashboardComponent } from './component/dashboard/dashboard.component';
 import { AboutusComponent } from './component/aboutus/aboutus.component';
 import { ContactusComponent } from './component/contactus/contactus.component';
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -18,6 +18,9 @@ import { LoginComponent } from './login/login.component';
 import { AuthInterceptor } from './auth-interceptor.interceptor';
 import { authGuard } from './auth.guard';
 import { UnauthorizedComponent } from './component/unauthorized/unauthorized.component';
+import { ChangePasswordComponent } from './component/change-password/change-password.component';
+import { RegisterUserComponent } from './component/register-user/register-user.component';
+
 
 
 @NgModule({
@@ -30,14 +33,16 @@ import { UnauthorizedComponent } from './component/unauthorized/unauthorized.com
     AboutusComponent,
     ContactusComponent,
     LoginComponent,
-    UnauthorizedComponent
+    UnauthorizedComponent,
+    ChangePasswordComponent,
+    RegisterUserComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
-   // FormsModule,
+    FormsModule, 
    TranslateModule.forRoot({
     loader: {
       provide: TranslateLoader,
