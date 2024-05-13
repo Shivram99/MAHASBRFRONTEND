@@ -23,6 +23,5 @@ public class DistrictMasterController {
 	public ResponseEntity<?> postDistrictDetails(@RequestBody DistrictMasterModel districtMasterModel) {
 		DistrictMaster district = districtMasterService.insertDistrictDetail(districtMasterModel);
 		return ResponseEntity.ok(new MessageResponse("Added successfully!", district));
-
 	}
 }
