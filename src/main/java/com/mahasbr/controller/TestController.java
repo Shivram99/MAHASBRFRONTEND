@@ -11,12 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 //@CrossOrigin(origins = "*", maxAge = 3600)
-//@RestController
-//@RequestMapping("/api/auth")
+@RestController
+@RequestMapping("/api/test")
 public class TestController {
-	/*
 
-	
 	   @GetMapping(value = "/secured", produces = MediaType.APPLICATION_JSON_VALUE)
 	    public ResponseEntity<String> secured() {
 	        return new ResponseEntity<>("{\"msg\":\"Hello secure World\"}", HttpStatus.OK);
@@ -32,5 +30,5 @@ public class TestController {
 	    @GetMapping(value = "/unsecured", produces = MediaType.APPLICATION_JSON_VALUE)
 	    public ResponseEntity<String> unsecured() {
 	        return new ResponseEntity<>("{\"msg\":\"Hello unsecure World\"}", HttpStatus.OK);
-	    }*/
+	    }
 }

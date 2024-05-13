@@ -49,13 +49,13 @@ public class RegistrationController {
       return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
     }
 
-	/*
-	 * if (userRepository.existsByEmail(signUpRequest.getEmail())) { return
-	 * ResponseEntity.badRequest().body(new
-	 * MessageResponse("Error: Email is already in use!")); }
-	 */
+
+ if (userRepository.existsByEmail(signUpRequest.getEmail())) { return
+	 ResponseEntity.badRequest().body(new
+	  MessageResponse("Error: Email is already in use!")); }
+	 
     // Create new user's account
-    User user = new User(signUpRequest.getUsername(), encoder.encode(signUpRequest.getPassword()));
+    User user = new User(signUpRequest.getUsername(), encoder.encode(signUpRequest.getPassword()),signUpRequest.getEmail(),signUpRequest.getPhoneNo());
 
     Set<String> strRoles = signUpRequest.getRole();
     Set<Role> roles = new HashSet<>();

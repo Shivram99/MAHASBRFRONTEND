@@ -14,6 +14,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 @Entity
@@ -30,6 +31,18 @@ public class User {
     private String username;
 
     @NotBlank
+    @Size(max = 12)
+    @Email
+    private String phoneNo;
+    
+    
+    @NotBlank
+    @Size(max = 50)
+    @Email
+    private String email;
+    
+    
+    @NotBlank
     @Size(max = 120)
     private String password;
 
@@ -37,13 +50,18 @@ public class User {
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    
     public User() {
+    	
     }
-
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
+    
+    public User(String username, String password, String email, String phoneNo) {
+    	   this.username = username;
+           this.password = password;
+           this.email = email;
+           this.phoneNo = phoneNo;
+       }
+   
 
     public Long getId() {
         return id;
@@ -76,5 +94,24 @@ public class User {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+
+	public String getPhoneNo() {
+		return phoneNo;
+	}
+
+	public void setPhoneNo(String phoneNo) {
+		this.phoneNo = phoneNo;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+    
+    
+    
 }
 

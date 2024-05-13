@@ -22,6 +22,7 @@ import com.mahasbr.response.JwtResponse;
 import com.mahasbr.service.UserDetailsImpl;
 import com.mahasbr.util.JwtUtils;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 
@@ -48,7 +49,7 @@ public class LoginController {
   JwtUtils jwtUtils;
 
   @PostMapping("/signin")
-  public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+  public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest,HttpSession httpSession) {
 
     Authentication authentication = authenticationManager
         .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -57,6 +58,10 @@ public class LoginController {
     String jwt = jwtUtils.generateJwtToken(authentication);
 
     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+    
+    httpSession.setAttribute("MY_SESSION_MESSAGES", userDetails);
+    
+    
     List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
         .collect(Collectors.toList());
 
