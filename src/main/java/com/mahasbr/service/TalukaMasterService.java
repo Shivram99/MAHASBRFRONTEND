@@ -12,10 +12,9 @@ public class TalukaMasterService {
 	@Autowired
 	TalukaMasterRepository talukaMasterRepository;
 
-	public TalukaMaster insertTalukaDetails(TalukaMasterModel talukaMasterModel) {
-		TalukaMaster data = new TalukaMaster(talukaMasterModel);
-		talukaMasterRepository.save(data);
-		return data;
-	}
-
+	/*
+	 * public TalukaMaster insertTalukaDetails(TalukaMasterModel talukaMasterModel)
+	 * { TalukaMaster data = new TalukaMaster(talukaMasterModel);
+	 * talukaMasterRepository.save(data); return data; }
+	 */
 }

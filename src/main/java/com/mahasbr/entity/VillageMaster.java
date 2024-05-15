@@ -1,70 +1,36 @@
 package com.mahasbr.entity;
 
-import com.mahasbr.model.VillageMasterModel;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor  
 @Table(name = "village_master")
-public class VillageMaster {
+public class VillageMaster extends Auditable{
+	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "village_master_seq_generator")
+    @SequenceGenerator(name="village_master_seq_generator", sequenceName = "village_seq", allocationSize=1)
 	@NotBlank
-	private Long villageId;
+	private Integer censusVillageCode;
+	
 
 	@NotBlank
 	private String villageName;
+	
+	
 	@NotBlank
-	private Integer censusVillageCode;
-
-	
-	
-	public Long getVillageId() {
-		return villageId;
-	}
-
-
-
-	public void setVillageId(Long villageId) {
-		this.villageId = villageId;
-	}
-
-
-
-	public String getVillageName() {
-		return villageName;
-	}
-
-
-
-	public void setVillageName(String villageName) {
-		this.villageName = villageName;
-	}
-
-
-
-	public Integer getCensusVillageCode() {
-		return censusVillageCode;
-	}
-
-
-
-	public void setCensusVillageCode(Integer censusVillageCode) {
-		this.censusVillageCode = censusVillageCode;
-	}
-
-	public VillageMaster(VillageMasterModel villageMasterModel) {
-		this.villageName = villageMasterModel.getVillageName();
-		this.censusVillageCode = villageMasterModel.getCensusVillageCode();
-
-	}
-
+	private Long censusTalukaCode;
 	
 }

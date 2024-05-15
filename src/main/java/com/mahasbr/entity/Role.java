@@ -17,12 +17,12 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "roles")
-public class Role {
+public class Role  extends Auditable{
 	
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_seq_generator")
     @SequenceGenerator(name="role_seq_generator", sequenceName = "roles_seq", allocationSize=1)
-    private Integer id;
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
@@ -36,15 +36,17 @@ public class Role {
         this.name = name;
     }
 
-    public Integer getId() {
-        return id;
-    }
+    
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public Long getId() {
+		return id;
+	}
 
-    public ERole getName() {
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public ERole getName() {
         return name;
     }
 

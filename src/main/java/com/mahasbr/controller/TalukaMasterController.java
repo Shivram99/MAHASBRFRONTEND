@@ -43,16 +43,18 @@ public class TalukaMasterController {
 	private static final Logger logger = LoggerFactory.getLogger(TalukaMasterController.class);
 	private static final String CSV_FILE_LOCATION = "\\MAHASBR\\target\\Book3.xlsx";
 
-	@PostMapping("/taluka")
-	public ResponseEntity<MessageResponse> postMethodName(@RequestBody TalukaMasterModel talukaMasterModel) {
-		TalukaMaster taluka = talukaMasterService.insertTalukaDetails(talukaMasterModel);
-		return ResponseEntity.ok(new MessageResponse("Added successfully!", taluka));
-
-	}
-
+	/*
+	 * @PostMapping("/taluka") public ResponseEntity<MessageResponse>
+	 * postMethodName(@RequestBody TalukaMasterModel talukaMasterModel) {
+	 * TalukaMaster taluka =
+	 * talukaMasterService.insertTalukaDetails(talukaMasterModel); return
+	 * ResponseEntity.ok(new MessageResponse("Added successfully!", taluka));
+	 * 
+	 * }
+	 */
 	@GetMapping("/{districtCode}")
-	public @ResponseBody List<TalukaMasterModel> getDistrictDetails(@PathVariable String districtCode) {
-		List<TalukaMasterModel> talukas = new ArrayList<>();
+	public @ResponseBody void getDistrictDetails(@PathVariable String districtCode) {
+		List<TalukaMaster> talukas = new ArrayList<>();
 		Workbook workbook = null;
 		Set<Integer> talukaCodes = new HashSet<>(); // Set to store unique taluka
 		// codes
@@ -77,18 +79,15 @@ public class TalukaMasterController {
 					String cellValue = dataFormatter.formatCellValue(cell);
 					if (cellValue.equals(districtCode)) {
 
-						TalukaMasterModel taluka = new TalukaMasterModel();
+						TalukaMaster taluka = new TalukaMaster();
 
-						taluka.setCensusTalukaCode(Integer.parseInt(dataFormatter.formatCellValue(row.getCell(3))));
-						taluka.setTalukaName(dataFormatter.formatCellValue(row.getCell(4)));
-
-						// Check if district code is already in set, if not add to list and set
-						if (!talukaCodes.contains(taluka.getCensusTalukaCode())) {
-							talukas.add(taluka);
-							talukaCodes.add(taluka.getCensusTalukaCode());
-						}
-						TalukaMaster data = new TalukaMaster(taluka);
-						talukaMasterRepository.save(data);
+						taluka.setCensusTalukaCode(Long.parseLong(dataFormatter.formatCellValue(row.getCell(2))));
+						taluka.setTalukaName(dataFormatter.formatCellValue(row.getCell(3)));
+						taluka.setCensusTalukaCode(Long.parseLong(dataFormatter.formatCellValue(row.getCell(1))));
+						
+						talukas.add(taluka);
+						
+						talukaMasterRepository.saveAll(talukas);
 					}
 				}
 
@@ -105,6 +104,5 @@ public class TalukaMasterController {
 			}
 		}
 
-		return talukas;
 	}
 }

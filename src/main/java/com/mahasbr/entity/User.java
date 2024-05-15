@@ -3,6 +3,7 @@ package com.mahasbr.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -11,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -20,7 +22,7 @@ import jakarta.validation.constraints.Size;
 @Entity
 @Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = "username"),
     @UniqueConstraint(columnNames = "email") })
-public class User {
+public class User extends Auditable{
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq_generator")
     @SequenceGenerator(name="user_seq_generator", sequenceName = "users_seq", allocationSize=1)
@@ -50,6 +52,10 @@ public class User {
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private DepartmentMst department;
+    
     
     public User() {
     	

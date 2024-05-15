@@ -18,11 +18,11 @@ public class StatesMasterController {
 	@Autowired
 	StatesMasterService statesMasterService;
 
-	@PostMapping("/state")
-	public ResponseEntity<?> postStateName(@RequestBody StatesMasterModel stateMasterModel) {
-		StatesMaster state = statesMasterService.postState(stateMasterModel);
-		return ResponseEntity.ok(new MessageResponse("Added successfully!", state));
-
-	}
+	/*
+	 * @PostMapping("/state") public ResponseEntity<?> postStateName(@RequestBody
+	 * StatesMasterModel stateMasterModel) { StatesMaster state =
+	 * statesMasterService.postState(stateMasterModel); return ResponseEntity.ok(new
+	 * MessageResponse("Added successfully!", state)); }
+	 */
 
 }

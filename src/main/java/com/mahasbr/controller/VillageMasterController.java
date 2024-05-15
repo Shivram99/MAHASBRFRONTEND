@@ -40,17 +40,20 @@ public class VillageMasterController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(VillageMasterController.class);
 	private static final String CSV_FILE_LOCATION = "\\MAHASBR\\target\\Book3.xlsx";
-	@PostMapping("/village")
-	public ResponseEntity<?> postVillageDetails(@RequestBody VillageMasterModel villageMasterModel) {
-		VillageMaster village = villageMasterService.insertVillageDetails(villageMasterModel);
-		return ResponseEntity.ok(new MessageResponse("Added successfully!", village));
-	}
+
+	/*
+	 * @PostMapping("/village") public ResponseEntity<?>
+	 * postVillageDetails(@RequestBody VillageMasterModel villageMasterModel) {
+	 * VillageMaster village =
+	 * villageMasterService.insertVillageDetails(villageMasterModel); return
+	 * ResponseEntity.ok(new MessageResponse("Added successfully!", village)); }
+	 */
 	
 	
 
 	@GetMapping("/{talukaCode}")
-	public @ResponseBody List<VillageMasterModel> getVillageDetails(@PathVariable String talukaCode) {
-		List<VillageMasterModel> villages = new ArrayList<>();
+	public @ResponseBody void  getVillageDetails(@PathVariable String talukaCode) {
+		List<VillageMaster> villages = new ArrayList<>();
 		Workbook workbook = null;
 		try {
 			// Creating a Workbook from an Excel file (.xls or .xlsx)
@@ -68,26 +71,15 @@ public class VillageMasterController {
 					Cell cell = row.getCell(3);
 					String cellValue = dataFormatter.formatCellValue(cell);
 
-					if (cellValue.equals(talukaCode)) {
 
-						VillageMasterModel village = new VillageMasterModel();
-					//	village.setId(dataFormatter.formatCellValue(row.getCell(0)));
-						village.setCensusVillageCode(Integer.parseInt(dataFormatter.formatCellValue(row.getCell(5))));
-						village.setVillageName(dataFormatter.formatCellValue(row.getCell(6)));
-					//  village.setVillageCategory(dataFormatter.formatCellValue(row.getCell(7)));
-
+						VillageMaster village = new VillageMaster();
+						village.setCensusVillageCode(Integer.parseInt(dataFormatter.formatCellValue(row.getCell(2))));
+						village.setVillageName(dataFormatter.formatCellValue(row.getCell(3)));
+						//village
 						villages.add(village);
-						
-
-						if (villages.size() > 3) {
-							System.out.println("************" + villages.get(3));
-						}
-						VillageMaster data = new VillageMaster(village);
-						villageMasterRepository.save(data);
+					
 					}
-
-				}
-
+				villageMasterRepository.saveAll(villages);
 			});
 		} catch (EncryptedDocumentException | InvalidFormatException | IOException e) {
 			logger.error(e.getMessage(), e);
@@ -100,6 +92,6 @@ public class VillageMasterController {
 			}
 		}
 
-		return villages;
+		//return villages;
 	}}
 

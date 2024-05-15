@@ -11,11 +11,10 @@ import com.mahasbr.repository.VillageMasterRepository;
 public class VillageMasterService {
 	@Autowired
 	VillageMasterRepository villageMasterRepository;
-
-	public VillageMaster insertVillageDetails(VillageMasterModel villageMasterModel) {
-		VillageMaster data = new VillageMaster(villageMasterModel);
-		villageMasterRepository.save(data);
-		return data;
-	}
-
+	/*
+	 * public VillageMaster insertVillageDetails(VillageMasterModel
+	 * villageMasterModel) { VillageMaster data = new
+	 * VillageMaster(villageMasterModel); villageMasterRepository.save(data); return
+	 * data; }
+	 */
 }

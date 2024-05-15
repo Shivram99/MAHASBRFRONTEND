@@ -1,31 +1,37 @@
 package com.mahasbr.entity;
 
-import com.mahasbr.model.TalukaMasterModel;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor  
 @Table(name = "taluka_master")
-public class TalukaMaster {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@NotBlank
-	private Long talukaId;
+public class TalukaMaster  extends Auditable{
+	
 
+	@Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "taluka_master_seq_generator")
+    @SequenceGenerator(name="taluka_master_seq_generator", sequenceName = "taluka_seq", allocationSize=1)
+	@NotBlank
+	private Long censusTalukaCode;
+	
 	@NotBlank
 	private String talukaName;
+	
 	@NotBlank
-	private Integer censusTalukaCode;
+	private Long censusDistrictCode;
 
-	public TalukaMaster(TalukaMasterModel talukaMasterModel) {
-		this.talukaName = talukaMasterModel.getTalukaName();
-		this.censusTalukaCode = talukaMasterModel.getCensusTalukaCode();
-	}
+	
+	
 }

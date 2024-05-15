@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mahasbr.entity.DistrictMaster;
-import com.mahasbr.model.DistrictMasterModel;
 import com.mahasbr.repository.DistrictMasterRepository;
 import com.mahasbr.response.MessageResponse;
 import com.mahasbr.service.DistrictMasterService;
@@ -35,24 +34,27 @@ import com.mahasbr.service.DistrictMasterService;
 public class DistrictMasterController {
 	@Autowired
 	DistrictMasterService districtMasterService;
+	
+	
 	@Autowired
 	DistrictMasterRepository districtMasterRepository;
 	
 	private static final Logger logger = LoggerFactory.getLogger(DistrictMasterController.class);
 	private static final String CSV_FILE_LOCATION = "\\MAHASBR\\target\\Book3.xlsx";
+	
 	@PostMapping("/district")
-	public ResponseEntity<?> postDistrictDetails(@RequestBody DistrictMasterModel districtMasterModel) {
-		DistrictMaster district = districtMasterService.insertDistrictDetail(districtMasterModel);
+	public ResponseEntity<?> postDistrictDetails(@RequestBody DistrictMaster districtMaster) {
+		DistrictMaster district = districtMasterService.insertDistrictDetail(districtMaster);
 		return ResponseEntity.ok(new MessageResponse("Added successfully!", district));
 	}
 
 	@GetMapping
-	public @ResponseBody List<DistrictMasterModel> readCSV() {
-		List<DistrictMasterModel> districts = new ArrayList<>();
+	public @ResponseBody void readCSV() {
+		
+		List<DistrictMaster> districts = new ArrayList<>();
 		Workbook workbook = null;
 		Set<Integer> districtCodes = new HashSet<>(); // Set to store unique district codes
 		try {
-			// Creating a Workbook from an Excel file (.xls or .xlsx)
 			workbook = WorkbookFactory.create(new File(CSV_FILE_LOCATION));
 
 			// Retrieving the number of sheets in the Workbook
@@ -66,20 +68,17 @@ public class DistrictMasterController {
 				// loop through all rows and columns and create Course object
 				int index = 0;
 				for (Row row : sheet) {
-					if (index++ == 0)
-						continue;
-					DistrictMasterModel district = new DistrictMasterModel();
-
-					district.setCensusDistrictCode(Integer.parseInt(dataFormatter.formatCellValue(row.getCell(1))));
+					DistrictMaster district = new DistrictMaster();
+					district.setCensusDistrictCode(Long.parseLong(dataFormatter.formatCellValue(row.getCell(1))));
 					district.setDistrictName(dataFormatter.formatCellValue(row.getCell(2)));
 
 					// Check if district code is already in set, if not add to list and set
 					if (!districtCodes.contains(district.getCensusDistrictCode())) {
 						districts.add(district);
-						districtCodes.add(district.getCensusDistrictCode());
+					//	districtCodes.add(district.getCensusDistrictCode());
 				}
-					DistrictMaster data = new DistrictMaster(district);
-					districtMasterRepository.save(data);
+				//	DistrictMaster data = new DistrictMaster(district);
+				districtMasterRepository.saveAll(districts);
 				}
 
 			});
@@ -95,6 +94,6 @@ public class DistrictMasterController {
 			}
 		}
 
-		return districts;
+		//return districts;
 	}
 }

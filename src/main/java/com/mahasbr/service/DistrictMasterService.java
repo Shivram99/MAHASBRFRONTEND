@@ -13,11 +13,9 @@ public class DistrictMasterService {
 	@Autowired
 	DistrictMasterRepository districtMasterRepository;
 
-	public DistrictMaster insertDistrictDetail(DistrictMasterModel districtMasterModel) {
-		DistrictMaster data = new DistrictMaster(districtMasterModel);
-		districtMasterRepository.save(data);
-		return data;
-
+	public DistrictMaster insertDistrictDetail(DistrictMaster districtMaster) {
+		DistrictMaster save = districtMasterRepository.save(districtMaster);
+		return save;
 	}
 
 }
