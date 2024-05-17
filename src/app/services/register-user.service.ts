@@ -17,11 +17,20 @@ export class RegisterUserService {
    }
 
    fetchRoles() {
-    return this.http.get<any[]>(`${this.apiUrl}/common/api/roles`);
+    return this.http.get<any[]>(`${this.apiUrl}/admin/getAllRoles`);
   }
 
+
+  fetchDepartments() {
+    return this.http.get<any[]>(`${this.apiUrl}/admin/getAllDepartments`);
+  }
+
+
+
+  
+
   register(user: User): Observable<any> {
-    return this.http.post(`${this.apiUrl}/api/auth/signup`, user);
+    return this.http.post(`${this.apiUrl}/admin/signup`, user);
   }
 
 

@@ -18,7 +18,14 @@ const routes: Routes = [
   {path:"login",component:LoginComponent},
   {path:"unauthorized",component:UnauthorizedComponent},
   {path:"changePassword",component:ChangePasswordComponent},
-  {path:"register",component:RegisterUserComponent},
+  { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
+ 
+ // {path:"register",component:RegisterUserComponent},
+  /*{
+    path: "admin",
+    loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
+    canActivate: [authGuard], data: { expectedRole: 'ROLE_ADMIN' } // Load only when authenticated
+  },*/
 ];
 
 @NgModule({

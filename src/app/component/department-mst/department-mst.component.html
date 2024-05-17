@@ -1,0 +1,24 @@
+<div>
+    <h2>Departments</h2>
+    <div *ngFor="let department of departments">
+      <p>{{ department.departmentName }}</p>
+      <!-- Add more fields as necessary -->
+      <button (click)="updateDepartment(department)">Update</button>
+      <button (click)="deleteDepartment(department.departmentId)">Delete</button>
+    </div>
+  </div>
+  
+  <hr>
+  
+  <div>
+    <h2>Create / Update Department</h2>
+    <form #departmentForm="ngForm" (ngSubmit)="onSubmit()">
+      <div>
+        <label for="departmentName">Department Name</label>
+        <input type="text" id="departmentName" name="departmentName" [(ngModel)]="newDepartment.departmentName" required>
+      </div>
+      <!-- Add more input fields as necessary -->
+      <button type="submit" [disabled]="departmentForm.invalid">Submit</button>
+    </form>
+  </div>
+  
