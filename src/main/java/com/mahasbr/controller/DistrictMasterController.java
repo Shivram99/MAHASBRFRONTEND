@@ -37,9 +37,10 @@ public class DistrictMasterController {
 	DistrictMasterService districtMasterService;
 	@Autowired
 	DistrictMasterRepository districtMasterRepository;
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(DistrictMasterController.class);
 	private static final String CSV_FILE_LOCATION = "\\MAHASBR\\target\\Book3.xlsx";
+
 	@PostMapping("/district")
 	public ResponseEntity<?> postDistrictDetails(@RequestBody DistrictMasterModel districtMasterModel) {
 		DistrictMaster district = districtMasterService.insertDistrictDetail(districtMasterModel);
@@ -78,7 +79,7 @@ public class DistrictMasterController {
 					if (!districtCodes.contains(district.getCensusDistrictCode())) {
 						districts.add(district);
 						districtCodes.add(district.getCensusDistrictCode());
-				}
+					}
 					DistrictMaster data = new DistrictMaster(district);
 					districtMasterRepository.save(data);
 				}

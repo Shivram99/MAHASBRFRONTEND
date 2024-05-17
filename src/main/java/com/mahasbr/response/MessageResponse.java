@@ -1,6 +1,7 @@
 package com.mahasbr.response;
 
 import com.mahasbr.entity.DistrictMaster;
+import com.mahasbr.entity.FeedbackForm;
 import com.mahasbr.entity.StatesMaster;
 import com.mahasbr.entity.TalukaMaster;
 import com.mahasbr.entity.VillageMaster;
@@ -36,6 +37,11 @@ public class MessageResponse {
 	public MessageResponse(String message, VillageMaster village) {
 		this.message = message;
 		this.object = village;
+	}
+
+	public MessageResponse(String message, FeedbackForm feedbackdetails) {
+		this.message = message;
+		this.object = feedbackdetails;
 	}
 
 	public String getMessage() {
