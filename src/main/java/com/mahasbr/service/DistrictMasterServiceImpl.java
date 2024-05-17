@@ -12,11 +12,11 @@ public class DistrictMasterServiceImpl implements DistrictMasterService {
 	@Autowired
 	DistrictMasterRepository districtMasterRepository;
 
+
 	@Override
-	public DistrictMaster insertDistrictDetail(DistrictMasterModel districtMasterModel) {
-		DistrictMaster data = new DistrictMaster(districtMasterModel);
-		districtMasterRepository.save(data);
-		return data;
+	public DistrictMaster insertDistrictDetail(DistrictMaster districtMaster) {
+		districtMasterRepository.save(districtMaster);
+		return districtMaster;
 	}
 
 }
