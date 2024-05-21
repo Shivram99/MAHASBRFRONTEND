@@ -1,16 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DepartmentMst } from '../../model/department-mst';
 import { DepartmentMstService } from '../../services/department-mst.service';
+
+import { Subject } from 'rxjs';
+import DataTables from 'datatables.net';
+
 
 @Component({
   selector: 'app-department-mst',
   templateUrl: './department-mst.component.html',
   styleUrl: './department-mst.component.css'
 })
-export class DepartmentMstComponent implements OnInit {
+export class DepartmentMstComponent implements OnInit, OnDestroy {
 
   departments: DepartmentMst[] = [];
   newDepartment: DepartmentMst = new DepartmentMst(); // New department object to bind form inputs
+  dataTable: any;
 
   constructor(private departmentService: DepartmentMstService) { }
 
@@ -29,6 +34,7 @@ export class DepartmentMstComponent implements OnInit {
     );
   }
 
+ 
   createDepartment(department: DepartmentMst): void {
     this.departmentService.createDepartment(department).subscribe(
       newDepartment => {
@@ -72,6 +78,12 @@ export class DepartmentMstComponent implements OnInit {
       this.updateDepartment(this.newDepartment);
     } else {
       this.createDepartment(this.newDepartment);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.dataTable) {
+      this.dataTable.destroy();
     }
   }
 

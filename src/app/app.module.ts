@@ -19,10 +19,10 @@ import { AuthInterceptor } from './auth-interceptor.interceptor';
 import { authGuard } from './auth.guard';
 import { UnauthorizedComponent } from './component/unauthorized/unauthorized.component';
 import { ChangePasswordComponent } from './component/change-password/change-password.component';
-import { RegisterUserComponent } from './component/register-user/register-user.component';
 import { DepartmentMstComponent } from './component/department-mst/department-mst.component';
 import { RoleComponent } from './component/role/role.component';
 
+import {DataTablesModule} from 'angular-datatables';
 
 
 @NgModule({
@@ -47,6 +47,7 @@ import { RoleComponent } from './component/role/role.component';
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule, 
+    DataTablesModule,
    TranslateModule.forRoot({
     loader: {
       provide: TranslateLoader,
