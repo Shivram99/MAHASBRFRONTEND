@@ -1,46 +1,27 @@
 {
-    "Sitetitle": "MahaSBR Project",
- 
+    "Sitetitle": "MahaSBR",
     "Name": "Name",
- 
     "NameError": "I am sure you must have a name!",
- 
     "Email": "Email address",
- 
     "PhoneNo": "Phone No",
-
-    "signUpPageHeading":"Sign in",
-
-    "username":"Username",
- 
+    "signUpPageHeading": "Sign in",
+    "username": "Username",
     "Password": "Password",
- 
     "Bio": "Enter bio",
- 
     "TermsConditions": "I agree to terms and conditions.",
- 
     "Submit": "Submit",
-
-    "aboutustitle":"About Us",
-
-    "loginTitle":"Login",
-
-    "logoutTitle":"Logout",
-
-    "dashboardTitle":"Dashboard",
-
-
-    "contactusTitle":"Contact Us",
-
-
-    "changePasword":"Change Pasword",
-
-    "register":"Register"
-
-
-    
-
-   
-
-
- }
+    "aboutustitle": "About Us",
+    "loginTitle": "Login",
+    "logoutTitle": "Logout",
+    "dashboardTitle": "Dashboard",
+    "contactusTitle": "Contact Us",
+    "changePasword": "Change Pasword",
+    "register": "Register",
+    "GovernmentofState": "Government of State Name Regional",
+    "GovernmentofMaharashtra": "Government of Maharashtra",
+    "skipToMain": "SKIP TO MAIN CONTENT",
+    "welcomeTo": "Welcome To",
+    "bannerSubText":"Showing the Maharashra",
+    "devAndHostby":"Developed and Hosted by",
+    "GovOfMaha":"Government of Maharashtra"
+}

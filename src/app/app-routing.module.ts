@@ -4,7 +4,7 @@ import { HomepageComponent } from './component/homepage/homepage.component';
 import { DashboardComponent } from './component/dashboard/dashboard.component';
 import { AboutusComponent } from './component/aboutus/aboutus.component';
 import { ContactusComponent } from './component/contactus/contactus.component';
-import { LoginComponent } from './login/login.component';
+import { LoginComponent } from './component/login/login.component';
 import { authGuard } from './auth.guard';
 import { UnauthorizedComponent } from './component/unauthorized/unauthorized.component';
 import { ChangePasswordComponent } from './component/change-password/change-password.component';

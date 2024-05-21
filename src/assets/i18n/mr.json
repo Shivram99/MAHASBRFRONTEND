@@ -1,49 +1,29 @@
 {
-    "Sitetitle": "महा राज्य व्यवसाय नोंदणी प्रकल्प",
- 
+    "Sitetitle": "महाराष्ट्र व्यवसाय नोंदणी प्रकल्प",
     "Name": "नाव",
- 
     "NameError": "मला खात्री आहे की तुमचे नाव असले पाहिजे!",
- 
     "Email": "ईमेल",
- 
     "PhoneNo": "दूरध्वनी क्रमांक",
-
-    
-    "signUpPageHeading":"साइन इन करा",
-
-
-    "username":"वापरकर्तानाव",
- 
+    "signUpPageHeading": "साइन इन करा",
+    "username": "वापरकर्तानाव",
     "Password": "पासवर्ड",
- 
     "Bio": "बायो एंटर करा",
- 
     "TermsConditions": "मी अटी व शर्ती मान्य करतो",
- 
     "Submit": "प्रस्तुत करणे",
+    "aboutustitle": "आमच्याबद्दल",
+    "logout": "बाहेर पडणे",
+    "loginTitle": "लॉगिन करा",
+    "logoutTitle": "बाहेर पडणे",
+    "dashboardTitle": "डॅशबोर्ड",
+    "contactusTitle": "आमच्याशी संपर्क साधा",
+    "changePasword": "पासवर्ड बदला",
+    "register": "नोंदणी करा",
+    "GovernmentofState": "राज्य सरकारचे प्रादेशिक नाव",
+    "GovernmentofMaharashtra": "महाराष्ट्र शासन",
+    "skipToMain": "मुख्य सामग्रीवर जा",
+    "welcomeTo": "स्वागत आहे",
+    "bannerSubText":"महाराष्ट्र दाखवत आहे",
+    "devAndHostby":"द्वारे विकसित आणि होस्ट केले",
+    "GovOfMaha":"महाराष्ट्र सरकार"
 
-    
-    "aboutustitle":"आमच्याबद्दल",
-
-    "logout":"बाहेर पडणे",
-
-    "loginTitle":"लॉगिन करा",
-
-    "logoutTitle":"बाहेर पडणे",
-
-    "dashboardTitle":"डॅशबोर्ड",
-
-
-    "contactusTitle":"आमच्याशी संपर्क साधा",
-
-
-    "changePasword":"पासवर्ड बदला",
-
-    "register":"नोंदणी करा"
-
-
-
-
-    
- }
+}

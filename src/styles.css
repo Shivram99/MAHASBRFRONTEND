@@ -1,1 +1,292 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+body {
+    font-family: "Open Sans", sans-serif !important;
+    font-size: 14px !important;
+}
+
+/* Slider start*/
+.slider-caption {
+    background: rgba(0, 0, 0, 0.69);
+    padding: 10px;
+    text-align: center;
+    margin: 0 auto;
+    color: #FFF;
+    position: relative;
+    margin-top: -77px;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(1);
+}
+
+/* Slider end*/
+/* Icon section start*/
+.gen-list.iconTop-textBottom-list li .list-anchor {
+    color: #000;
+}
+
+.gen-list ul {
+    padding-left: 0;
+    display: inline-block;
+    width: 100%;
+}
+
+.gen-list.iconTop-textBottom-list li {
+    display: inline-block;
+    background-color: transparent;
+    width: 19%;
+    min-width: 150px;
+    margin-right: 0.5%;
+    text-align: center;
+    vertical-align: top;
+}
+
+.gen-list ul li {
+    list-style: none;
+    padding: 0px;
+    margin-bottom: 10px;
+    border-radius: 7px;
+    border: 1px solid transparent;
+}
+
+.gen-list.iconTop-textBottom-list li a,
+.gen-list.iconTop-textBottom-list li .list-anchor {
+    color: #000;
+}
+
+.gen-list.normal-font a,
+.gen-list.normal-font .list-anchor {
+    font-size: 1em !important;
+}
+
+.mva7-thc-activetheme-district-theme-2 .gen-list.iconTop-textBottom-list.large-circle li a span.list-icon,
+.mva7-thc-activetheme-district-theme-2 .gen-list.iconTop-textBottom-list.large-circle li .list-anchor span.list-icon,
+.home-2 .gen-list.iconTop-textBottom-list.large-circle li a span.list-icon,
+.home-2 .gen-list.iconTop-textBottom-list.large-circle li .list-anchor span.list-icon {
+    width: 70px !important;
+    height: 70px !important;
+    line-height: 70px !important;
+}
+
+.gen-list.iconTop-textBottom-list li a span.list-icon:before,
+.gen-list.iconTop-textBottom-list li .list-anchor span.list-icon:before {
+    font-size: 30px;
+}
+
+.gen-list ul li a span.list-icon:before,
+.gen-list ul li .list-anchor span.list-icon:before {
+    font-family: 'icomoon' !important;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 20px;
+}
+
+.gen-list.iconTop-textBottom-list li a div.list-text,
+.gen-list.iconTop-textBottom-list li .list-anchor div.list-text {
+    display: inherit;
+    padding-left: 0;
+}
+
+.orange-bg,
+.no-bg .list-icon.orange-bg,
+.list-icon.orange-bg {
+    background-color: #d04a0d !important;
+}
+
+.list-icon.blue-bg,
+.list-icon.green-bg,
+.list-icon.red-bg,
+.list-icon.orange-bg,
+.list-icon.gray-bg {
+    color: #fff !important;
+}
+
+.border-radius-round {
+    border-radius: 50% !important;
+}
+
+.orange-bg.icon-main {
+    width: 85px;
+    height: 85px;
+    text-align: center;
+    padding: 12% 0;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.orange-bg.icon-main i {
+    color: #fff;
+    font-size: 24px;
+}
+
+.gen-list.no-border.no-bg.padding-0.border-radius-none.iconTop-textBottom-list.large-circle.normal-font li {
+    text-align: center;
+    text-align: -webkit-center;
+
+}
+
+.gen-list {
+    padding: 35px 0;
+}
+
+.gen-list.no-border.no-bg.padding-0.border-radius-none.iconTop-textBottom-list.large-circle.normal-font {
+    padding-bottom: 0;
+}
+
+/* Icon section end */
+/* notification section Start*/
+.notification-main .tab {
+    float: left;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    width: 30%;
+    height: 300px;
+}
+
+/* Style the buttons inside the tab */
+.notification-main .tab button {
+    padding: 5px 10px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.3s;
+    border-bottom: 1px solid #3f4db8;
+}
+
+.notification-main .tab {
+    border: 1px solid #3f4db8;
+}
+
+.notification-main .tabcontent,
+.notification-main .tablinks.active {
+    background: #3f4db8 !important;
+    color: #fff;
+}
+
+/* Change background color of buttons on hover */
+.notification-main .tab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current "tab button" class */
+.notification-main .tab button.active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.notification-main .tabcontent {
+    float: left;
+    padding: 0px 12px;
+    border: 1px solid #3f4db8;
+    width: 70%;
+    border-left: none;
+    height: 300px;
+}
+
+.info-main ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.info-main li a {
+    display: inline-flex;
+    gap: 15px;
+    padding: 5px 0;
+}
+
+.info-main a .fa {
+    width: 40px;
+    height: 40px;
+    padding: 13px 14px;
+    border-radius: 50%;
+    color: #fff;
+}
+
+span.fa.fa-phone {
+    background-color: #06880e !important;
+}
+
+span.fa.fa-drivers-license {
+    background-color: #d04a0d !important;
+}
+
+span.fa.fa-sticky-note {
+    background-color: #cc4647 !important;
+}
+
+span.fa.fa-phone-square {
+    background-color: #0972a8;
+}
+
+span.fa.fa-calendar-plus-o {
+    background-color: #cc4647 !important;
+}
+
+span.fa.fa-newspaper-o {
+    background-color: #737373 !important;
+}
+
+.notification-main h5 {
+    background: #00000036;
+    text-align: center;
+}
+
+.info-main a {
+    text-decoration: none;
+    align-items: center;
+    color: #000;
+}
+
+.notification-main h3 {
+    font-size: 21px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* notification section End*/
+/* image galary start */
+.gallery-item {
+    text-align: center;
+}
+
+.image-galary-main .card-header {
+    background: rgb(208, 74, 13) !important;
+    color: #fff;
+    text-align: center;
+}
+
+h3 {
+    font-size: 21px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* image galary end */
+
+@media screen and (max-width:767px) {
+
+    /* .orange-bg.icon-main {
+        width: 50px;
+        height: 50px;
+        padding: 18% 0;
+    }
+    .gen-list.iconTop-textBottom-list li {
+        min-width: auto;
+    }
+    .orange-bg.icon-main i {
+        color: #fff;
+        font-size: 18px;
+    } */
+    .notification-main h3 {
+        margin-top: 21px;
+    }
+
+    .notification-main .tabcontent {
+        min-height: 300px;
+    }
+}
