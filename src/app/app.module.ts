@@ -20,6 +20,8 @@ import { authGuard } from './auth.guard';
 import { UnauthorizedComponent } from './component/unauthorized/unauthorized.component';
 import { ChangePasswordComponent } from './component/change-password/change-password.component';
 import { RegisterUserComponent } from './component/register-user/register-user.component';
+import { DepartmentMstComponent } from './component/department-mst/department-mst.component';
+import { RoleComponent } from './component/role/role.component';
 
 
 
@@ -35,7 +37,9 @@ import { RegisterUserComponent } from './component/register-user/register-user.c
     LoginComponent,
     UnauthorizedComponent,
     ChangePasswordComponent,
-    RegisterUserComponent
+   // RegisterUserComponent,
+    DepartmentMstComponent,
+    RoleComponent
   ],
   imports: [
     BrowserModule,

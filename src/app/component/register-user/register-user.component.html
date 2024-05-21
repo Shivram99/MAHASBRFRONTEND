@@ -1,11 +1,26 @@
+
 <div class="container">
-  <form (ngSubmit)="register()">
-    <label>Username: <input type="text" name="username" [(ngModel)]="user.username"></label><br>
-    <label>Password: <input type="password" name="password" [(ngModel)]="user.password"></label><br>
-    <label>User Roles:</label>
-    <select multiple name="roles" [(ngModel)]="user.roles">
-      <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
-    </select><br>
-    <button type="submit">Register</button>
-  </form>
+<form (ngSubmit)="register()">
+  <label>Username: <input type="text" name="username" [(ngModel)]="user.username"></label><br>
+  <label>Password: <input type="password" name="password" [(ngModel)]="user.password"></label><br>
+  <label>Email: <input type="text" name="email" [(ngModel)]="user.email"></label><br>
+  <label>Mobile Number: <input type="text" name="phoneNo" [(ngModel)]="user.phoneNo"></label><br>
+  <label>User Roles:</label>
+  <select name="roles" [(ngModel)]="user.roles">
+    <option [value]="0" selected>Please Select</option>
+      <option *ngFor="let role of roles" [value]="role.name">{{ role.name }}</option>
+  </select>
+  <br>
+
+
+  <select name="department" [(ngModel)]="user.departmentId">
+    <option [value]="0" selected>Please Select</option>
+  <!--  <option *ngFor="let department of departments" [value]="department.departmentId">{{ department.departmentName }}</option>-->
+      <option *ngFor="let department of departments" [value]="department.departmentId">{{ department.departmentName }}</option>
+  </select>
+
+
+  <button type="submit">Register</button>
+</form>
+
 </div>

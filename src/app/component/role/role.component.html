@@ -1,0 +1,24 @@
+<div>
+    <h2>Roles</h2>
+    <div *ngFor="let role of roles">
+      <p>{{ role.name }}</p>
+      <!-- Add more fields as necessary -->
+      <button (click)="updateRole(role)">Update</button>
+      <button (click)="deleteRole(role)">Delete</button>
+    </div>
+  </div>
+  
+  <hr>
+  
+  <div>
+    <h2>Create Role</h2>
+    <form>
+      <div>
+        <label for="roleName">Role Name</label>
+        <input type="text" id="roleName" name="roleName" [(ngModel)]="newRole.name" required>
+      </div>
+      <!-- Add more input fields as necessary -->
+      <button (click)="createRole()" [disabled]="!newRole.name">Create</button>
+    </form>
+  </div>
+  

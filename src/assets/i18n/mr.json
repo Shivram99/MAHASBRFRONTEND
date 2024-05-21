@@ -10,20 +10,23 @@
     "Bio": "बायो एंटर करा",
     "TermsConditions": "मी अटी व शर्ती मान्य करतो",
     "Submit": "प्रस्तुत करणे",
-    "aboutustitle": "आमच्याबद्दल",
-    "logout": "बाहेर पडणे",
-    "loginTitle": "लॉगिन करा",
-    "logoutTitle": "बाहेर पडणे",
-    "dashboardTitle": "डॅशबोर्ड",
-    "contactusTitle": "आमच्याशी संपर्क साधा",
-    "changePasword": "पासवर्ड बदला",
-    "register": "नोंदणी करा",
     "GovernmentofState": "राज्य सरकारचे प्रादेशिक नाव",
     "GovernmentofMaharashtra": "महाराष्ट्र शासन",
     "skipToMain": "मुख्य सामग्रीवर जा",
     "welcomeTo": "स्वागत आहे",
     "bannerSubText":"महाराष्ट्र दाखवत आहे",
     "devAndHostby":"द्वारे विकसित आणि होस्ट केले",
-    "GovOfMaha":"महाराष्ट्र सरकार"
-
+    "GovOfMaha":"महाराष्ट्र सरकार",
+    "aboutustitle":"आमच्याबद्दल",
+    "logout":"बाहेर पडणे",
+    "loginTitle":"लॉगिन करा",
+    "logoutTitle":"बाहेर पडणे",
+    "dashboardTitle":"डॅशबोर्ड",
+    "contactusTitle":"आमच्याशी संपर्क साधा",
+    "changePasword":"पासवर्ड बदला",
+    "register":"नोंदणी करा",
+    "department":"विभाग मास्टर"
 }
+
+    
+  
