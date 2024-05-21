@@ -9,13 +9,28 @@ import { LanguageService } from '../../language.service';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent  implements OnInit{
+  isChecked: boolean = true;
+
 
   ngOnInit(): void {
+
+    const currentLang = this.translate.currentLang;
+    this.isChecked = currentLang === 'mr'; 
+
     this.languageService.getLanguageObservable().subscribe(language => {
      /* this.languageService.setCurrentLanguage(language);
       // alert(language);
        this.translate.use(language);*/
     });
+  }
+
+
+
+  toggleLang(event: Event) {
+    const checked = (event.target as HTMLInputElement).checked;
+    this.isChecked = checked;
+    const selectedLang = checked ? 'mr' : 'en'; // Change 'en' and 'mr' to your language codes
+    this.translate.use(selectedLang);
   }
 
 
