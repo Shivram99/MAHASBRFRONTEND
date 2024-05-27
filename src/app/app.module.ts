@@ -22,8 +22,6 @@ import { ChangePasswordComponent } from './component/change-password/change-pass
 import { DepartmentMstComponent } from './component/department-mst/department-mst.component';
 import { RoleComponent } from './component/role/role.component';
 
-import {DataTablesModule} from 'angular-datatables';
-
 
 @NgModule({
   declarations: [
@@ -47,7 +45,6 @@ import {DataTablesModule} from 'angular-datatables';
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule, 
-    DataTablesModule,
    TranslateModule.forRoot({
     loader: {
       provide: TranslateLoader,
