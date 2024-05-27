@@ -36,7 +36,7 @@ export class AuthService {
   }
 
   fetchSecureEndpoint(): Observable<{ msg: string }> {
-    return this.http.get<{ msg: string }>(`${environment.apiUrl}/api/test/secured`);
+    return this.http.get<{ msg: string }>(`${environment.apiUrl}git `);
   }
 
   fetchSecureAdminEndpoint(): Observable<{ msg: string }> {

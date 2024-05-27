@@ -3,7 +3,6 @@ import { DepartmentMst } from '../../model/department-mst';
 import { DepartmentMstService } from '../../services/department-mst.service';
 
 import { Subject } from 'rxjs';
-import DataTables from 'datatables.net';
 
 
 @Component({
