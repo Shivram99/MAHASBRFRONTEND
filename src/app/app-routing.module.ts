@@ -13,7 +13,6 @@ import { RegisterUserComponent } from './component/register-user/register-user.c
 const routes: Routes = [
   {path:"",component:HomepageComponent},
   {path:"aboutus",component:AboutusComponent},
-  { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard], data: { expectedRole: 'ROLE_ADMIN' } }, // Guarded by AuthGuard
   {path:"contactus",component:ContactusComponent},
   {path:"login",component:LoginComponent},
   {path:"unauthorized",component:UnauthorizedComponent},

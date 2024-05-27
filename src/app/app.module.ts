@@ -31,7 +31,7 @@ import { RoleComponent } from './component/role/role.component';
     HeaderComponent,
     FooterComponent,
     HomepageComponent,
-    DashboardComponent,
+    // DashboardComponent,
     AboutusComponent,
     ContactusComponent,
     LoginComponent,

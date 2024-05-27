@@ -3,10 +3,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { RegisterUserComponent } from '../component/register-user/register-user.component';
 import { authGuard } from '../auth.guard';
 import { DepartmentMstComponent } from '../component/department-mst/department-mst.component';
+import { DashboardComponent } from '../component/dashboard/dashboard.component';
 
 const routes: Routes = [
     {path:"register",component:RegisterUserComponent,canActivate: [authGuard], data: { expectedRole: 'ROLE_ADMIN' } },
     {path:"department",component:DepartmentMstComponent,canActivate: [authGuard], data: { expectedRole: 'ROLE_ADMIN' } },
+    { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard], data: { expectedRole: 'ROLE_ADMIN' } }, // Guarded by AuthGuard
 
     /*path: '',
     children: [
