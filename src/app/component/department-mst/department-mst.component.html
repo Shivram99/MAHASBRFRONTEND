@@ -1,12 +1,31 @@
-<div>
+  <div class="container">
     <h2>Departments</h2>
-    <div *ngFor="let department of departments">
-      <p>{{ department.departmentName }}</p>
-      <!-- Add more fields as necessary -->
-      <button (click)="updateDepartment(department)">Update</button>
-      <button (click)="deleteDepartment(department.departmentId)">Delete</button>
+  
+    <div class="card m-5 p-3">
+        <div class="card-body">
+            <table id="example" class="table table-bordered table-striped table-hover">
+                <thead>
+                <tr>
+                    <th>Sr No</th>
+                    <th>Name</th>
+                    <th>Update</th>
+                    <th>delete</th>
+            
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let department of departments;let i = index">
+                    <td>{{ i+1}}</td>
+                    <td>{{ department.departmentName}}</td>
+                    <td> <button (click)="updateDepartment(department)">Update</button></td>
+                    <td><button (click)="deleteDepartment(department.departmentId)">Delete</button></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
     </div>
-  </div>
+</div>
   
   <hr>
   
@@ -21,4 +40,10 @@
       <button type="submit" [disabled]="departmentForm.invalid">Submit</button>
     </form>
   </div>
-  
+
+
+<script>
+  $(document).ready(function() {
+    $('#example').DataTable();
+  });
+</script>
