@@ -62,10 +62,8 @@ export class LoginComponent implements OnInit {
     this.authService.logout();
     this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe(() => {
     
-      
-      this.router.navigate(['/dashboard']);
-
-
+      this.router.navigate(['/admin/dashboard']);
+    
     }, (error: HttpErrorResponse) => {
       if (error.status === 401) {
         this.errorMessage = 'Invalid username or password';

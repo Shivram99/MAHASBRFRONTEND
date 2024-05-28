@@ -8,7 +8,7 @@ import { DashboardComponent } from '../component/dashboard/dashboard.component';
 const routes: Routes = [
     {path:"register",component:RegisterUserComponent,canActivate: [authGuard], data: { expectedRole: 'ROLE_ADMIN' } },
     {path:"department",component:DepartmentMstComponent,canActivate: [authGuard], data: { expectedRole: 'ROLE_ADMIN' } },
-    { path: "dashboard", component: DashboardComponent, canActivate: [authGuard], data: { expectedRole: 'ROLE_ADMIN' } }, // Guarded by AuthGuard
+    { path: "dashboard", component: DashboardComponent, canActivate: [authGuard], data: { expectedRole: ['ROLE_ADMIN','ROLE_DEVELOPER','ROLE_MODRATOR'] } }, // Guarded by AuthGuard
 
     /*path: '',
     children: [

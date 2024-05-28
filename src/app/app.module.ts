@@ -9,7 +9,7 @@ import { HomepageComponent } from './component/homepage/homepage.component';
 import { DashboardComponent } from './component/dashboard/dashboard.component';
 import { AboutusComponent } from './component/aboutus/aboutus.component';
 import { ContactusComponent } from './component/contactus/contactus.component';
-import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -54,7 +54,7 @@ import { RoleComponent } from './component/role/role.component';
   }),
   ],
   providers: [
-    provideClientHydration(),
+    provideClientHydration(),provideHttpClient(withFetch()),
     authGuard,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
