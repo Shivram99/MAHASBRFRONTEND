@@ -1,9 +1,32 @@
 <p>dashboard works!</p>
 
 
-<button (click)="fetchUnsecure()" mat-raised-button>Fetch unsecure</button>
+<!-- <button (click)="fetchUnsecure()" mat-raised-button>Fetch unsecure</button>
 <div>{{unsecure}}</div>
 <button (click)="fetchSecure()" mat-raised-button>Fetch secure</button>
 <div>{{secure}}</div>
 <button (click)="fetchSecureAdmin()" mat-raised-button>Fetch data for admin</button>
-<div>{{secureAdmin}}</div>
+<div>{{secureAdmin}}</div> -->
+<div class="container">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of dummyData">
+                <td>{{ item.id }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.status }}</td>
+                <td>
+                    <button (click)="removeItem(item.id)">Remove</button>
+                    <button *ngIf="item.status === 'Pending'" (click)="approveItem(item.id)">Approve</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

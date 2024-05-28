@@ -8,26 +8,42 @@ import { AuthService } from './services/auth.service';
 })
 export class authGuard implements CanActivate {
 
-  constructor(private router: Router,private authService:AuthService) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    const isAuthenticated = localStorage.getItem("isAuthenticated");
-    
-    const roles = localStorage.getItem("roles");
-    const expectedRole = route.data['expectedRole']; // Access expectedRole dynamically using index signature
-
-
+    if (typeof localStorage !== 'undefined') {
+    const isAuthenticated: string | null = localStorage.getItem("isAuthenticated");
+    const storedRoles: string | null = localStorage.getItem("roles");
+    const expectedRoles: string[] = route.data['expectedRole'];
+      debugger
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/']);
       return false;
     }
 
-    if (!roles || !roles.includes(expectedRole)) {
-      debugger
+    if (!storedRoles) {
+      // Handle case where roles are not available
       this.router.navigate(['/unauthorized']);
       return false;
     }
 
+    const userRoles: string[] = storedRoles.split(',');
+
+    // Check if any of the user roles match the expected roles
+    const hasMatchingRole = expectedRoles.some(expectedRole => userRoles.includes(expectedRole));
+
+    if (!hasMatchingRole) {
+      this.router.navigate(['/unauthorized']);
+      return false;
+    }
     return true;
+  
+  }else{
+    this.router.navigate(['/unauthorized']);
+      return false;
   }
+    
+    
+  }
+  
 }
