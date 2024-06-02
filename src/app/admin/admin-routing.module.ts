@@ -4,6 +4,7 @@ import { RegisterUserComponent } from '../component/register-user/register-user.
 import { authGuard } from '../auth.guard';
 import { DepartmentMstComponent } from '../component/department-mst/department-mst.component';
 import { DashboardComponent } from '../component/dashboard/dashboard.component';
+import { DashboarddataComponent } from '../component/dashboarddata/dashboarddata/dashboarddata.component';
 
 const routes: Routes = [
     {path:"register",component:RegisterUserComponent,canActivate: [authGuard], data: { expectedRole: ['ROLE_ADMIN'] } },
