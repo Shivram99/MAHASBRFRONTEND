@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AutologoutService } from './autologout.service';
 import { Observable } from 'rxjs/internal/Observable';
-import { tap } from 'rxjs';
+import { BehaviorSubject, tap } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 
 import jwt_decode from 'jwt-decode';
@@ -18,6 +18,9 @@ export class AuthService {
   private roles = 'roles';
 
   responseData: any;
+
+
+  private isLoggedInSubject = new BehaviorSubject<boolean>(false);
 
   constructor(private http: HttpClient) { }
 
@@ -63,6 +66,7 @@ export class AuthService {
     localStorage.setItem(this.username, username);
 
     localStorage.setItem("isAuthenticated","true");
+    this.setIsLoggedIn(true);
   }
 
   logout(): void {
@@ -81,6 +85,7 @@ export class AuthService {
     const expiration = localStorage.getItem(this.tokenExpirationKey);
     if (!expiration || new Date(expiration) <= new Date()) {
       this.logout();
+      this.setIsLoggedIn(false);
       return false;
     }
     return true;
@@ -89,5 +94,14 @@ export class AuthService {
   getTokenExpiration(): Date {
     const expiration = localStorage.getItem(this.tokenExpirationKey);
     return expiration ? new Date(expiration) : new Date();
+  }
+
+ 
+  setIsLoggedIn(value: boolean) {
+    this.isLoggedInSubject.next(value);
+  }
+
+  getIsLoggedIn() {
+    return this.isLoggedInSubject.asObservable();
   }
 }
