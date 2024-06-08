@@ -19,7 +19,7 @@ export class MenuComponent implements OnInit {
    newMenu: MstMenu = {
      menuNameEnglish: '',
      menuNameMarathi: '',
-     isActive: '',
+     isActive: '1',
      menuId:0
    };
  

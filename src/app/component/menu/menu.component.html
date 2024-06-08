@@ -10,13 +10,26 @@
 <form (submit)="createMenu()">
   <input type="text" [(ngModel)]="newMenu.menuNameEnglish" name="menuNameEnglish" placeholder="Menu Name (English)">
   <input type="text" [(ngModel)]="newMenu.menuNameMarathi" name="menuNameMarathi" placeholder="Menu Name (Marathi)">
-  <input type="text" [(ngModel)]="newMenu.isActive" name="menuNameMarathi" placeholder="Is Active">
+ 
+
+  
+  <select name="isActive" [(ngModel)]="newMenu.isActive">
+    <option [value]="1" selected>Active</option>
+    <option [value]="0" selected>InActive</option>
+    
+  </select>
   <button type="submit">Create</button>
 <h2>Edit Menu</h2>
 <form *ngIf="selectedMenu" (submit)="updateMenu()">
-  <input type="text" [(ngModel)]="selectedMenu.menuNameEnglish">
-  <input type="text" [(ngModel)]="selectedMenu.menuNameMarathi">
-  <input type="text" [(ngModel)]="selectedMenu.isActive">
+  <input type="text" name="menuNameEnglish" [(ngModel)]="selectedMenu.menuNameEnglish">
+  <input type="text"   name="menuNameMarathi" [(ngModel)]="selectedMenu.menuNameMarathi">
+  
+  <select name="isActive" [(ngModel)]="selectedMenu.isActive">
+    <option [value]="1" selected>Active</option>
+    <option [value]="0" selected>InActive</option>
+    
+  </select>
+
   <button type="submit">Update</button>
 </form>
 
