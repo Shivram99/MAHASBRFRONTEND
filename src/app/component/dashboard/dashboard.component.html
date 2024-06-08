@@ -8,30 +8,43 @@
 <button (click)="fetchSecureAdmin()" mat-raised-button>Fetch data for admin</button>
 <div>{{secureAdmin}}</div> -->
 
+  
 <div class="container">
-    <app-dashboard-bar-chart></app-dashboard-bar-chart>
-    <!-- src/app/app.component.html -->
-<!-- <app-dashboarddata></app-dashboarddata> -->
-<!-- 
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let item of dummyData">
-                <td>{{ item.id }}</td>
-                <td>{{ item.name }}</td>
-                <td>{{ item.status }}</td>
-                <td>
-                    <button (click)="removeItem(item.id)">Remove</button>
-                    <button *ngIf="item.status === 'Pending'" (click)="approveItem(item.id)">Approve</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div> -->
+    <app-chartfilter (childEvent)="handleChildEvent($event)"></app-chartfilter>
+    <!-- <app-dashboard-bar-chart [userType]="user" [dashboarddata]="data"></app-dashboard-bar-chart>
+    <app-dashboard-bar-chart [userType]="user" [dashboarddata]="dashboardData"></app-dashboard-bar-chart> -->
+    <div class="row">
+        <div class="col-md-6 blk">
+          <div style="display: block">
+            <app-dashboard-bar-chart [dashboarddata]="data" [chartType]="chartname"></app-dashboard-bar-chart>
+          </div>
+          <div class="lable-main">
+            <label
+              >Graphical representation of the dashboard-district and time wise</label
+            >
+          </div>
+        </div>
+        <div class="col-md-6 blk">
+            <div style="display: block">
+            <app-dashboard-bar-chart [userType]="user" [dashboarddata]="dashboardData2"></app-dashboard-bar-chart>
+          </div>
+          <div class="lable-main">
+            <label
+              >Graphical representation of the dashboard-district and time wise</label
+            >
+          </div>
+        </div>
+        <div class="col-md-6 blk">
+            <div style="display: block">
+                <app-dashboard-bar-chart [userType]="user" [dashboarddata]="dashboardData"></app-dashboard-bar-chart>
+              </div>
+              <div class="lable-main">
+                <label
+                  >Graphical representation of the dashboard-district and time wise</label
+                >
+              </div>
+        </div>
+        <div class="col-md-6 blk">4</div>
+      </div>
+    
+ </div>

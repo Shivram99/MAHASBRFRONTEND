@@ -1,0 +1,96 @@
+
+
+  <div class="container">
+    <!-- app.component.html -->
+<form [formGroup]="adminDashBoardfrm" (change)="onSubmit()" >
+  <div class="row" >
+    <div class="col-md-4 blk">
+      <div style="display: block">
+        <label for="registerDateFrom" >Registration Form Date:</label>
+        <input type="date" 
+        id="registerDateFrom"
+        name="registerDateFrom"
+        class="form-control"
+        formControlName="registerDateFrom" 
+        placeholder="DD-MM-YYYY"
+      >
+      </div>
+      
+    </div>
+
+    <div class="col-md-4 blk">
+        <label for="district">District:</label>
+        <select class="form-control"
+          id="district"
+          name="district"
+          formControlName="district" 
+          (change)="onChangeFunction($event)"
+          required
+        >
+        <option [value]="11111">All</option>
+        <option *ngFor="let district of districts" [value]="district.censusDistrictCode">
+          {{ district.districtName }}
+      </option>
+        </select>
+    </div>
+
+    <div class="col-md-4 blk">
+     <label >BNR :</label>
+     <input type="text" 
+        class="form-control"
+        id="BNR"
+        name="BNR"
+        formControlName="BNR" 
+        >
+    </div>
+
+    <div class="col-md-4 blk">
+      <div style="display: block">
+        <label for="registerDate">Registration TO Date:</label>
+        <input type="date" id="registerDateTo" class="form-control" formControlName="registerDateTo" placeholder="DD-MM-YYYY">
+      </div>
+    </div>
+
+    <div class="col-md-4 blk">
+      <label for="district">Taluka:</label>
+        <select class="form-control"
+          id="talukas"
+          name="talukas"
+          formControlName="talukas" 
+        >
+          <option *ngFor="let talukas of talukas" [value]="talukas.censusTalukaCode">
+            {{ talukas.talukaName }}
+          </option>
+        </select>
+
+    </div> 
+
+  </div>
+</form>
+ 
+<div id="pdfContent">
+  
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">Sr. No.</th>
+        <th scope="col">Data received from department name</th>
+        <th scope="col">District BRN number</th>
+        <th scope="col">Remark</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of tableData">
+        <td>{{ item.serialNumber }}</td>
+        <td>{{ item.departmentName }}</td>
+        <td>{{ item.districtBRN }}</td>
+        <td><button (click)="openDialog()">View Details</button></td>
+      </tr>
+    </tbody>
+  </table>
+<div>
+</div>
+  <button (click)="generateExcel(tableData)" class="btn btn-primary btn-sm">Export to Excel</button> &nbsp;&nbsp;
+  <button (click)="generatePDF()" >Generate PDF</button>
+</div>
+</div>

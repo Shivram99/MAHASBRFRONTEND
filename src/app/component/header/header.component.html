@@ -1,74 +1,187 @@
-<div class="top-bar-main">
-  <div class="container">
-    <div class="row top-bar">
-      <div class="col-md-3 sm-hide "><a lang="grt" href="#"
-          aria-label="Government of State Name Regional - External Regional Language Site that opens in a new window"
-          title="Government of State Name Regional - External Regional Language Site that opens in a new window">
-          {{'GovernmentofState' | translate }}</a></div>
-      <div class="col-md-5 sm-text-center"><a lang="en" href="#">{{'GovernmentofMaharashtra' | translate }}</a></div>
-      <div class="col-md-4">
-        <div class="skip-content-main">
-          <a href="#menumain-container" class="skip-to-content" title="Skip to main content"><strong class="responsive-hide">
-              {{"skipToMain" | translate}}</strong></a>
-          <div class="goiSearchmain position-relative">
-            <a href="javascript:void(0);" title="Site Search" aria-label="Site Search" role="button"
-              data-toggle="dropdown">
-              <img class="show-con" src="assets/images/search-icon.png" title="Search Icon" alt="Search Icon">
-            </a>
-            <div class="goiSearch position-absolute">
-              <form onsubmit="return search_validation()" action="#" method="get">
-                <label for="search" class="hide">Search</label>
-                <input type="hidden" id="csrf_nonce" name="csrf_nonce" value="a02ffc4ee6"><input type="hidden"
-                  name="_wp_http_referer" value="/"> <input type="search" title="Enter Text" name="s" id="search"
-                  value="">
-                <button type="submit" title="Search"><small class="tcon">Search</small><span class="icon-search"
-                    aria-hidden="true"></span></button>
-              </form>
+<div class="headd-mainn sticky-top">
+  <div class="top-bar-main">
+    <div class="container">
+      <div class="row top-bar">
+        <div class="col-md-3 sm-hide">
+          <a
+            lang="grt"
+            href="#"
+            aria-label="Government of State Name Regional - External Regional Language Site that opens in a new window"
+            title="Government of State Name Regional - External Regional Language Site that opens in a new window"
+          >
+            {{ "GovernmentofState" | translate }}</a
+          >
+        </div>
+        <div class="col-md-5 sm-text-center">
+          <a lang="en" href="#">{{ "GovernmentofMaharashtra" | translate }}</a>
+        </div>
+        <div class="col-md-4">
+          <div class="skip-content-main">
+            <a
+              href="#menumain-container"
+              class="skip-to-content"
+              title="Skip to main content"
+              ><strong class="responsive-hide">
+                {{ "skipToMain" | translate }}</strong
+              ></a
+            >
+            <div class="goiSearchmain position-relative">
+              <a
+                href="javascript:void(0);"
+                title="Site Search"
+                aria-label="Site Search"
+                role="button"
+                data-toggle="dropdown"
+              >
+                <img
+                  class="show-con"
+                  src="assets/images/search-icon.png"
+                  title="Search Icon"
+                  alt="Search Icon"
+                />
+              </a>
+              <div class="goiSearch position-absolute">
+                <form
+                  onsubmit="return search_validation()"
+                  action="#"
+                  method="get"
+                >
+                  <label for="search" class="hide">Search</label>
+                  <input
+                    type="hidden"
+                    id="csrf_nonce"
+                    name="csrf_nonce"
+                    value="a02ffc4ee6"
+                  /><input type="hidden" name="_wp_http_referer" value="/" />
+                  <input
+                    type="search"
+                    title="Enter Text"
+                    name="s"
+                    id="search"
+                    value=""
+                  />
+                  <button type="submit" title="Search">
+                    <small class="tcon">Search</small
+                    ><span class="icon-search" aria-hidden="true"></span>
+                  </button>
+                </form>
+              </div>
             </div>
-          </div>
 
-          <div class="soc-media-main"><a href="#" title="Social Media Links" class="show-social-links" role="button"
-              data-toggle="dropdown">
-              <img class="show-con" src="assets/images/social-icon.png" title="Social Icon" alt="Social Icon">
-              <span class="off-css">Social Media Links</span>
-            </a>
-            <ul class="socialIcons">
-              <li><a href="#" target="_blank" aria-label="Facebook | External site that opens in a new window"><img
-                    src="assets/images/ico-facebook.png" title="Facebook | External site that opens in a new window"
-                    alt="Facebook, External Link that opens in a new window"></a></li>
-              <li><a href="#" target="_blank" aria-label="Twitter | External site that opens in a new window"><img
-                    src="assets/images/ico-twitter.png" title="Twitter | External site that opens in a new window"
-                    alt="Twitter | External site that opens in a new window"></a></li>
-              <li><a href="#" target="_blank" aria-label="Youtube | External site that opens in a new window"><img
-                    src="assets/images/ico-youtube.png" title="Youtube | External site that opens in a new window"
-                    alt="Youtube | External site that opens in a new window"></a></li>
-            </ul>
-          </div>
-          <div class="Accessibility-Links-main"><a href="javascript:void(0);" title="Accessibility Links"
-              aria-label="Accessibility Links" class="accessible-icon" role="button" data-toggle="dropdown">
-              <img class="show-con" src="assets/images/accessibility.png" title="Accessibility Icon"
-                alt="Accessibility Icon">
-              <span class="off-css">Accessibility Links</span>
-            </a>
-            <ul class="accessiblelinks textSizing" aria-label="Font size and Contrast controls">
-              <li class="fontSizeEvent"><a data-selected-text="selected" data-event-type="increase"
-                  href="javascript:void(0);" data-label="Font Size Increase" aria-label="Font Size Increase"
-                  title="Font Size Increase"><span aria-hidden="true">A+</span><span class="off-css"> Font Size
-                    Increase</span></a></li>
-              <li class="fontSizeEvent"><a data-selected-text="selected" data-event-type="normal"
-                  href="javascript:void(0);" data-label="Normal Font" aria-label="Normal Font - selected"
-                  title="Normal Font - selected" class="link-selected"><span aria-hidden="true">A</span><span
-                    class="off-css"> Normal Font -
-                    Selected</span></a></li>
-              <li class="fontSizeEvent"><a data-selected-text="selected" data-event-type="decrease"
-                  href="javascript:void(0);" data-label="Font Size Decrease" aria-label="Font Size Decrease"
-                  title="Font Size Decrease"><span aria-hidden="true">A-</span><span class="off-css"> Font Size
-                    Decrease</span></a></li>
-            </ul>
-          </div>
+            <div class="soc-media-main">
+              <a
+                href="#"
+                title="Social Media Links"
+                class="show-social-links"
+                role="button"
+                data-toggle="dropdown"
+              >
+                <img
+                  class="show-con"
+                  src="assets/images/social-icon.png"
+                  title="Social Icon"
+                  alt="Social Icon"
+                />
+                <span class="off-css">Social Media Links</span>
+              </a>
+              <ul class="socialIcons">
+                <li>
+                  <a
+                    href="#"
+                    target="_blank"
+                    aria-label="Facebook | External site that opens in a new window"
+                    ><img
+                      src="assets/images/ico-facebook.png"
+                      title="Facebook | External site that opens in a new window"
+                      alt="Facebook, External Link that opens in a new window"
+                  /></a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    target="_blank"
+                    aria-label="Twitter | External site that opens in a new window"
+                    ><img
+                      src="assets/images/ico-twitter.png"
+                      title="Twitter | External site that opens in a new window"
+                      alt="Twitter | External site that opens in a new window"
+                  /></a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    target="_blank"
+                    aria-label="Youtube | External site that opens in a new window"
+                    ><img
+                      src="assets/images/ico-youtube.png"
+                      title="Youtube | External site that opens in a new window"
+                      alt="Youtube | External site that opens in a new window"
+                  /></a>
+                </li>
+              </ul>
+            </div>
+            <div class="Accessibility-Links-main">
+              <a
+                href="javascript:void(0);"
+                title="Accessibility Links"
+                aria-label="Accessibility Links"
+                class="accessible-icon"
+                role="button"
+                data-toggle="dropdown"
+              >
+                <img
+                  class="show-con"
+                  src="assets/images/accessibility.png"
+                  title="Accessibility Icon"
+                  alt="Accessibility Icon"
+                />
+                <span class="off-css">Accessibility Links</span>
+              </a>
+              <ul
+                class="accessiblelinks textSizing"
+                aria-label="Font size and Contrast controls"
+              >
+                <li class="fontSizeEvent">
+                  <a
+                    data-selected-text="selected"
+                    data-event-type="increase"
+                    href="javascript:void(0);"
+                    data-label="Font Size Increase"
+                    aria-label="Font Size Increase"
+                    title="Font Size Increase"
+                    ><span aria-hidden="true">A+</span
+                    ><span class="off-css"> Font Size Increase</span></a
+                  >
+                </li>
+                <li class="fontSizeEvent">
+                  <a
+                    data-selected-text="selected"
+                    data-event-type="normal"
+                    href="javascript:void(0);"
+                    data-label="Normal Font"
+                    aria-label="Normal Font - selected"
+                    title="Normal Font - selected"
+                    class="link-selected"
+                    ><span aria-hidden="true">A</span
+                    ><span class="off-css"> Normal Font - Selected</span></a
+                  >
+                </li>
+                <li class="fontSizeEvent">
+                  <a
+                    data-selected-text="selected"
+                    data-event-type="decrease"
+                    href="javascript:void(0);"
+                    data-label="Font Size Decrease"
+                    aria-label="Font Size Decrease"
+                    title="Font Size Decrease"
+                    ><span aria-hidden="true">A-</span
+                    ><span class="off-css"> Font Size Decrease</span></a
+                  >
+                </li>
+              </ul>
+            </div>
 
-
-          <!-- <div class="lang-main hide">
+            <!-- <div class="lang-main hide">
             <select class="lang-select-box border-0" #selectedLang (change)="switchLang(selectedLang.value)">
 
 
@@ -109,68 +222,116 @@
             </select>
           </div>
           -->
-          <div class="lang-main">
-            <label class="switch">
-              <input type="checkbox" id="togBtn" (change)="toggleLang($event)">
-              <span class="slider round">
-                <span class="label" [innerHTML]="isChecked ? 'मराठी' : 'Eng'"
-                  [ngClass]="isChecked ? 'on' : 'off'"></span>
-              </span>
-            </label>
+            <div class="lang-main">
+              <label class="switch">
+                <input
+                  type="checkbox"
+                  id="togBtn"
+                  (change)="toggleLang($event)"
+                />
+                <span class="slider round">
+                  <span
+                    class="label"
+                    [innerHTML]="isChecked ? 'मराठी' : 'Eng'"
+                    [ngClass]="isChecked ? 'on' : 'off'"
+                  ></span>
+                </span>
+              </label>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-<div class="header-container">
-  <div class="container">
-    <div class="logo">
-      <a href="index.html" title="Go to home" class="emblem" rel="home">
-        <img class="site_logo" height="100" id="logo" src="assets/images/Seal_of_Maharashtra.png"
-          alt="State Emblem of Maharashtra">
+  <div class="header-container">
+    <div class="container">
+      <div class="logo">
+        <a href="index.html" title="Go to home" class="emblem" rel="home">
+          <img
+            class="site_logo"
+            height="100"
+            id="logo"
+            src="assets/images/Seal_of_Maharashtra.png"
+            alt="State Emblem of Maharashtra"
+          />
 
-        <div class="logo-text">
-          <!-- <strong lang="grt" class="site_name_regional">महा एसआरबी</strong> -->
-          <h1 class="site_name_english">{{"Sitetitle" | translate}}</h1>
-        </div>
-      </a>
-    </div>
+          <div class="logo-text">
+            <!-- <strong lang="grt" class="site_name_regional">महा एसआरबी</strong> -->
+            <h1 class="site_name_english">{{ "Sitetitle" | translate }}</h1>
+          </div>
+        </a>
+      </div>
 
-    <div class="header-right clearfix">
-      <div class="right-content clearfix">
-        <div class="float-element">
-          <a aria-label="Mahait - External site that opens in a new window" href="http://mahait.gov.in/" target="_blank"
-            title="Digital India" class="right-logo-main"
-            onclick="return confirm('You are being redirected to an external website. Please note that District Preview Template cannot be held responsible for external websites content &amp; privacy policies.');"
-            rel="noopener noreferrer">
-            <img class="sw-logo" height="95" src="assets/images/mahait_logo.png" alt="MahaIT">
-          </a>
+      <div class="header-right clearfix">
+        <div class="right-content clearfix">
+          <div class="float-element">
+            <a
+              aria-label="Mahait - External site that opens in a new window"
+              href="http://mahait.gov.in/"
+              target="_blank"
+              title="Digital India"
+              class="right-logo-main"
+              onclick="return confirm('You are being redirected to an external website. Please note that District Preview Template cannot be held responsible for external websites content &amp; privacy policies.');"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="sw-logo"
+                height="95"
+                src="assets/images/mahait_logo.png"
+                alt="MahaIT"
+              />
+            </a>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-<div class="menumain-container" id="menumain-container">
-  <div class="container menumain">
-    <nav class="navbar navbar-expand-lg">
-      <div class="">
-        <!-- <a href="#" class="navbar-brand"> {{'Sitetitle' | translate }}</a> -->
-        <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-          <div class="navbar-nav">
-            <a href="#" class="nav-item nav-link active" routerLink="dashboard"> {{'dashboardTitle' | translate }}</a>
-            <a href="#" class="nav-item nav-link" routerLink="aboutus"> {{'aboutustitle' | translate }}</a>
-            <a href="#" class="nav-item nav-link" routerLink="aboutus"> {{'contactusTitle' | translate }}</a>
-            <a href="#" class="nav-item nav-link " routerLink="/login"> {{'loginTitle' | translate }}</a>
-            <a href="#" class="nav-item nav-link" routerLink="/changePassword"> {{'changePasword' | translate }}</a>
-            <!-- <a href="#" class="nav-item nav-link" routerLink="/register"> {{'register' | translate }}</a> -->
-            <a href="#" class="nav-item nav-link" href="#"> {{'logoutTitle' | translate }}</a>
+  <div class="menumain-container" id="menumain-container">
+    <div class="container menumain">
+      <nav class="navbar navbar-expand-lg">
+        <div class="">
+          <!-- <a href="#" class="navbar-brand"> {{'Sitetitle' | translate }}</a> -->
+          <button
+            type="button"
+            class="navbar-toggler"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarCollapse"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav">
+              <a
+                href="#"
+                class="nav-item nav-link active"
+                routerLink="dashboard"
+              >
+                {{ "dashboardTitle" | translate }}</a
+              >
+              <a href="#" class="nav-item nav-link" routerLink="aboutus">
+                {{ "aboutustitle" | translate }}</a
+              >
+              <a href="#" class="nav-item nav-link" routerLink="aboutus">
+                {{ "contactusTitle" | translate }}</a
+              >
+              <a href="#" class="nav-item nav-link" routerLink="/login">
+                {{ "loginTitle" | translate }}</a
+              >
+              <a
+                href="#"
+                class="nav-item nav-link"
+                routerLink="/changePassword"
+              >
+                {{ "changePasword" | translate }}</a
+              >
+              <!-- <a href="#" class="nav-item nav-link" routerLink="/register"> {{'register' | translate }}</a> -->
+              <a href="#" class="nav-item nav-link" href="#">
+                {{ "logoutTitle" | translate }}</a
+              >
+            </div>
           </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   </div>
 </div>

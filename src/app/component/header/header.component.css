@@ -218,9 +218,13 @@ input:checked+.slider .off {
     border-bottom: 1px solid #d8d8d8;
     margin-bottom: 20px;
 }
+
 h1.site_name_english {
     font-size: 26px;
     font-weight: bold;
+}
+.headd-mainn.sticky-top {
+    background: #fff;
 }
 @media screen and (max-width:767px) {
     .sm-hide {

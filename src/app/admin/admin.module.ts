@@ -8,12 +8,13 @@ import { FormsModule } from '@angular/forms';
 import { DashboardComponent } from '../component/dashboard/dashboard.component';
 import { DashboardBarChartComponent } from '../component/dashboard-bar-chart/dashboard-bar-chart.component';
 import { DashboarddataComponent } from '../component/dashboarddata/dashboarddata/dashboarddata.component';
-
+import { ChartfilterComponent } from '../component/chartfilter/chartfilter.component';
 
 console.log("properly loaded")
 @NgModule({
   declarations: [RegisterUserComponent,DashboardComponent,DashboardBarChartComponent,
     DashboarddataComponent,
+    ChartfilterComponent,
   ],
   imports: [
     CommonModule,

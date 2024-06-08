@@ -9,6 +9,8 @@ import { authGuard } from './auth.guard';
 import { UnauthorizedComponent } from './component/unauthorized/unauthorized.component';
 import { ChangePasswordComponent } from './component/change-password/change-password.component';
 import { RegisterUserComponent } from './component/register-user/register-user.component';
+import { ModeratorModule} from './moderator/moderator.module';
+import { DeveloperModule } from './developer/developer.module'; 
 
 const routes: Routes = [
   {path:"",component:HomepageComponent},
@@ -18,6 +20,8 @@ const routes: Routes = [
   {path:"unauthorized",component:UnauthorizedComponent},
   {path:"changePassword",component:ChangePasswordComponent},
   { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
+  { path: 'moderator', loadChildren: () => import('./moderator/moderator.module').then(m => m.ModeratorModule) },
+  { path: 'developer', loadChildren: () => import('./developer/developer.module').then(m => m.DeveloperModule) },
  
  // {path:"register",component:RegisterUserComponent},
   /*{

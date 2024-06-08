@@ -1,0 +1,15 @@
+/* @media screen and (min-width: 1200px) {
+    .modal-dialog {
+        min-width: 1140px !important;
+    }
+}
+@media screen and (min-width: 992px) {
+    .modal-dialog {
+        min-width: 800px !important;
+    }
+} */
+
+.modal-header {
+    display: flex;
+    justify-content: flex-end;
+  }

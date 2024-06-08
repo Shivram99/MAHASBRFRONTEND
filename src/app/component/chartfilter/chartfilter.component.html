@@ -1,0 +1,124 @@
+<div>
+  <label>Select Count Type:</label>
+  <div *ngFor="let option of countOptions">
+    <input
+      type="radio"
+      [value]="option"
+      [(ngModel)]="countType"
+      (change)="sendDataToParent()"
+    />
+    {{ option }}
+  </div>
+</div>
+<br />
+<div>
+  <form #registrationForm="ngForm" (ngSubmit)="onSubmit()">
+    <div class="row form-group">
+      <div class="col-md-4">
+        <label for="region">Acts/Registering Authorities:</label><br />
+        <select
+          class="form-control"
+          id="region"
+          name="act"
+          [(ngModel)]="registration.registration_act"
+          required
+          (ngModelChange)="onFieldChange()"
+        >
+          <option *ngFor="let act of acts" [value]="act">{{ act }}</option>
+        </select>
+      </div>
+
+      <!-- <div style="flex: 1 1 25%; padding: 0 10px;">
+              <label for="region">Region:</label><br>
+              <select id="region" name="region" [(ngModel)]="registration.region" required (ngModelChange)="onFieldChange()">
+                <option *ngFor="let region of regions" [value]="region">{{ region }}</option>
+              </select>
+            </div> -->
+      <div class="col-md-4">
+        <label for="region">Region:</label><br />
+        <select
+          class="form-control"
+          id="region"
+          name="region"
+          [(ngModel)]="registration.region"
+          required
+          (ngModelChange)="onRegionChange($event)"
+        >
+          <option *ngFor="let region of regions" [value]="region">
+            {{ region }}
+          </option>
+        </select>
+      </div>
+
+      <!-- <div style="flex: 1 1 25%; padding: 0 10px;">
+              <label for="district">District:</label><br>
+              <select id="district" name="district" [(ngModel)]="registration.district" required (ngModelChange)="onFieldChange()">
+                <option *ngFor="let district of districts" [value]="district">{{ district }}</option>
+              </select>
+            </div> -->
+      <div class="col-md-4">
+        <label for="district">District:</label><br />
+        <select
+          class="form-control"
+          id="district"
+          name="district"
+          [(ngModel)]="registration.district"
+          required
+          (ngModelChange)="onFieldChange()"
+        >
+          <option *ngFor="let district of districts" [value]="district">
+            {{ district }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <br/>
+    <div class="row form-group">
+      <div class="col-md-4">
+        <label for="year">Year:</label><br />
+        <select
+          class="form-control"
+          id="year"
+          name="year"
+          [(ngModel)]="registration.year"
+          required
+          (ngModelChange)="onFieldChange()"
+        >
+          <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+        </select>
+      </div>
+
+      <div class="col-md-4">
+        <label for="quarter">Quarter:</label><br />
+        <select
+          class="form-control"
+          id="quarter"
+          name="quarter"
+          [(ngModel)]="registration.quarter"
+          required
+          (ngModelChange)="onFieldChange()"
+        >
+          <option *ngFor="let quarter of quarters" [value]="quarter">
+            {{ quarter }}
+          </option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label for="industry">Industry/NIC Classification:</label><br />
+        <select
+          class="form-control"
+          id="industry"
+          name="industry"
+          [(ngModel)]="registration.industry"
+          required
+          (ngModelChange)="onFieldChange()"
+        >
+          <option *ngFor="let option of industry" [value]="option">
+            {{ option }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </form>
+</div>
+<br/>

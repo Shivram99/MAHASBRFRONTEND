@@ -21,6 +21,12 @@ import { UnauthorizedComponent } from './component/unauthorized/unauthorized.com
 import { ChangePasswordComponent } from './component/change-password/change-password.component';
 import { DepartmentMstComponent } from './component/department-mst/department-mst.component';
 import { RoleComponent } from './component/role/role.component';
+import { DashboardadminComponent } from './component/dashboardadmin/dashboardadmin.component';
+import { ViewDetailsAdminDashBoardComponent } from './component/view-details-admin-dash-board/view-details-admin-dash-board.component';
+import { PrivateHeaderComponent } from './private-header/private-header.component';
+import { PrivateFooterComponent } from './private-footer/private-footer.component';
+import { PrivateLayoutComponent } from './private-layout/private-layout.component';
+//import { ChartfilterComponent } from './component/chartfilter/chartfilter.component';
 
 
 @NgModule({
@@ -38,6 +44,12 @@ import { RoleComponent } from './component/role/role.component';
    // RegisterUserComponent,
     DepartmentMstComponent,
     RoleComponent,
+    DashboardadminComponent,
+    ViewDetailsAdminDashBoardComponent,
+    PrivateHeaderComponent,
+    PrivateFooterComponent,
+    PrivateLayoutComponent,
+   // ChartfilterComponent,
   ],
   imports: [
     BrowserModule,

@@ -5,11 +5,12 @@ import { authGuard } from '../auth.guard';
 import { DepartmentMstComponent } from '../component/department-mst/department-mst.component';
 import { DashboardComponent } from '../component/dashboard/dashboard.component';
 import { DashboarddataComponent } from '../component/dashboarddata/dashboarddata/dashboarddata.component';
-
+import { DashboardadminComponent } from '../component/dashboardadmin/dashboardadmin.component';
 const routes: Routes = [
-    {path:"register",component:RegisterUserComponent,canActivate: [authGuard], data: { expectedRole: ['ROLE_ADMIN'] } },
+    {path:"register",component:RegisterUserComponent,canActivate: [authGuard], data: { expectedRole: ['ROLE_USER'] } },
     {path:"department",component:DepartmentMstComponent,canActivate: [authGuard], data: { expectedRole: ['ROLE_ADMIN'] } },
-    { path: "dashboard", component: DashboardComponent, canActivate: [authGuard], data: { expectedRole: ['ROLE_ADMIN','ROLE_DEVELOPER','ROLE_MODRATOR'] } }, // Guarded by AuthGuard
+    { path: "dashboard", component: DashboardComponent, canActivate: [authGuard], data: { expectedRole: ['ROLE_USER'] } }, // Guarded by AuthGuard
+    { path: "dashboardadmin", component: DashboardadminComponent, canActivate: [authGuard], data: { expectedRole: ['ROLE_ADMIN',] } }, // Guarded by AuthGuard
 
     /*path: '',
     children: [

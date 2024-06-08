@@ -60,16 +60,18 @@ export class LoginComponent implements OnInit {
   login(): void {
 
     this.authService.logout();
+    debugger
     this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe(() => {
       
       if(this.authService.responseData.roles.includes("ROLE_ADMIN")){
-        this.router.navigate(['/admin/dashboard']);
+
+        this.router.navigate(['/admin/dashboardadmin']);
 
       }else if(this.authService.responseData.roles.includes("ROLE_MODRATOR")){
-        this.router.navigate(['/admin/dashboard']);
+        this.router.navigate(['/admin/dashboardmod']);
 
       }else if(this.authService.responseData.roles.includes("ROLE_DEVELOPER")){
-        this.router.navigate(['/admin/dashboard']);
+        this.router.navigate(['/admin/dashboarddev']);
 
       }else if(this.authService.responseData.roles.includes("ROLE_USER")){
         this.router.navigate(['/admin/dashboard']);
@@ -86,6 +88,7 @@ export class LoginComponent implements OnInit {
       }
     });
   }
+  
 
   /*login() {
     alert(localStorage);
