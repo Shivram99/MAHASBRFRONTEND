@@ -1,0 +1,23 @@
+<!-- menu-crud.component.html -->
+<h2>Menu List</h2>
+<ul>
+  <li *ngFor="let menu of menus" (click)="selectMenu(menu)">
+    {{ menu.menuNameEnglish }} - {{ menu.menuNameMarathi }}
+  </li>
+</ul>
+
+<h2>Create Menu</h2>
+<form (submit)="createMenu()">
+  <input type="text" [(ngModel)]="newMenu.menuNameEnglish" name="menuNameEnglish" placeholder="Menu Name (English)">
+  <input type="text" [(ngModel)]="newMenu.menuNameMarathi" name="menuNameMarathi" placeholder="Menu Name (Marathi)">
+  <input type="text" [(ngModel)]="newMenu.isActive" name="menuNameMarathi" placeholder="Is Active">
+  <button type="submit">Create</button>
+<h2>Edit Menu</h2>
+<form *ngIf="selectedMenu" (submit)="updateMenu()">
+  <input type="text" [(ngModel)]="selectedMenu.menuNameEnglish">
+  <input type="text" [(ngModel)]="selectedMenu.menuNameMarathi">
+  <input type="text" [(ngModel)]="selectedMenu.isActive">
+  <button type="submit">Update</button>
+</form>
+
+<button (click)="deleteMenu()">Delete</button>

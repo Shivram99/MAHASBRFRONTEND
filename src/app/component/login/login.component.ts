@@ -68,10 +68,10 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['/admin/dashboardadmin']);
 
       }else if(this.authService.responseData.roles.includes("ROLE_MODRATOR")){
-        this.router.navigate(['/admin/dashboardmod']);
+        this.router.navigate(['/moderator/moderatorDashboard']);
 
       }else if(this.authService.responseData.roles.includes("ROLE_DEVELOPER")){
-        this.router.navigate(['/admin/dashboarddev']);
+        this.router.navigate(['/developer/developerDashboard']);
 
       }else if(this.authService.responseData.roles.includes("ROLE_USER")){
         this.router.navigate(['/admin/dashboard']);

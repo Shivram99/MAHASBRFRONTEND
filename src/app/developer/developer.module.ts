@@ -2,13 +2,25 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { DeveloperRoutingModule } from './developer-routing.module';
+import { MenuComponent } from '../component/menu/menu.component';
+import { SubMenuComponent } from '../component/sub-menu/sub-menu.component';
+import { MenuRoleMappingComponent } from '../component/menu-role-mapping/menu-role-mapping.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DeveloperDashboardComponent } from '../component/developer-dashboard/developer-dashboard.component';
 
 
 @NgModule({
-  declarations: [],
+  declarations: [    
+    MenuComponent,
+    SubMenuComponent,
+    MenuRoleMappingComponent,
+    DeveloperDashboardComponent,
+  ],
   imports: [
     CommonModule,
-    DeveloperRoutingModule
+    DeveloperRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
   ]
 })
 export class DeveloperModule { }

@@ -23,9 +23,10 @@ import { DepartmentMstComponent } from './component/department-mst/department-ms
 import { RoleComponent } from './component/role/role.component';
 import { DashboardadminComponent } from './component/dashboardadmin/dashboardadmin.component';
 import { ViewDetailsAdminDashBoardComponent } from './component/view-details-admin-dash-board/view-details-admin-dash-board.component';
-import { PrivateHeaderComponent } from './private-header/private-header.component';
-import { PrivateFooterComponent } from './private-footer/private-footer.component';
-import { PrivateLayoutComponent } from './private-layout/private-layout.component';
+import { PrivateHeaderComponent } from './component/private-header/private-header.component';
+import { PrivateFooterComponent } from './component/private-footer/private-footer.component';
+import { PrivateLayoutComponent } from './component/private-layout/private-layout.component';
+
 //import { ChartfilterComponent } from './component/chartfilter/chartfilter.component';
 
 
@@ -49,6 +50,8 @@ import { PrivateLayoutComponent } from './private-layout/private-layout.componen
     PrivateHeaderComponent,
     PrivateFooterComponent,
     PrivateLayoutComponent,
+  
+
    // ChartfilterComponent,
   ],
   imports: [
