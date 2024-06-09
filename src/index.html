@@ -8,6 +8,7 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 
 
@@ -46,4 +47,18 @@
   <script src="assets/datatables/jquery.min.js"></script>
   <script src="assets/datatables/jquery.dataTables.min.js"></script>
   <script src="assets/datatables/dataTables.bootstrap4.min.js"></script>
+
+  <script>
+    debugger
+    // Define the callback function in the global scope
+    window.handleCaptchaResponse = function(token) {
+      // Token available here, you can send it to your server for validation
+      var captchaToken = document.getElementsByName('g-recaptcha-response')[0].value;
+      console.log('Captcha token:', captchaToken);
+      
+      document.getElementById("recaptchaResponse").value=captchaToken;
+      
+      // You can perform any action with the token here, such as sending it to the server for verification
+    }
+  </script>
 </html>

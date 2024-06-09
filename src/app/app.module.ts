@@ -27,6 +27,7 @@ import { PrivateHeaderComponent } from './component/private-header/private-heade
 import { PrivateFooterComponent } from './component/private-footer/private-footer.component';
 import { PrivateLayoutComponent } from './component/private-layout/private-layout.component';
 
+
 //import { ChartfilterComponent } from './component/chartfilter/chartfilter.component';
 
 
@@ -60,6 +61,7 @@ import { PrivateLayoutComponent } from './component/private-layout/private-layou
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule, 
+    //RecaptchaModule.forRoot(),
    TranslateModule.forRoot({
     loader: {
       provide: TranslateLoader,

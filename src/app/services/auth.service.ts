@@ -24,8 +24,8 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  login(username: string, password: string): Observable<any> {
-    return this.http.post<any>(`${environment.apiUrl}/api/auth/signin`, { username, password })
+  login(username: string, password: string,recaptchaResponse:string): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/api/auth/signin`, { username, password ,recaptchaResponse})
       .pipe(
         tap(response => {
           this.responseData = response;
@@ -64,6 +64,7 @@ export class AuthService {
     localStorage.setItem(this.tokenExpirationKey, tomorrowDate.toString());
     localStorage.setItem(this.roles, roles);
     localStorage.setItem(this.username, username);
+    localStorage.setItem(this.id, id);
 
     localStorage.setItem("isAuthenticated","true");
     this.setIsLoggedIn(true);
@@ -74,6 +75,7 @@ export class AuthService {
     localStorage.removeItem(this.tokenExpirationKey);
     localStorage.removeItem(this.roles);
     localStorage.removeItem(this.username);
+    localStorage.removeItem(this.id);
     localStorage.removeItem("isAuthenticated");
   }
 

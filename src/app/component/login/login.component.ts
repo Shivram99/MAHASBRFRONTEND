@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { AfterViewInit, Component, OnInit, Renderer2, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../../services/login.service';
 import { take } from 'rxjs';
@@ -6,13 +6,14 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LanguageService } from '../../language.service';
+declare var grecaptcha: any;
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit,AfterViewInit {
   appService = inject(LoginService);
 
  // authService = inject(AuthService);
@@ -29,16 +30,18 @@ export class LoginComponent implements OnInit {
   showRegistration = false;
   responseData: any;
 
+  captchaError: boolean = false;
   username: string = '';
   password: string = '';
+  recaptchaResponse:string='';
   errorMessage: string | null = null; // Explicitly define errorMessage property
 
   currentLanguage: string="en";
 
- constructor(private authService: AuthService,private router: Router,private languageService:LanguageService) { }
+ constructor(private authService: AuthService,private router: Router,private languageService:LanguageService,private renderer: Renderer2) { }
 
   ngOnInit(): void {
-
+    this.loadReCaptchaScript();
     this.currentLanguage = this.languageService.getCurrentLanguage();
     this.languageService.getLanguageObservable().subscribe(language => {
       this.currentLanguage = language;
@@ -47,22 +50,35 @@ export class LoginComponent implements OnInit {
     this.loginForm = new FormGroup({
       username: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
+      recaptchaResponse: new FormControl('', [Validators.required]),
     });
 
     this.registrationForm = new FormGroup({
       username: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
+      recaptchaResponse: new FormControl('', [Validators.required]),
     });
   }
 
 
 
   login(): void {
+    debugger;
+   // const tokenInput = document.getElementsByName('g-recaptcha-response')[0] as HTMLInputElement;
+    //const token = tokenInput.value;
+    //this.recaptchaResponse=token;
+    const response = grecaptcha.getResponse();
 
+    this.loginForm.get('recaptchaResponse')?.setValue(response);
+
+    if (response.length === 0) {
+      this.captchaError = true;
+      return;
+    }
     this.authService.logout();
     debugger
-    this.authService.login(this.loginForm.value.username, this.loginForm.value.password).subscribe(() => {
-      
+    this.authService.login(this.loginForm.value.username, this.loginForm.value.password, this.loginForm.value.recaptchaResponse).subscribe(() => {
+      grecaptcha.reset();
       if(this.authService.responseData.roles.includes("ROLE_ADMIN")){
 
         this.router.navigate(['/admin/dashboardadmin']);
@@ -81,6 +97,7 @@ export class LoginComponent implements OnInit {
      
     
     }, (error: HttpErrorResponse) => {
+      grecaptcha.reset();
       if (error.status === 401) {
         this.errorMessage = 'Invalid username or password';
       } else {
@@ -174,4 +191,33 @@ export class LoginComponent implements OnInit {
     localStorage.setItem('roles', this.responseData.roles );
     localStorage.setItem('isAuthenticated', "true");
   }
+
+  handleCaptchaResponse(token: string) {
+    // Token available here, you can send it to your server for validation
+    //console.log('Captcha token:', token);
+    
+    // You can perform any action with the token here, such as sending it to the server for verification
+  }
+
+  ngAfterViewInit() {
+    // Initialize reCAPTCHA in the callback function
+    this.initializeReCaptcha();
+  }
+
+  loadReCaptchaScript() {
+    const script = this.renderer.createElement('script');
+    script.src = 'https://www.google.com/recaptcha/api.js?render=explicit';
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+  }
+
+  initializeReCaptcha() {
+    // Initialize reCAPTCHA when the script is loaded
+    grecaptcha.render('recaptchaElement', {
+      'sitekey': '6Le8N_QpAAAAAJBErDqsniTRWKzU9m45WOcnoi7x',
+      'callback': this.handleCaptchaResponse
+    });
+  }
+
 }

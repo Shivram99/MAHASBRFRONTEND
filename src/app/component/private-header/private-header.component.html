@@ -288,6 +288,23 @@
     </div>
     <div class="menumain-container" id="menumain-container">
       <div class="container menumain">
+
+        <nav>
+          <ul>
+            <ng-container *ngFor="let menu of menus">
+              <li>
+                {{ menu.menuNameEnglish }}
+                <ul>
+                  <ng-container *ngFor="let submenu of subMenus">
+                    <li *ngIf="submenu.menu?.menuId === menu.menuId">{{ submenu.subMenuNameEnglish }}</li>
+                  </ng-container>
+                </ul>
+              </li>
+            </ng-container>
+          </ul>
+        </nav>
+
+
         <nav class="navbar navbar-expand-lg">
           <div class="">
             <!-- <a href="#" class="navbar-brand"> {{'Sitetitle' | translate }}</a> -->
@@ -314,6 +331,20 @@
                 <a href="#" class="nav-item nav-link" routerLink="aboutus">
                   {{ "contactusTitle" | translate }}</a
                 >
+                <a href="#" class="nav-item nav-link" routerLink="developer/subMenu">
+                submenu
+                </a>
+
+                <a href="#" class="nav-item nav-link" routerLink="developer/menuMapping">
+                  Menu Role Mapping
+                  </a>
+
+                  <a href="#" class="nav-item nav-link" routerLink="developer/menu">
+                    Menu
+                    </a>
+
+                
+
                 <a href="#" class="nav-item nav-link" routerLink="/login">
                   {{ "loginTitle" | translate }}</a
                 >

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MstMenu } from '../../model/mst-menu';
-import { MenuService } from '../../menu.service';
+import { MenuService } from '../../services/menu.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({

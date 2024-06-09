@@ -1,1 +1,65 @@
-<p>sub-menu works!</p>
+<!-- mst-sub-menu.component.html -->
+<h2>Mst SubMenu</h2>
+
+
+<table>
+    <thead>
+      <tr>
+        <th>SubMenu ID</th>
+        <th>SubMenu Name (English)</th>
+        <th>Controller Name</th>
+        <th>Link Name</th>
+        <th>SubMenu Name (Marathi)</th>
+        <th>Active</th>
+        <th>Menu ID</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let subMenu of subMenus">
+        <td>{{ subMenu.subMenuId }}</td>
+        <td>{{ subMenu.subMenuNameEnglish }}</td>
+        <td>{{ subMenu.controllerName }}</td>
+        <td>{{ subMenu.linkName }}</td>
+        <td>{{ subMenu.subMenuNameMarathi }}</td>
+        <td>{{ subMenu.isActive }}</td>
+        <td>{{ subMenu.menuId }}</td>
+        <td>
+          <button (click)="getSubMenuById(subMenu.subMenuId)">Edit</button>
+          <button (click)="deleteSubMenu(subMenu.subMenuId)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+
+<!-- Form to create new submenu -->
+<form [formGroup]="subMenuForm" (ngSubmit)="createSubMenu()">
+    <label for="subMenuNameEnglish">Sub Menu Name (English):</label>
+    <input type="text" id="subMenuNameEnglish" formControlName="subMenuNameEnglish" placeholder="Enter Sub Menu Name (English)">
+    <div *ngIf="subMenuForm.get('subMenuNameEnglish')?.invalid && subMenuForm.get('subMenuNameEnglish')?.touched" class="error">
+      Sub Menu Name (English) is required
+    </div>
+  
+  <label for="controllerName">Controller Name:</label>
+  <input type="text" id="controllerName" formControlName="controllerName" placeholder="Enter Controller Name">
+  
+  <label for="linkName">Link Name:</label>
+  <input type="text" id="linkName" formControlName="linkName" placeholder="Enter Link Name">
+  
+  <label for="subMenuNameMarathi">Sub Menu Name (Marathi):</label>
+  <input type="text" id="subMenuNameMarathi" formControlName="subMenuNameMarathi" placeholder="Enter Sub Menu Name (Marathi)">
+  
+  <label for="isActive">Is Active:</label>
+  <input type="text" id="isActive" formControlName="isActive" placeholder="Enter Is Active">
+  
+  <label for="menuId">Menu ID:</label>
+  
+  <select id="menuId" formControlName="menuId">
+    <option [value]="0" selected>Please Select</option>
+      <option *ngFor="let menu of menus" [value]="menu.menuId">{{ menu.menuNameEnglish }}</option>
+  </select>
+  
+  <!-- Add other form controls as needed -->
+  <button type="submit" [disabled]="subMenuForm.invalid">Create</button>
+</form>

@@ -17,6 +17,17 @@
         <div class="form-group">
           <label>{{'Password' | translate }} </label>
           <input formControlName="password" class="form-control" type="password">
+          <input formControlName="recaptchaResponse" id="recaptchaResponse" class="form-control" type="hidden">
+        </div>
+        <div class="form-group" >
+        <div id="recaptchaElement">
+      </div>
+
+       <!--   <div class="g-recaptcha"  data-sitekey="6Le8N_QpAAAAAJBErDqsniTRWKzU9m45WOcnoi7x"  ></div>-->
+
+          
+            <div *ngIf="captchaError" onclass="error">Recaptcha not verified.</div>
+
         </div>
       </div>
       <div class="card-footer text-center">

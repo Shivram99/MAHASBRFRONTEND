@@ -19,7 +19,7 @@ console.log("properly loaded")
   imports: [
     CommonModule,
     AdminRoutingModule,
-    FormsModule
+    FormsModule,
   ]
 })
 export class AdminModule { }
