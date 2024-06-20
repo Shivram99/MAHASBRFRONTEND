@@ -6,6 +6,8 @@ import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { DialogService } from '../../services/dashboard/dialog.service';
+import { DetailsPageDTO } from '../../interface/details-page-dto';
+import { Page } from '../../interface/page';
 
 @Component({
   selector: 'app-dashboardadmin',
@@ -13,43 +15,31 @@ import { DialogService } from '../../services/dashboard/dialog.service';
   styleUrl: './dashboardadmin.component.css'
 })
 export class DashboardadminComponent  { 
-  adminDashBoardfrm: FormGroup;
-  selectedDistrict:any;
+ 
   districts: any[]=[] ;
   talukas:any[]=[];
-  
-  constructor(private fb: FormBuilder,private dataService: DataService,private dialogService: DialogService) {
-    this.adminDashBoardfrm = this.fb.group({
-      registerDate: ['', [Validators.required]]
-    });
-  }
+  tableData: any[] = [];
+  currentPage: number = 1;
+  totalPages: number = 1;
+  pageSize: number = 50;
+  pages: number[] = [];
+  BNR:any;
+  tableData1: DetailsPageDTO[] = [];
+  totalElements: number=0;
 
-  
+  filters = {
+    registerDateFrom: '',
+    registerDateTo: '',
+    district: '',
+    talukas: ''
+  };
 
-
-  tableData = [
-    { serialNumber: 1, departmentName: 'Department A', districtBRN: '123456', remark: 'Some remark' },
-    { serialNumber: 2, departmentName: 'Department B', districtBRN: '789012', remark: 'Another remark' },
-    { serialNumber: 3, departmentName: 'Department C', districtBRN: '345678', remark: 'Yet another remark' }
-    // Add more data as needed
-  ];
-
-
-
-  
+  constructor(private fb: FormBuilder,private dataService: DataService,private dialogService: DialogService) { }
   ngOnInit(): void {
     this.fetchDistricts();
-      this.adminDashBoardfrm = this.fb.group({
-        registerDateFrom: [''],
-        registerDateTo: [''],
-        district: ['11111'],
-        BNR: [''],
-        talukas: ['']
-    
-  });
-}
-
-
+   this.getAlldata();
+  }
+  // load all districts 
   fetchDistricts(): void {
     this.dataService.getAllDistricts()
       .subscribe(districts1 => {
@@ -61,39 +51,96 @@ export class DashboardadminComponent  {
 
       });
   }
+  //Call on chage the district
   onChangeFunction(event: any) {
     const selectedValue = event.target.value;
-  this.fetchTalukas(selectedValue);
-    
-  }
-  fetchTalukas(selectedValue:number): void {
-    this.dataService.getAllTaluka(selectedValue)
-      .subscribe(talukas1 => {
-        this.talukas = talukas1.map(talukas => ({
-          censusTalukaCode: talukas.censusTalukaCode,
-          talukaName: talukas.talukaName,
-          censusDistrictCode: talukas.censusDistrictCode
-        }));
-
+    this.fetchTalukas(selectedValue);
+    this.applyFilters();  
+    }
+    // load the talukas 
+    fetchTalukas(selectedValue:number): void {
+      this.dataService.getAllTaluka(selectedValue)
+        .subscribe(talukas1 => {
+          this.talukas = talukas1.map(talukas => ({
+            censusTalukaCode: talukas.censusTalukaCode,
+            talukaName: talukas.talukaName,
+            censusDistrictCode: talukas.censusDistrictCode
+          }));
+  
+        });
+    }
+  // load the initial data in dashboard
+  getAlldata(){
+      this.dataService.getDashBoardData(this.currentPage - 1, this.pageSize).subscribe((response: Page<DetailsPageDTO>) => {
+        this.totalPages = response.totalPages;
+        this.totalElements = response.totalElements;
+        this.tableData1 = response.content;
+      },(error) => {
+       // console.error('Error fetching BRN details', error);
+        this.tableData1 = [];
+        this.totalElements = 0;
       });
+    }
+
+  onBRNInput(event: Event) {
+    const input = (event.target as HTMLInputElement).value;
+    this.BNR = input;
   }
-  onChangeFunctionfrm(): void {
-    this.onSubmit();
+  //load the BRN number details
+  searchBRN() {
+    if (this.BNR) {
+      this.dataService.getBRNDetails(this.BNR).subscribe(
+        (response: Page<DetailsPageDTO>) => {
+          this.totalPages = response.totalPages;
+          this.totalElements = response.totalElements;
+          this.tableData1 = response.content;
+          console.log(this.tableData1);
+        },
+        (error) => {
+          this.tableData1 = [];
+          this.totalElements = 0;
+        }
+      );
+    }
   }
 
-  onSubmit() {
-    const formData = this.adminDashBoardfrm.value;
-    this.dataService.getDashBoardData(formData).subscribe({
-      next: (response) => {
-        // Handle the response here
-        console.log(response);
+applyFilters() {
+    this.dataService.fetchDataWithFilters(this.filters,this.currentPage,this.pageSize).subscribe(
+      (response: Page<DetailsPageDTO>) => {
+        this.totalPages = response.totalPages;
+        this.totalElements = response.totalElements;
+        this.tableData1 = response.content;
+        console.log(this.tableData1);
       },
-      error: (error) => {
-        // Handle errors here
-        console.error('Error occurred:', error);
+      (error) => {
+        console.log("console.log(this.tableData1); "+this.tableData1);
+        this.tableData1 = [];
+        this.totalElements = 0;
       }
-    });
+    );
   }
+  
+  
+  
+
+  
+  //Load the pagination details
+  fetchData(pagedata:any[]) {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.tableData = pagedata.slice(startIndex, endIndex);
+    this.totalPages = Math.ceil(pagedata.length / this.pageSize);
+    this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  
+
+
+  
+  
+
+  
+ 
   generateExcel(data:any[]) {
     const data1 = [];
 
@@ -156,6 +203,50 @@ export class DashboardadminComponent  {
     this.dialogService.openDialog();
   }
 
+
+
+//  for the pagination 
+onPageChange(page: number) {
+  this.currentPage = page;
+}
+
+nextPage() {
+  if (this.currentPage < this.totalPages) {
+    this.onPageChange(this.currentPage + 1);
+  }
+}
+
+previousPage() {
+  if (this.currentPage > 1) {
+    this.onPageChange(this.currentPage - 1);
+  }
+}
+
+firstPage() {
+  if (this.currentPage !== 1) {
+    this.onPageChange(1);
+  }
+}
+
+lastPage() {
+  if (this.currentPage !== this.totalPages) {
+    this.onPageChange(this.totalPages);
+  }
+}
+
+getDisplayedPages(): number[] {
+  const maxPagesToShow = 9; // Change this number to adjust how many pages to show
+  const halfMaxPages = Math.floor(maxPagesToShow / 2);
+
+  let startPage = Math.max(1, this.currentPage - halfMaxPages);
+  let endPage = Math.min(this.totalPages, startPage + maxPagesToShow - 1);
+
+  if (endPage - startPage + 1 < maxPagesToShow) {
+    startPage = Math.max(1, endPage - maxPagesToShow + 1);
+  }
+
+  return Array.from({length: (endPage - startPage + 1)}, (_, i) => startPage + i);
+}
 }
   
 
