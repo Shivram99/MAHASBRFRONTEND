@@ -26,6 +26,13 @@ import { ViewDetailsAdminDashBoardComponent } from './component/view-details-adm
 import { PrivateHeaderComponent } from './component/private-header/private-header.component';
 import { PrivateFooterComponent } from './component/private-footer/private-footer.component';
 import { PrivateLayoutComponent } from './component/private-layout/private-layout.component';
+import { TopbarComponent } from './component/control/topbar/topbar.component';
+import { NavComponent } from './component/control/nav/nav.component';
+import { CaroselComponent } from './component/control/carosel/carosel.component';
+import { NewsTickerComponent } from './component/control/news-ticker/news-ticker.component';
+import { AwardsComponent } from './component/awards/awards.component';
+import { CirclularComponent } from './component/circlular/circlular.component';
+import { FeedbackComponent } from './component/feedback/feedback.component';
 
 
 //import { ChartfilterComponent } from './component/chartfilter/chartfilter.component';
@@ -51,7 +58,14 @@ import { PrivateLayoutComponent } from './component/private-layout/private-layou
     PrivateHeaderComponent,
     PrivateFooterComponent,
     PrivateLayoutComponent,
-  
+    TopbarComponent,
+    NavComponent,
+    CaroselComponent,
+    NewsTickerComponent,
+    AwardsComponent,
+    CirclularComponent,
+    FeedbackComponent
+    
 
    // ChartfilterComponent,
   ],

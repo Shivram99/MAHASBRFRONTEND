@@ -1,0 +1,15 @@
+ul.accessibility-menu li { margin-right: 4px; display: inline-block; }
+ul.accessibility-menu li a { padding: 5px 6px; color: #fff; display: block; }
+ul.accessibility-menu li a:hover { color: #f88203;}
+ul.accessibility-menu li a.text-black { color: #000 !important;}
+.btn-org {
+    background: #f88203;
+    border-radius: 0;
+    color: #fff;
+}
+
+.btn-org:hover {
+    background: #2b64df;
+}
+.search input { padding-left: 10px; border: 0px solid;}
+

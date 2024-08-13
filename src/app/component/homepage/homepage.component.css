@@ -1,0 +1,27 @@
+.homeDesign {
+    background: url(../../../assets/images/bg_wecome.jpg) repeat;
+    padding: 8rem 0 3rem;
+    margin-top: -7rem;
+}
+
+.footerSidebar { background: url(../../../assets/images/Footer_sidebar.jpg) no-repeat top center; background-size: cover;}
+
+p{
+    font-size: 1.1rem;
+}
+
+h1 {
+    color: #a5f3fc;
+    text-transform: capitalize;
+
+}
+.btn-round-org {
+    background: #f78400;
+    color: #fff;
+    padding: 15px 25px;
+    border: 1px solid #fff;
+    border-radius: 100px;
+}
+.btn-round-org:hover {
+    background: #140a9e;
+}

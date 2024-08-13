@@ -1,0 +1,80 @@
+
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+
+:root {
+    --darkblue: #004056;
+}
+.source-sans-3-400 {
+    font-family: "Source Sans 3", sans-serif;
+    font-optical-sizing: auto;
+    font-weight:400;
+    font-style: normal;
+  }
+
+  
+
+body {
+    font-size: 0.9rem !important;
+    font-family: "Source Sans 3", sans-serif;
+}
+
+.darkblue {
+    background-color: var(--darkblue);
+}
+
+
+.imgHeightNew .carousel-img {
+    height: 160px !important;
+    object-fit: cover;
+    width:  auto !important;
+    margin: 0 auto;
+}
+.imgHeightNew .top-1\/2{
+    top: 40% !important;
+
+}
+
+.footerLogo .owl-carousel .owl-item img {
+    width: 150px !important; 
+  }
+  .linkorg {
+    color: #f88203;
+    text-decoration: none;
+}
+
+.darkblue a { text-decoration: none;}
+
+  .footerLogo .owl-carousel a { display: block; text-align: center;}
+
+  .navbar {
+    margin-bottom: 0;
+    border-radius: 0;
+  }
+  
+  /* Add a gray background color and some padding to the footer */
+  footer {
+    background-color: #f2f2f2;
+    padding: 25px;
+  }
+  
+.carousel-inner img {
+    width: 100%; /* Set width to 100% */
+    margin: auto;
+    min-height:180px;
+}
+
+/* Hide the carousel text when the screen is less than 600 pixels wide */
+@media (max-width: 600px) {
+  .carousel-caption {
+    display: none; 
+  }
+}
+
+
+  @media (min-width:1600px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+        max-width:1536px !important;
+    }
+}
+

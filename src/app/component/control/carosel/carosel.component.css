@@ -1,0 +1,19 @@
+.carousel-container {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.carousel {
+  display: flex;
+  transition: transform 0.5s ease; /* Smooth transition for slide effect */
+}
+
+.carousel-item {
+  flex: 0 0 100%; /* Ensure each slide takes full width */
+}
+
+.carousel-item img {
+  width: 100%;
+  height: auto;
+}

@@ -1,0 +1,17 @@
+<div class="d-flex ticker-bg mb-5">
+    <div class="tickerHead">What's News</div>
+    <div class="ticker-container d-flex">
+      
+        <div class="ticker-wrapper" [style.transform]="tickerTransform" [style.transition]="isTransitioning ? 'transform 0.5s ease' : 'none'">
+          <div class="ticker-content" *ngFor="let item of displayItems">
+            {{ item }}
+          </div>
+        </div>
+      </div>
+      <div class="ticker-controls d-flex">
+        <button class="btn btn-outline-light" (click)="prevItem()">Previous</button>
+        <button class="btn btn-outline-light" (click)="togglePlayStop()">{{ isPlaying ? 'Stop' : 'Play' }}</button>
+        <button class="btn btn-outline-light" (click)="nextItem()">Next</button>
+      </div>
+      
+</div>

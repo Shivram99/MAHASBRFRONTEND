@@ -1,0 +1,42 @@
+.arrowUnique li {
+    padding-left: 30px;
+    background: url(../../../assets/images/arrowUnique.png) no-repeat;
+    padding-bottom: 5px;
+}
+
+.arrowUnique li a {
+    color: #232323;
+}
+
+
+.roundedUniqContent {
+    border-radius:0px  0px 25px 25px ;
+    padding: 15px;
+    border:1px solid #fa7304;
+}
+
+
+.roundedUniqContent ul  { padding: 0; }
+.roundedUniqContent ul li {
+    list-style: none;
+    padding: 10px 0;
+    padding-left: 30px;
+    background-position: 0px 10px;
+}
+
+.roundedUniqContent ul li a {
+     text-decoration: none;
+}
+
+
+
+.arrowUnique li a:hover { color: #fa7304;}
+h2 {
+    color: #fff;
+    font-size: 20px;
+    text-transform: uppercase;
+    background: #f78400;
+    margin: 0;
+    padding: 15px;
+    border-radius:25px  0px 0px 0px ;
+}
