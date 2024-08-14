@@ -33,7 +33,8 @@ import { NewsTickerComponent } from './component/control/news-ticker/news-ticker
 import { AwardsComponent } from './component/awards/awards.component';
 import { CirclularComponent } from './component/circlular/circlular.component';
 import { FeedbackComponent } from './component/feedback/feedback.component';
-
+import { OwlCorosalComponent } from './component/control/owl-corosal/owl-corosal.component';
+import { FaqComponent } from './component/faq/faq.component';
 
 //import { ChartfilterComponent } from './component/chartfilter/chartfilter.component';
 
@@ -64,7 +65,9 @@ import { FeedbackComponent } from './component/feedback/feedback.component';
     NewsTickerComponent,
     AwardsComponent,
     CirclularComponent,
-    FeedbackComponent
+    FeedbackComponent,
+    OwlCorosalComponent,
+    FaqComponent
     
 
    // ChartfilterComponent,

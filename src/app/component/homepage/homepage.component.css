@@ -25,3 +25,7 @@ h1 {
 .btn-round-org:hover {
     background: #140a9e;
 }
+
+.bglightblue {
+    background: #fff !important;
+}

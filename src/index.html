@@ -25,7 +25,29 @@
   <script src="assets/datatables/jquery.min.js"></script>
   <script src="assets/datatables/jquery.dataTables.min.js"></script>
   <script src="assets/datatables/dataTables.bootstrap4.min.js"></script>
+<script>
+ $(document).ready(function(){
+  $('.owl-carousel').owlCarousel({
+    loop: true,
+    margin: 30,
+    nav: false,
+    autoplay: true,
+    dots: false,
+    responsive: {
+      0: {
+        items: 1
+      },
+      600: {
+        items: 5
+      },
+      1000: {
+        items: 5
+      }
+    }
+  });
+});
 
+</script>
   <script>
     debugger
     // Define the callback function in the global scope

@@ -7,16 +7,17 @@ background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(215,230,245,1) 10
     font-size: 1.6rem;
     text-transform: uppercase;
     color: var(--darkblue);
-    white-space: nowrap;
     text-align: center;
     margin-left: 25px;
+    width: 450px;
 }
 
 .logo h1 span {
     font-size: 0.9rem;
     color: #000;
-    font-weight: 500;
+    font-weight: 400;
     display: block;
+    text-transform: capitalize;
 }
 
 h1 {

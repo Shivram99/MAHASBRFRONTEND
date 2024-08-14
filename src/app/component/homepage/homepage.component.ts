@@ -16,5 +16,12 @@ export class HomepageComponent  implements OnInit{
       // Update homepage content based on the new language
     });
   }
+
+  images2 = [
+    'assets/images/slide/img.png',
+    'assets/images/slide/img2.png',
+    'assets/images/slide/img3.png'
+  ];
+  
 }
   

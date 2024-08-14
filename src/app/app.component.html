@@ -1,6 +1,9 @@
 <app-private-header *ngIf="isLoggedIn"></app-private-header>
 <app-header *ngIf="!isLoggedIn"></app-header>
-<router-outlet ></router-outlet>
+
+    <router-outlet ></router-outlet>  
+
+
 <app-footer *ngIf="!isLoggedIn"></app-footer>
 <app-private-footer *ngIf="isLoggedIn"></app-private-footer>
 

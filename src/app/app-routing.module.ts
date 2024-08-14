@@ -11,12 +11,15 @@ import { ChangePasswordComponent } from './component/change-password/change-pass
 import { RegisterUserComponent } from './component/register-user/register-user.component';
 import { ModeratorModule} from './moderator/moderator.module';
 import { DeveloperModule } from './developer/developer.module'; 
+import { FaqComponent } from './component/faq/faq.component';
+
 
 const routes: Routes = [
   {path:"",component:HomepageComponent},
   {path:"aboutus",component:AboutusComponent},
   {path:"contactus",component:ContactusComponent},
   {path:"login",component:LoginComponent},
+  {path:"faq",component:FaqComponent},
   {path:"unauthorized",component:UnauthorizedComponent},
   {path:"changePassword",component:ChangePasswordComponent},
   { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },

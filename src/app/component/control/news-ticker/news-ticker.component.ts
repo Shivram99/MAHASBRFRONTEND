@@ -8,10 +8,8 @@ import { isPlatformBrowser } from '@angular/common';
 })
 export class NewsTickerComponent implements OnInit, OnDestroy {
   newsItems: string[] = [
-    'Breaking News: Angular is awesome!',
-    'Latest Update: Learn Angular with hands-on projects.',
-    'Headline: TypeScript makes JavaScript safer.',
-    'Breaking: Web development trends for 2024.'
+    'Cabinet Decisions 20/02/2024 (Meeting No.63)',
+    'Cabinet Decisions 20/02/2024 (Meeting No.63)'
   ];
 
   displayItems: string[] = [];  // Array to handle duplicated items for smooth looping

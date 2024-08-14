@@ -57,14 +57,10 @@ export class HeaderComponent  implements OnInit{
     this.translate.use(lang);
   }
 
-  images2 = [
-    'assets/images/slide/img.png',
-    'assets/images/slide/img2.png',
-    'assets/images/slide/img3.png'
-  ];
+
   
 
-  mh_logo : string = 'assets/images/mh_logo.png';
+  mh_logo : string = 'assets/images/DES_Logo.png';
   
 
 }
