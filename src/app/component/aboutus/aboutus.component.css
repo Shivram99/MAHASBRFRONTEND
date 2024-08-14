@@ -24,10 +24,6 @@ button i {
     display: inline-block;
     margin-right: 15px;
 }
-.profileDetails {
-    display: inline-block;
-    vertical-align: top;
-}
 
 .profiles {
     padding: 0;
@@ -38,6 +34,12 @@ button i {
     font-weight: 400;
     margin-bottom: 0px;
 }
+.profileDetails {
+    display: inline-block;
+    vertical-align: top;
+}
+
+
 .profileDetails span {
     color: #000;
 }

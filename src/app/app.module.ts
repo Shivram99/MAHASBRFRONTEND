@@ -35,6 +35,8 @@ import { CirclularComponent } from './component/circlular/circlular.component';
 import { FeedbackComponent } from './component/feedback/feedback.component';
 import { OwlCorosalComponent } from './component/control/owl-corosal/owl-corosal.component';
 import { FaqComponent } from './component/faq/faq.component';
+import { ImportantDocumentComponent } from './component/important-document/important-document.component';
+import { SearchBrnComponent } from './component/search-brn/search-brn.component';
 
 //import { ChartfilterComponent } from './component/chartfilter/chartfilter.component';
 
@@ -67,7 +69,9 @@ import { FaqComponent } from './component/faq/faq.component';
     CirclularComponent,
     FeedbackComponent,
     OwlCorosalComponent,
-    FaqComponent
+    FaqComponent,
+    ImportantDocumentComponent,
+    SearchBrnComponent
     
 
    // ChartfilterComponent,
