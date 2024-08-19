@@ -2,4 +2,22 @@
     border: 1px solid #ddd;
     padding: 20px 15px !important;
     text-align: center;
+    margin-bottom: 15px;
+}
+
+.dashboardTabs  #v-pills-tab {
+    background: #2676C3;
+    width: 450px;
+    padding: 30px;
+}
+
+.dashboardTabs  #v-pills-tab button {
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+border: 1px solid #48A5FF;
+margin-bottom: 5px;
+}
+.dashboardTabs  #v-pills-tab button.active {
+    background: #004056;
 }

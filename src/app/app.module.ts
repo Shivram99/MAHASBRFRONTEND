@@ -37,6 +37,7 @@ import { OwlCorosalComponent } from './component/control/owl-corosal/owl-corosal
 import { FaqComponent } from './component/faq/faq.component';
 import { ImportantDocumentComponent } from './component/important-document/important-document.component';
 import { SearchBrnComponent } from './component/search-brn/search-brn.component';
+import { DashboardNavComponent } from './component/dashboard-nav/dashboard-nav.component';
 
 //import { ChartfilterComponent } from './component/chartfilter/chartfilter.component';
 
@@ -71,7 +72,8 @@ import { SearchBrnComponent } from './component/search-brn/search-brn.component'
     OwlCorosalComponent,
     FaqComponent,
     ImportantDocumentComponent,
-    SearchBrnComponent
+    SearchBrnComponent,
+    DashboardNavComponent
     
 
    // ChartfilterComponent,

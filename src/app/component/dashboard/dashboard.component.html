@@ -1,4 +1,92 @@
-<p>dashboard works!</p>
+
+<div class="bglightblue">
+  <div class="container">
+    <div class="content">
+      <div class="d-md-flex justify-content-between border-b-org p-3">
+    <h1>Dashboard</h1>
+    <nav aria-label="breadcrumb">
+     
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+      </ol>
+    </nav>
+  </div>
+<div class="p-3">
+
+  <div class="d-flex align-items-start dashboardTabs">
+    <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+      <button class="nav-link active" id="v-Pills-dashboard-tab" data-bs-toggle="pill" data-bs-target="#v-Pills-dashboard" type="button" role="tab" aria-controls="v-Pills-dashboard" aria-selected="true">Dashboard</button>
+      <button class="nav-link" id="v-pills-acts-tab" data-bs-toggle="pill" data-bs-target="#v-pills-acts" type="button" role="tab" aria-controls="v-pills-acts" aria-selected="false">Acts/Registering Authorities</button>
+  
+      <button class="nav-link" id="v-pills-regions-tab" data-bs-toggle="pill" data-bs-target="#v-pills-regions" type="button" role="tab" aria-controls="v-pills-regions" aria-selected="false">Regions</button>
+      <button class="nav-link" id="v-pills-districts-tab" data-bs-toggle="pill" data-bs-target="#v-pills-districts" type="button" role="tab" aria-controls="v-pills-districts" aria-selected="false">Districts</button>
+      <button class="nav-link" id="v-pills-timey-tab" data-bs-toggle="pill" data-bs-target="#v-pills-timey" type="button" role="tab" aria-controls="v-pills-timey" aria-selected="false">Time (Year)</button>
+      <button class="nav-link" id="v-pills-timeq-tab" data-bs-toggle="pill" data-bs-target="#v-pills-timeq" type="button" role="tab" aria-controls="v-pills-timeq" aria-selected="false">Time (Quarters)</button>
+      <button class="nav-link" id="v-pills-industry-tab" data-bs-toggle="pill" data-bs-target="#v-pills-industry" type="button" role="tab" aria-controls="v-pills-industry" aria-selected="false">Industry/ NIC Classification</button>
+    </div>
+    <div class="tab-content" id="v-pills-tabContent">
+      <div class="tab-pane fade show active" id="v-Pills-dashboard" role="tabpanel" aria-labelledby="v-Pills-dashboard-tab" tabindex="0">
+
+        <app-chartfilter (childEvent)="handleChildEvent($event)"></app-chartfilter>
+        <!-- <app-dashboard-bar-chart [userType]="user" [dashboarddata]="data"></app-dashboard-bar-chart>
+        <app-dashboard-bar-chart [userType]="user" [dashboarddata]="dashboardData"></app-dashboard-bar-chart> -->
+        <div class="row">
+            <div class="col-md-6 ">
+              <div class="blk" style="display: block">
+                <app-dashboard-bar-chart [dashboarddata]="data" [chartType]="chartname"></app-dashboard-bar-chart>
+             
+              <div class="lable-main">
+                <label class="text-center"
+                  >Graphical representation of the dashboard-district and time wise</label
+                >
+              </div>
+            </div>
+            </div>
+            <div class="col-md-6 ">
+                <div class="blk" style="display: block">
+                <app-dashboard-bar-chart [userType]="user" [dashboarddata]="dashboardData2"></app-dashboard-bar-chart>
+             
+              <div class="lable-main">
+                <label class="text-center"
+                  >Graphical representation of the dashboard-district and time wise</label
+                >
+              </div>
+            </div>
+            </div>
+            <div class="col-md-6 ">
+                <div class="blk" style="display: block">
+                    <app-dashboard-bar-chart [userType]="user" [dashboarddata]="dashboardData"></app-dashboard-bar-chart>
+            
+                  <div class="lable-main">
+                    <label class="text-center"
+                      >Graphical representation of the dashboard-district and time wise</label
+                    >
+                  </div>
+                </div>
+            </div>
+            <div class="col-md-6 ">
+              <div class="blk">
+              4
+            </div></div>
+          </div>
+
+      </div>
+      <div class="tab-pane fade" id="v-pills-acts" role="tabpanel" aria-labelledby="v-pills-acts-tab" tabindex="0">...</div>
+      <div class="tab-pane fade" id="v-pills-regions" role="tabpanel" aria-labelledby="v-pills-regions-tab" tabindex="0">...</div>
+      <div class="tab-pane fade" id="v-pills-districts" role="tabpanel" aria-labelledby="v-pills-districts-tab" tabindex="0">...</div>
+      <div class="tab-pane fade" id="v-pills-timey" role="tabpanel" aria-labelledby="v-pills-timey-tab" tabindex="0">timey...</div>
+      <div class="tab-pane fade" id="v-pills-timeq" role="tabpanel" aria-labelledby="v-pills-timeq-tab" tabindex="0">timeq...</div>
+      <div class="tab-pane fade" id="v-pills-industry" role="tabpanel" aria-labelledby="v-pills-industry-tab" tabindex="0">industry...</div>
+    </div>
+  </div>
+
+ 
+
+ 
+  </div>
+  </div>
+  </div>
 
 
 <!-- <button (click)="fetchUnsecure()" mat-raised-button>Fetch unsecure</button>
@@ -8,43 +96,5 @@
 <button (click)="fetchSecureAdmin()" mat-raised-button>Fetch data for admin</button>
 <div>{{secureAdmin}}</div> -->
 
-  
-<div class="container">
-    <app-chartfilter (childEvent)="handleChildEvent($event)"></app-chartfilter>
-    <!-- <app-dashboard-bar-chart [userType]="user" [dashboarddata]="data"></app-dashboard-bar-chart>
-    <app-dashboard-bar-chart [userType]="user" [dashboarddata]="dashboardData"></app-dashboard-bar-chart> -->
-    <div class="row">
-        <div class="col-md-6 blk">
-          <div style="display: block">
-            <app-dashboard-bar-chart [dashboarddata]="data" [chartType]="chartname"></app-dashboard-bar-chart>
-          </div>
-          <div class="lable-main">
-            <label
-              >Graphical representation of the dashboard-district and time wise</label
-            >
-          </div>
-        </div>
-        <div class="col-md-6 blk">
-            <div style="display: block">
-            <app-dashboard-bar-chart [userType]="user" [dashboarddata]="dashboardData2"></app-dashboard-bar-chart>
-          </div>
-          <div class="lable-main">
-            <label
-              >Graphical representation of the dashboard-district and time wise</label
-            >
-          </div>
-        </div>
-        <div class="col-md-6 blk">
-            <div style="display: block">
-                <app-dashboard-bar-chart [userType]="user" [dashboarddata]="dashboardData"></app-dashboard-bar-chart>
-              </div>
-              <div class="lable-main">
-                <label
-                  >Graphical representation of the dashboard-district and time wise</label
-                >
-              </div>
-        </div>
-        <div class="col-md-6 blk">4</div>
-      </div>
-    
- </div>
+
+</div>

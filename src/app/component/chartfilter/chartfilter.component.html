@@ -1,6 +1,8 @@
 <div>
   <label>Select Count Type:</label>
-  <div *ngFor="let option of countOptions">
+  <div class="d-flex gap-3">
+  <div class="" *ngFor="let option of countOptions">
+    <label>
     <input
       type="radio"
       [value]="option"
@@ -8,7 +10,9 @@
       (change)="sendDataToParent()"
     />
     {{ option }}
+  </label>
   </div>
+</div>
 </div>
 <br />
 <div>
@@ -17,7 +21,7 @@
       <div class="col-md-4">
         <label for="region">Acts/Registering Authorities:</label><br />
         <select
-          class="form-control"
+          class="form-select"
           id="region"
           name="act"
           [(ngModel)]="registration.registration_act"
@@ -37,7 +41,7 @@
       <div class="col-md-4">
         <label for="region">Region:</label><br />
         <select
-          class="form-control"
+          class="form-select"
           id="region"
           name="region"
           [(ngModel)]="registration.region"
@@ -59,7 +63,7 @@
       <div class="col-md-4">
         <label for="district">District:</label><br />
         <select
-          class="form-control"
+          class="form-select"
           id="district"
           name="district"
           [(ngModel)]="registration.district"
@@ -77,7 +81,7 @@
       <div class="col-md-4">
         <label for="year">Year:</label><br />
         <select
-          class="form-control"
+          class="form-select"
           id="year"
           name="year"
           [(ngModel)]="registration.year"
@@ -91,7 +95,7 @@
       <div class="col-md-4">
         <label for="quarter">Quarter:</label><br />
         <select
-          class="form-control"
+          class="form-select"
           id="quarter"
           name="quarter"
           [(ngModel)]="registration.quarter"
@@ -106,7 +110,7 @@
       <div class="col-md-4">
         <label for="industry">Industry/NIC Classification:</label><br />
         <select
-          class="form-control"
+          class="form-select"
           id="industry"
           name="industry"
           [(ngModel)]="registration.industry"
