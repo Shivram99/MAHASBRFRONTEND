@@ -6,6 +6,14 @@
         <a routerLink="/contact" class="">Search BRN</a>
         <a routerLink="/contact" class="">Dashboard</a>
         <a routerLink="/faq" class="">FAQ</a>
- 
+        <!-- <div *ngFor="let item of menuItems" class="menu-item">
+            <a [routerLink]="item.route" class="">{{ item.name }}</a>
+        
+            <div *ngIf="item.submenus && item.submenus.length > 0" class="submenu">
+              <div *ngFor="let submenu of item.submenus" class="submenu-item">
+                <a [routerLink]="submenu.route" class="">{{ submenu.name }}</a>
+              </div>
+            </div>
+          </div> -->
   </nav>
   

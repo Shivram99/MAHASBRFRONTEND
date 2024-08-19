@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from './services/auth.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +11,7 @@ export class AppComponent implements OnInit {
   
   title = 'MahaSbrFrontend';
   isLoggedIn: boolean = false;
-
+  private loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   constructor(private authService: AuthService) {}
 
   ngOnInit() {

@@ -19,8 +19,8 @@ export class AuthService {
 
   responseData: any;
 
-
-  private isLoggedInSubject = new BehaviorSubject<boolean>(false);
+  private isLoggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  //private isLoggedInSubject = new BehaviorSubject<boolean>(false);
 
   constructor(private http: HttpClient) { }
 
