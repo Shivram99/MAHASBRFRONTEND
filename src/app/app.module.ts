@@ -38,6 +38,10 @@ import { FaqComponent } from './component/faq/faq.component';
 import { ImportantDocumentComponent } from './component/important-document/important-document.component';
 import { SearchBrnComponent } from './component/search-brn/search-brn.component';
 import { DashboardNavComponent } from './component/dashboard-nav/dashboard-nav.component';
+import { CitizenDashboardComponent } from './component/citizen-dashboard/citizen-dashboard.component';
+import { DetailsComponent } from './component/details/details.component';
+import { UploadCsvComponent } from './component/upload-csv/upload-csv.component';
+import { CircularComponent } from './component/circular/circular.component';
 
 //import { ChartfilterComponent } from './component/chartfilter/chartfilter.component';
 
@@ -73,7 +77,11 @@ import { DashboardNavComponent } from './component/dashboard-nav/dashboard-nav.c
     FaqComponent,
     ImportantDocumentComponent,
     SearchBrnComponent,
-    DashboardNavComponent
+    DashboardNavComponent,
+    CitizenDashboardComponent,
+    DetailsComponent,
+    UploadCsvComponent,
+    CircularComponent
     
 
    // ChartfilterComponent,

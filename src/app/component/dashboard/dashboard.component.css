@@ -11,13 +11,22 @@
     padding: 30px;
 }
 
+
+
 .dashboardTabs  #v-pills-tab button {
     color: #fff;
     text-decoration: none;
     border-radius: 5px;
 border: 1px solid #48A5FF;
 margin-bottom: 5px;
+text-align: left;
 }
-.dashboardTabs  #v-pills-tab button.active {
+.dashboardTabs  #v-pills-tab button.active, .dashboardTabs  #v-pills-tab button:hover {
     background: #004056;
 }
+
+.dashboardTabs  #v-pills-tab button img, 
+.dashboardTabs  #v-pills-tab button svg {
+    margin-right: 10px ;
+}
+ 

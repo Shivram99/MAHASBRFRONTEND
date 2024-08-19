@@ -14,6 +14,10 @@ import { DeveloperModule } from './developer/developer.module';
 import { FaqComponent } from './component/faq/faq.component';
 import { ImportantDocumentComponent } from './component/important-document/important-document.component';
 import { SearchBrnComponent } from './component/search-brn/search-brn.component';
+import { FeedbackComponent } from './component/feedback/feedback.component';
+import { CirclularComponent } from './component/circlular/circlular.component';
+import { CircularComponent } from './component/circular/circular.component';
+import { CitizenDashboardComponent } from './component/citizen-dashboard/citizen-dashboard.component';
 
 
 const routes: Routes = [
@@ -23,7 +27,10 @@ const routes: Routes = [
   {path:"login",component:LoginComponent},
   {path:"faq",component:FaqComponent},
   {path:"important-document",component:ImportantDocumentComponent},
+  {path:"circular",component:CircularComponent},
   {path:"dashboard",component:DashboardComponent},
+  {path:"citizen-dashboard",component:CitizenDashboardComponent},
+  {path:"feedback",component:FeedbackComponent},
   {path:"search-brn",component:SearchBrnComponent},
   {path:"unauthorized",component:UnauthorizedComponent},
   {path:"changePassword",component:ChangePasswordComponent},
