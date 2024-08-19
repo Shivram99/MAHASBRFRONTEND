@@ -63,7 +63,6 @@ export class LoginComponent implements OnInit,AfterViewInit {
 
 
   login(): void {
-    debugger;
    // const tokenInput = document.getElementsByName('g-recaptcha-response')[0] as HTMLInputElement;
     //const token = tokenInput.value;
     //this.recaptchaResponse=token;
@@ -76,9 +75,10 @@ export class LoginComponent implements OnInit,AfterViewInit {
       return;
     }
     this.authService.logout();
-    debugger
+    
     this.authService.login(this.loginForm.value.username, this.loginForm.value.password, this.loginForm.value.recaptchaResponse).subscribe(() => {
       grecaptcha.reset();
+     
       if(this.authService.responseData.roles.includes("ROLE_ADMIN")){
 
         this.router.navigate(['/admin/dashboardadmin']);
