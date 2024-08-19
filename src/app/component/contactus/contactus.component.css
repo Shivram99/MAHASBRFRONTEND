@@ -1,0 +1,100 @@
+h1{margin: 0;}
+
+.contactDetails {
+    text-align: center;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #ddd;
+}
+
+h3 {color: #2676C3; font-size: 1.2rem;}
+.details p {
+    color: #555555;
+}
+
+
+.gomMap path {
+    stroke: var(--themeblue);
+    stroke-width: 1;
+    fill: #fff;
+    transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+  }
+  .gomMap text {
+    transition: all 0.5s;
+    font-size: 15px;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+  }
+  .gomMap a {
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .gomMap a:hover path {
+    fill: var(--themeblue);
+  }
+  .gomMap a:hover text {
+    fill: #fff;
+  }
+  .gomMap path title {
+    background-color: var(--themeblue);
+    color: #fff;
+  }
+  .gomMap path text {
+    fill: var(--themeblue);
+  }
+  .gomMap svg {
+    height: 490px;
+    display: block;
+    width: 100%;
+  }
+  
+  .mhinfo {
+    margin-top: 70px;
+  }
+  .patch {
+    position: relative;
+    margin: 0;
+  }
+  
+  .patch div {
+    z-index: 99;
+  }
+  .patch::after {
+    /* background: url(../images/mahBg.jpg) repeat-y top center; */
+    /* height: 129px; */
+    /* content: ""; */
+    position: absolute;
+    bottom: 35px;
+    width: 100%;
+    border-radius: 7px;
+    z-index: 0;
+    background-size: cover;
+  }
+
+  .contact-card h2 {
+    background: var(--themeblue);
+    color: #fff;
+    font-size: 1.2rem;
+    padding: 10px;
+    margin-bottom: 0;
+  }
+  
+  .profileDetails  h3 {
+    color: #F88204;
+    font-size: 1rem;
+    font-weight: 400;
+    margin-bottom: 10px;
+}
+
+
+  .profileDetails {
+    display:block;
+    padding: 10px;
+    border: 1px solid #2676C3;
+}
+
+
+.profileDetails span {
+    color: #000;
+}

@@ -5,6 +5,7 @@
 :root {
     --darkblue: #004056;
     --themeblue: #2676C3;
+    
 }
 .source-sans-3-400 {
     font-family: "Source Sans 3", sans-serif;
@@ -81,6 +82,15 @@ body {
 
 .border-b-org {
     border-bottom: 2px solid #F88204;
+}
+
+.table th {
+  background: var(--darkblue);
+  color: #fff;
+  padding: 10px;
+}
+.table td{
+  padding: 10px;
 }
 
 

@@ -12,6 +12,8 @@ import { RegisterUserComponent } from './component/register-user/register-user.c
 import { ModeratorModule} from './moderator/moderator.module';
 import { DeveloperModule } from './developer/developer.module'; 
 import { FaqComponent } from './component/faq/faq.component';
+import { ImportantDocumentComponent } from './component/important-document/important-document.component';
+import { SearchBrnComponent } from './component/search-brn/search-brn.component';
 
 
 const routes: Routes = [
@@ -20,6 +22,8 @@ const routes: Routes = [
   {path:"contactus",component:ContactusComponent},
   {path:"login",component:LoginComponent},
   {path:"faq",component:FaqComponent},
+  {path:"important-document",component:ImportantDocumentComponent},
+  {path:"search-brn",component:SearchBrnComponent},
   {path:"unauthorized",component:UnauthorizedComponent},
   {path:"changePassword",component:ChangePasswordComponent},
   { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
