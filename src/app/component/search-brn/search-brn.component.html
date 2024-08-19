@@ -12,48 +12,68 @@
       </nav>
     </div>
   <div class="p-3">
-    
+    <form [formGroup]="searchBrnFilter" (ngSubmit)="onSubmit()">
     <div class="form row px-3 mt-3 ">
         <p class="col-md-12">
             This functionality is to allow users to search for a BRN (Business Register Number), which is an unique identification number for institutions or organizations within the state of Maharashtra.
         </p>
+        
         <div class="col-md-3">
             <div class="form-group">
                 <label>DISTRICT </label>
-              <select class="form-select">
-                <option>Select District Name</option>
+              <select class="form-select" formControlName="district">
+                <option [value]="-1">--Select--</option>
+                <option *ngFor="let district of districts" [value]="district.censusDistrictCode">
+                    {{ district.districtName }}
+                  </option>
               </select>
+              <div *ngIf="searchBrnFilter.get('district')?.hasError('forbiddenValue')">
+                Invalid value selected.
+              </div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="form-group">
-                <label>ESTABLISHMENT NAME /  BRN </label>
-                <textarea class="form-control"></textarea>
-
-                <span>
-                    Maximum character limit as 50
-                </span>
+                <label>ESTABLISHMENT NAME </label>
+                <textarea class="form-control" formControlName="nameOfEstablishmentOrOwner"></textarea>
+                
+                <div *ngIf="searchBrnFilter.hasError('atLeastOneRequired')">
+                    At least one of the fields 'Name of Establishment' or 'BRN No' is required.
+                  </div>
             </div>
         </div>
-       
-        <div class="col-md-5">
+        <div class="col-md-3">
             <div class="form-group">
-                <label>Captcha </label>
+                <label> BRN </label>
+                <input type="text"
+                class="form-control"
+                id="brnNo"
+                formControlName="brnNo"
+                placeholder="Enter BRN number"
+                />
+                <div *ngIf="searchBrnFilter.get('brnNo')?.invalid && (searchBrnFilter.get('brnNo')?.dirty || searchBrnFilter.get('brnNo')?.touched)">
+                    <div *ngIf="searchBrnFilter.get('brnNo')?.errors?.['pattern']">Only alphanumeric characters are allowed.</div>                  </div>
+                  <div *ngIf="searchBrnFilter.hasError('atLeastOneRequired')">
+                    At least one of the fields 'Name of Establishment' or 'BRN No' is required.
+                  </div>
+                  <div *ngIf="searchBrnFilter.get('brnNo')?.hasError('minlength') || searchBrnFilter.get('brnNo')?.hasError('maxlength')">
+                    BRN number must be exactly 16 characters long.
+                  </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label> </label>
                 <div class="d-md-flex">
-
-                
-                <input class="form-control" type="text" placeholder="Enter Captcha" />
-                <img class="img-fluid" src="../../../assets/images/captcha.jpg" />
-                <button class="btn btn-outline-primary"><i class="bi bi-arrow-clockwise"></i></button>
-
-                <button class="btn btn-primary ms-2 w-75">Search <i class="bi bi-search"></i> </button>
+                <button type="submit" [disabled]="searchBrnFilter.invalid" class="btn btn-primary ms-2 w-75">Search <i class="bi bi-search"></i> </button>
             </div>
-            </div>
+        </div>
 
            
         </div>
-      
+    
     </div>
+</form>
     <div class="float-end d-md-flex  align-items-center gap-2">
         
             Export 

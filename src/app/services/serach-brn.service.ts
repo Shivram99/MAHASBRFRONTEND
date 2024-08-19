@@ -1,0 +1,22 @@
+
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { HttpClient, HttpParams } from '@angular/common/http';
+
+import { District } from '../interface/district'; 
+@Injectable({
+  providedIn: 'root'
+})
+export class SerachBrnService {
+
+  apiUrl:String="";
+  constructor(private http: HttpClient) {
+    this.apiUrl=environment.apiUrl;
+   }
+
+  getAllDistricts(): Observable<District[]> {
+    return this.http.get<District[]>(`${this.apiUrl}/user/getAllDistricts`);
+  }
+  
+}
