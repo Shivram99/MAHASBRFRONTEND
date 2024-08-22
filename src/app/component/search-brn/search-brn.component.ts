@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { SerachBrnService } from '../../services/serach-brn.service';
+import { response } from 'express';
+import { MstRegistryDetailsPage } from '../../model/mst-registry-details-page';
 
 @Component({
   selector: 'app-search-brn',
@@ -13,6 +15,7 @@ export class SearchBrnComponent implements OnInit{
 
   searchBrnFilter!: FormGroup;
 
+  registryDetails: MstRegistryDetailsPage[]=[];
   
 
   constructor(private fb: FormBuilder,private dataService: SerachBrnService) { }
@@ -26,7 +29,7 @@ export class SearchBrnComponent implements OnInit{
       nameOfEstablishmentOrOwner: [''],
       brnNo: ['', [Validators.pattern('[A-Za-z0-9]+'),Validators.minLength(16),
         Validators.maxLength(16)]]
-    }, { validators: this.atLeastOneFieldValidator });
+    }, { validators: this.atLeastOneFieldValidator ,Validators: this.notMinusOneValidator});
 
    
    // this.searchBrnFilter.setValidators(this.atLeastOneFieldValidator);
@@ -60,10 +63,6 @@ export class SearchBrnComponent implements OnInit{
       });
   }
 
-  onSubmit() {
-    console.log("searchBrnFilter :"+this.searchBrnFilter.get('district')?.value );
-    console.log("searchBrnFilter :"+this.searchBrnFilter.get('nameOfEstablishmentOrOwner')?.value );
-    }
   atLeastOneRequiredValidator(group: FormGroup): any {
     const nameOfEstablishmentOrOwner = group.get('nameOfEstablishmentOrOwner')?.value;
     const brnNo = group.get('brnNo')?.value;
@@ -72,6 +71,25 @@ export class SearchBrnComponent implements OnInit{
     }
     return { atLeastOneRequired: true }; // Invalid
   }
+  onSubmit() {
+    console.log("searchBrnFilter :"+this.searchBrnFilter.get('district')?.value );
+    console.log("searchBrnFilter :"+this.searchBrnFilter.get('nameOfEstablishmentOrOwner')?.value );
+    console.log("searchBrnFilter :"+this.searchBrnFilter.get('brnNo')?.value );
 
+    if (this.searchBrnFilter.valid) {
+      this.dataService.submitForm(this.searchBrnFilter.value).subscribe(
+        (response: MstRegistryDetailsPage[]) => { // Expecting an array of MstRegistryDetailsPage
+          this.registryDetails = response;
+          console.log('Form submitted successfully', this.registryDetails);
+        },
+        error => {
+          console.error('Error submitting form', error);
+          
+        }
+      );
+    } else {
+      console.log('Form is invalid');
+    }
+    }
 
 }

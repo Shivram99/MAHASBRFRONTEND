@@ -9,8 +9,8 @@ import { DashboardadminComponent } from '../component/dashboardadmin/dashboardad
 const routes: Routes = [
     {path:"register",component:RegisterUserComponent,canActivate: [authGuard], data: { expectedRole: ['ROLE_ADMIN'] } },
     {path:"department",component:DepartmentMstComponent,canActivate: [authGuard], data: { expectedRole: ['ROLE_ADMIN'] } },
-    { path: "dashboard", component: DashboardComponent, canActivate: [authGuard], data: { expectedRole: ['ROLE_ADMIN'] } }, // Guarded by AuthGuard
-    { path: "dashboardadmin", component: DashboardadminComponent, canActivate: [authGuard], data: { expectedRole: ['ROLE_ADMIN',] } }, // Guarded by AuthGuard
+    { path: "dashboard", component: DashboardComponent, canActivate: [authGuard], data: { expectedRole: ['ROLE_MODERATOR'] } }, // Guarded by AuthGuard
+    { path: "dashboardadmin", component: DashboardadminComponent, canActivate: [authGuard], data: { expectedRole: ['ROLE_ADMIN','ROLE_MODERATOR'] } }, // Guarded by AuthGuard
 
     /*path: '',
     children: [

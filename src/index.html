@@ -49,8 +49,10 @@
 
 </script>
   <script>
-    debugger
+   
     // Define the callback function in the global scope
+   
+    // Your code that doesn't need Angular change detection
     window.handleCaptchaResponse = function(token) {
       // Token available here, you can send it to your server for validation
       var captchaToken = document.getElementsByName('g-recaptcha-response')[0].value;
@@ -60,5 +62,7 @@
       
       // You can perform any action with the token here, such as sending it to the server for verification
     }
+
+    
   </script>
 </html>

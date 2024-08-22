@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, Renderer2, inject } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnInit, PLATFORM_ID, Renderer2, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../../services/login.service';
 import { take } from 'rxjs';
@@ -6,6 +6,8 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LanguageService } from '../../language.service';
+import { isPlatformBrowser } from '@angular/common';
+import { IdleTimeoutService } from '../../services/idle-timeout.service';
 declare var grecaptcha: any;
 
 @Component({
@@ -38,10 +40,12 @@ export class LoginComponent implements OnInit,AfterViewInit {
 
   currentLanguage: string="en";
 
- constructor(private authService: AuthService,private router: Router,private languageService:LanguageService,private renderer: Renderer2) { }
+ constructor(private authService: AuthService,private router: Router,private languageService:LanguageService,private renderer: Renderer2,@Inject(PLATFORM_ID) private platformId: Object, private idleTimeoutService: IdleTimeoutService) { }
 
   ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
     this.loadReCaptchaScript();
+    }
     this.currentLanguage = this.languageService.getCurrentLanguage();
     this.languageService.getLanguageObservable().subscribe(language => {
       this.currentLanguage = language;
@@ -78,19 +82,23 @@ export class LoginComponent implements OnInit,AfterViewInit {
     
     this.authService.login(this.loginForm.value.username, this.loginForm.value.password, this.loginForm.value.recaptchaResponse).subscribe(() => {
       grecaptcha.reset();
-     
+      
       if(this.authService.responseData.roles.includes("ROLE_ADMIN")){
 
         this.router.navigate(['/admin/dashboardadmin']);
+        this.idleTimeoutService.reset();
 
-      }else if(this.authService.responseData.roles.includes("ROLE_MODRATOR")){
+      }else if(this.authService.responseData.roles.includes("ROLE_MODERATOR")){
         this.router.navigate(['/moderator/moderatorDashboard']);
+        this.idleTimeoutService.reset();
 
       }else if(this.authService.responseData.roles.includes("ROLE_DEVELOPER")){
         this.router.navigate(['/developer/developerDashboard']);
+        this.idleTimeoutService.reset();
 
       }else if(this.authService.responseData.roles.includes("ROLE_USER")){
         this.router.navigate(['/admin/dashboard']);
+        this.idleTimeoutService.reset();
 
       }
 
@@ -205,19 +213,23 @@ export class LoginComponent implements OnInit,AfterViewInit {
   }
 
   loadReCaptchaScript() {
+   
     const script = this.renderer.createElement('script');
     script.src = 'https://www.google.com/recaptcha/api.js?render=explicit';
     script.async = true;
     script.defer = true;
     document.body.appendChild(script);
+   
   }
 
   initializeReCaptcha() {
     // Initialize reCAPTCHA when the script is loaded
+    if (isPlatformBrowser(this.platformId)) {
     grecaptcha.render('recaptchaElement', {
       'sitekey': '6Le8N_QpAAAAAJBErDqsniTRWKzU9m45WOcnoi7x',
       'callback': this.handleCaptchaResponse
     });
+  }
   }
 
 }

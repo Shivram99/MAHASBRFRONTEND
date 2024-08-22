@@ -9,12 +9,15 @@ import { District } from '../interface/district';
   providedIn: 'root'
 })
 export class SerachBrnService {
-
+ 
   apiUrl:String="";
   constructor(private http: HttpClient) {
     this.apiUrl=environment.apiUrl;
    }
 
+   submitForm(data: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/user/searchBRN`, data);
+  }
   getAllDistricts(): Observable<District[]> {
     return this.http.get<District[]>(`${this.apiUrl}/user/getAllDistricts`);
   }

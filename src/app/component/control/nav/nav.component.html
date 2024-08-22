@@ -1,12 +1,20 @@
 <!-- src/app/nav/nav.component.html -->
 <nav class="mx-auto d-flex pt-2">
-
-        <a href="/" class="">Home</a>
+  <a *ngFor="let link of filteredNavLinks"
+  [href]="link.url ? link.url : null"
+  [routerLink]="link.routerLink ? link.routerLink : null"
+  [class]="link.class">
+ {{ link.label }}
+</a>
+<a *ngIf="isLoggedIn" href="#" class="nav-item nav-link" href="#">
+  {{ "logoutTitle" | translate }}</a
+>
+        <!-- <a href="/" class="">Home</a>
         <a routerLink="/aboutus" class="">About Us</a>
         <a routerLink="/search-brn" class="">Search BRN</a>
         <a routerLink="/dashboard" class="">Dashboard</a>
         <a routerLink="/faq" class="">FAQ</a>
-        <a routerLink="/circular" class="">Circular</a>
+        <a routerLink="/circular" class="">Circular</a> -->
         <!-- <div *ngFor="let item of menuItems" class="menu-item">
             <a [routerLink]="item.route" class="">{{ item.name }}</a>
         
@@ -17,4 +25,13 @@
             </div>
           </div> -->
   </nav>
+
+  <!-- <nav>
+  <a *ngFor="let link of navLinks" 
+     [href]="link.url ? link.url : null"
+     [routerLink]="link.routerLink ? link.routerLink : null" 
+     [class]="link.class">
+    {{ link.label }}
+  </a>
+</nav> -->
   

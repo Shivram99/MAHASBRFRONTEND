@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from '../../../environments/environment.development';
 import { LanguageService } from '../../language.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -10,7 +11,7 @@ import { LanguageService } from '../../language.service';
 })
 export class HeaderComponent  implements OnInit{
   isChecked: boolean = true;
-
+  isLoggedIn: boolean = false;
 
   ngOnInit(): void {
 
@@ -21,6 +22,10 @@ export class HeaderComponent  implements OnInit{
      /* this.languageService.setCurrentLanguage(language);
       // alert(language);
        this.translate.use(language);*/
+    });
+
+    this.authService.getIsLoggedIn().subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
     });
   }
 
@@ -36,7 +41,8 @@ export class HeaderComponent  implements OnInit{
 
   constructor(
     public translate: TranslateService,
-    private languageService: LanguageService
+    private languageService: LanguageService,
+    private authService: AuthService
   ) 
   {
  

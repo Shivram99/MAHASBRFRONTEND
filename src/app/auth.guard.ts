@@ -15,7 +15,7 @@ export class authGuard implements CanActivate {
     const isAuthenticated: string | null = localStorage.getItem("isAuthenticated");
     const storedRoles: string | null = localStorage.getItem("roles");
     const expectedRoles: string[] = route.data['expectedRole'];
-      debugger
+    
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/']);
       return false;
@@ -28,7 +28,7 @@ export class authGuard implements CanActivate {
     }
 
     const userRoles: string[] = storedRoles.split(',');
-
+    debugger
     // Check if any of the user roles match the expected roles
     const hasMatchingRole = expectedRoles.some(expectedRole => userRoles.includes(expectedRole));
 

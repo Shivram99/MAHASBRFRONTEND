@@ -42,6 +42,9 @@ import { CitizenDashboardComponent } from './component/citizen-dashboard/citizen
 import { DetailsComponent } from './component/details/details.component';
 import { UploadCsvComponent } from './component/upload-csv/upload-csv.component';
 import { CircularComponent } from './component/circular/circular.component';
+import { NgIdleModule } from '@ng-idle/core';
+import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
+
 
 //import { ChartfilterComponent } from './component/chartfilter/chartfilter.component';
 
@@ -81,7 +84,8 @@ import { CircularComponent } from './component/circular/circular.component';
     CitizenDashboardComponent,
     DetailsComponent,
     UploadCsvComponent,
-    CircularComponent
+    CircularComponent,
+   
     
 
    // ChartfilterComponent,
@@ -93,12 +97,15 @@ import { CircularComponent } from './component/circular/circular.component';
     ReactiveFormsModule,
     FormsModule, 
     //RecaptchaModule.forRoot(),
+    NgIdleModule.forRoot(), // Initialize NgIdleModule
+    NgIdleKeepaliveModule.forRoot(),
    TranslateModule.forRoot({
     loader: {
       provide: TranslateLoader,
       useFactory: HttpLoaderFactory,
       deps: [HttpClient] // If using HttpLoaderFactory
-    }
+    },
+    
   }),
   ],
   providers: [

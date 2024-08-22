@@ -74,6 +74,7 @@
     
     </div>
 </form>
+<div *ngIf="registryDetails.length > 0">
     <div class="float-end d-md-flex  align-items-center gap-2">
         
             Export 
@@ -85,7 +86,9 @@
             <i class="bi bi-filetype-pdf"></i>
         </button>
     </div>
+</div>
     <div class="table-responsive mt-5">
+        <div *ngIf="registryDetails.length > 0; else noData">
         <table class="table table-bordered table-striped">
             <thead>
                 <th class="first">Sr.No</th>
@@ -96,98 +99,21 @@
                 <th>Institution Type</th>
             </thead>
             <tbody>
-                <tr>
-                    <td>1.</td>
-                    <td>
-                        0914870000000374
-                    </td>
-                    <td>
-                        SAGART GALLEY & UNISEX SALON
-                    </td>
-                    <td>
-                        Kishangarh Rural Maliyon Ki Badi Kishangarh AJMER 305801
-                    </td>
-                    <td>
-                        Mumbai
-                    </td>
-                    <td>
-                        FIRM
-                    </td>
-                </tr>
-                <tr>
-                    <td>2.</td>
-                    <td>
-                        0914870000000374
-                    </td>
-                    <td>
-                        SAGART GALLEY & UNISEX SALON
-                    </td>
-                    <td>
-                        Kishangarh Rural Maliyon Ki Badi Kishangarh AJMER 305801
-                    </td>
-                    <td>
-                        Mumbai
-                    </td>
-                    <td>
-                        FIRM
-                    </td>
-                </tr>
-                <tr>
-                    <td>3.</td>
-                    <td>
-                        0914870000000374
-                    </td>
-                    <td>
-                        SAGART GALLEY & UNISEX SALON
-                    </td>
-                    <td>
-                        Kishangarh Rural Maliyon Ki Badi Kishangarh AJMER 305801
-                    </td>
-                    <td>
-                        Mumbai
-                    </td>
-                    <td>
-                        FIRM
-                    </td>
-                </tr>
-                <tr>
-                    <td>4.</td>
-                    <td>
-                        0914870000000374
-                    </td>
-                    <td>
-                        SAGART GALLEY & UNISEX SALON
-                    </td>
-                    <td>
-                        Kishangarh Rural Maliyon Ki Badi Kishangarh AJMER 305801
-                    </td>
-                    <td>
-                        Mumbai
-                    </td>
-                    <td>
-                        FIRM
-                    </td>
-                </tr>
-                <tr>
-                    <td>5.</td>
-                    <td>
-                        0914870000000374
-                    </td>
-                    <td>
-                        SAGART GALLEY & UNISEX SALON
-                    </td>
-                    <td>
-                        Kishangarh Rural Maliyon Ki Badi Kishangarh AJMER 305801
-                    </td>
-                    <td>
-                        Mumbai
-                    </td>
-                    <td>
-                        FIRM
-                    </td>
+                <tr *ngFor="let detail of registryDetails; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ detail.brnNo }}</td>
+                    <td>{{ detail.nameOfEstablishmentOrOwner }}</td>
+                    
+                    <td>{{ detail.district }}</td>
+                    <td>{{ detail.district }}</td>
+                    <td>{{ detail.sector }}</td>
                 </tr>
             </tbody>
         </table>
+    </div>
+    <ng-template #noData>
+        <p>No data available.</p>
+      </ng-template>
     </div>
   
     </div>
