@@ -7,10 +7,10 @@ import { DashboardComponent } from '../component/dashboard/dashboard.component';
 import { DashboarddataComponent } from '../component/dashboarddata/dashboarddata/dashboarddata.component';
 import { DashboardadminComponent } from '../component/dashboardadmin/dashboardadmin.component';
 const routes: Routes = [
-    {path:"register",component:RegisterUserComponent,canActivate: [authGuard], data: { expectedRole: ['ROLE_ADMIN'] } },
-    {path:"department",component:DepartmentMstComponent,canActivate: [authGuard], data: { expectedRole: ['ROLE_ADMIN'] } },
-    { path: "dashboard", component: DashboardComponent, canActivate: [authGuard], data: { expectedRole: ['ROLE_MODERATOR'] } }, // Guarded by AuthGuard
-    { path: "dashboardadmin", component: DashboardadminComponent, canActivate: [authGuard], data: { expectedRole: ['ROLE_ADMIN','ROLE_MODERATOR'] } }, // Guarded by AuthGuard
+    {path:"register",component:RegisterUserComponent,canActivate: [authGuard], data: { expectedRole: ['ROLE_ADMIN','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT'] } },
+    {path:"department",component:DepartmentMstComponent,canActivate: [authGuard], data: { expectedRole: ['ROLE_ADMIN','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT'] } },
+    { path: "dashboard", component: DashboardComponent, canActivate: [authGuard], data: { expectedRole: ['ROLE_MODERATOR','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT'] } }, // Guarded by AuthGuard
+    { path: "dashboardadmin", component: DashboardadminComponent, canActivate: [authGuard], data: { expectedRole: ['ROLE_ADMIN','ROLE_MODERATOR','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT'] } }, // Guarded by AuthGuard
 
     /*path: '',
     children: [

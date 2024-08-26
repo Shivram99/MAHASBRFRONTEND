@@ -18,13 +18,13 @@ export class NavComponent {
     class: string;
     roles: string[];
   }[] = [
-    { label: "Home", url: "/", routerLink: null, class: "", roles: [] },
-    { label: "About Us", url: null, routerLink: "/aboutus", class: "", roles: [] },
-    { label: "Search BRN", url: null, routerLink: "/search-brn", class: "", roles: [] },
-    { label: "Dashboard", url: null, routerLink: "/dashboard", class: "", roles: [] },
-    { label: "FAQ", url: null, routerLink: "/faq", class: "", roles: [] },
-    { label: "Circular", url: null, routerLink: "/circular", class: "", roles: [] },
-    { label: "citizen-dashboard", url: null, routerLink: "/citizen-dashboard", class: "", roles: [] }
+    { label: "Home", url: "/", routerLink: null, class: "", roles: ['ROLE_USER','ROLE_ADMIN','ROLE_DEVELOPER','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV'] },
+    { label: "About Us", url: null, routerLink: "/aboutus", class: "", roles: ['ROLE_USER','ROLE_ADMIN','ROLE_DEVELOPER','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV'] },
+    { label: "Search BRN", url: null, routerLink: "/search-brn", class: "", roles: ['ROLE_USER','ROLE_ADMIN','ROLE_DEVELOPER','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV'] },
+    { label: "Dashboard", url: null, routerLink: "/dashboard", class: "", roles: ['ROLE_USER','ROLE_ADMIN','ROLE_DEVELOPER','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV'] },
+    { label: "FAQ", url: null, routerLink: "/faq", class: "", roles: ['ROLE_USER','ROLE_ADMIN','ROLE_DEVELOPER','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV'] },
+    { label: "Circular", url: null, routerLink: "/circular", class: "", roles: ['ROLE_USER','ROLE_ADMIN','ROLE_DEVELOPER','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV'] },
+    { label: "citizen-dashboard", url: null, routerLink: "/citizen-dashboard", class: "", roles: ['ROLE_USER','ROLE_ADMIN','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV'] }
     
   ];
  //'ROLE_ADMIN','ROLE_USER' ,'ROLE_MODERATOR' 
@@ -47,6 +47,9 @@ filterLinks() {
   const userRoles = this.authService.getUserRoles();
   this.authService.getIsLoggedIn().subscribe(isLoggedIn => {
     this.isLoggedIn = isLoggedIn;
+    if(!this.isLoggedIn){
+      userRoles.push('ROLE_USER')
+    }
   });
 
   

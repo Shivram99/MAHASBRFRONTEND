@@ -18,7 +18,7 @@ export class AuthService {
   private roles = 'roles';
   private roles1: string[] = [];
   private rolesSubject = new BehaviorSubject<string[]>(this.roles1);
-
+  private defaultRole: string = 'ROLE_USER';
   responseData: any;
 
   private isLoggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -83,6 +83,7 @@ export class AuthService {
     localStorage.removeItem(this.username);
     localStorage.removeItem(this.id);
     localStorage.removeItem("isAuthenticated");
+    this.setIsLoggedIn(false);
   }
 
   getToken(): string | null {
