@@ -39,12 +39,14 @@
         <div class="table-responsive mt-2">
             <table class="table table-bordered table-striped">
                 <thead>
+                    <tr>
                     <th class="first">Sr.No</th>
                     <th>BRN </th>
                     <th>Establishment Name</th>
                     <th>City</th>
                     <th>District</th>
                     <th>Institution Type</th>
+                    </tr>
                 </thead>
                 <tbody>
                     <tr>
@@ -145,12 +147,14 @@
             <div *ngIf="registryDetails.length > 0; else noData">
             <table class="table table-bordered table-striped">
                 <thead>
+                    <tr>
                     <th class="first">Sr.No</th>
                     <th>BRN </th>
                     <th>Establishment Name</th>
                     <th>City</th>
                     <th>District</th>
                     <th>Institution Type</th>
+                </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let detail of registryDetails; let i = index">
@@ -194,11 +198,46 @@
 
         </div>
          <div class="tab-pane fade" id="v-pills-regions" role="tabpanel" aria-labelledby="v-pills-regions-tab" tabindex="0">
-            <app-upload-csv></app-upload-csv>
+           <app-upload-csv></app-upload-csv>
           
 
+
+
+            <!-- <div class="file-drop-area">
+                <span class="choose-file-button">Choose files</span>
+                <span class="file-message">or drag and drop files here</span>
+                <input type="file" class="file-input" (change)="onFileChange($event)" multiple>
+                <span class="file-info">{{fileInfo}}</span>  
+              </div>
+              <div *ngIf="uploadProgress > 0">
+                <progress [value]="uploadProgress" max="100"></progress>
+                <span>{{uploadProgress}}%</span>
+            </div>
+              <button class="btn btn-primary mt-3" (click)="uploadFile()">Upload</button>  -->
+              <!-- <div *ngIf="brnGenerationRecordCount"> 
+                <h4>BRN Generation Status:</h4>
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Total BRN Generation</th>
+                      <th>Concern Data</th>
+                      <th>Duplicate Generation</th>
+                      <th>Total Generation</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{ brnGenerationRecordCount?.totalBRNGeneretion }}</td>
+                      <td>{{ brnGenerationRecordCount?.concernData }}</td>
+                      <td>{{ brnGenerationRecordCount?.duplicateGeneration }}</td>
+                      <td>{{ brnGenerationRecordCount?.totalGeneration }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>  -->
+
         </div>
-      
+         
       </div>
     </div>
   
