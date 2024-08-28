@@ -1,1 +1,21 @@
-<p>upload-csv works!</p>
+<div class="file-drop-area">
+    <span class="choose-file-button">Choose files</span>
+    <span class="file-message">or drag and drop files here</span>
+    <input type="file" class="file-input" (change)="onFileChange($event)" multiple>
+</div>
+
+<div *ngIf="selectedFiles.length > 0" class="file-list">
+    <ul>
+        <li class="border mb-2 p-3" *ngFor="let file of selectedFiles; let i = index">
+            {{ file.name }}
+            <button type="button" class="btn btn-danger btn-sm" (click)="removeFile(i)">Delete</button>
+        </li>
+    </ul>
+</div>
+
+<div *ngIf="uploadProgress > 0">
+    <progress [value]="uploadProgress" max="100"></progress>
+    <span>{{ uploadProgress }}%</span>
+</div>
+
+<button class="btn btn-primary mt-3" (click)="uploadFile()">Upload</button>

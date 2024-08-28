@@ -1,6 +1,6 @@
-<div>
+<div class="dashboardTab">
   <label>Select Count Type:</label>
-  <div class="d-flex gap-3">
+  <div class="">
   <div class="" *ngFor="let option of countOptions">
     <label>
     <input
@@ -15,10 +15,10 @@
 </div>
 </div>
 <br />
-<div>
+<div class="dashboardTab">
   <form #registrationForm="ngForm" (ngSubmit)="onSubmit()">
     <div class="row form-group">
-      <div class="col-md-4">
+      <div class="col-12 mb-2">
         <label for="region">Acts/Registering Authorities:</label><br />
         <select
           class="form-select"
@@ -38,7 +38,7 @@
                 <option *ngFor="let region of regions" [value]="region">{{ region }}</option>
               </select>
             </div> -->
-      <div class="col-md-4">
+      <div class="col-12 mb-2">
         <label for="region">Region:</label><br />
         <select
           class="form-select"
@@ -60,7 +60,7 @@
                 <option *ngFor="let district of districts" [value]="district">{{ district }}</option>
               </select>
             </div> -->
-      <div class="col-md-4">
+      <div class="col-12 mb-2">
         <label for="district">District:</label><br />
         <select
           class="form-select"
@@ -76,9 +76,9 @@
         </select>
       </div>
     </div>
-    <br/>
+  
     <div class="row form-group">
-      <div class="col-md-4">
+      <div class="col-12 mb-2">
         <label for="year">Year:</label><br />
         <select
           class="form-select"
@@ -92,7 +92,7 @@
         </select>
       </div>
 
-      <div class="col-md-4">
+      <div class="col-12 mb-2">
         <label for="quarter">Quarter:</label><br />
         <select
           class="form-select"
@@ -107,7 +107,7 @@
           </option>
         </select>
       </div>
-      <div class="col-md-4">
+      <div class="col-12 mb-2">
         <label for="industry">Industry/NIC Classification:</label><br />
         <select
           class="form-select"
@@ -123,6 +123,8 @@
         </select>
       </div>
     </div>
+<div class="d-flex justify-content-between gap-2">
+    <button class="btn btn-warning w-100">Submit</button>    <button class="btn btn-dark w-100">Clear</button>
+</div>
   </form>
 </div>
-<br/>

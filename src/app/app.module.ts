@@ -44,6 +44,7 @@ import { UploadCsvComponent } from './component/upload-csv/upload-csv.component'
 import { CircularComponent } from './component/circular/circular.component';
 import { NgIdleModule } from '@ng-idle/core';
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
+import { DashboardDetailsComponent } from './component/dashboard-details/dashboard-details.component';
 
 
 //import { ChartfilterComponent } from './component/chartfilter/chartfilter.component';
@@ -85,6 +86,8 @@ import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
     DetailsComponent,
     UploadCsvComponent,
     CircularComponent,
+    DashboardDetailsComponent,
+    
    
     
 

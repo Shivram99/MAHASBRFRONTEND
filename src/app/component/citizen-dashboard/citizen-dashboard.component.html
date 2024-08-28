@@ -140,26 +140,7 @@
                 </tbody>
             </table>
         </div>
-        </div>
-        <div class="tab-pane fade" id="v-pills-acts" role="tabpanel" aria-labelledby="v-pills-acts-tab" tabindex="0">
-            
-            <div class="d-flex justify-content-between">
-                <h3>BRN : 98756454564</h3>
 
-                <div class="d-md-flex  align-items-center gap-2">
-            
-                    Export 
-            
-                <button class="btn btn-outline-success">
-                    <i class="bi bi-file-earmark-excel-fill"></i>
-                </button>
-                <button class="btn btn-outline-danger">
-                    <i class="bi bi-filetype-pdf"></i>
-                </button>
-            </div>
-            </div>
-           
-        <div class="clearfix"></div>
         <div class="table-responsive mt-2">
             <div *ngIf="registryDetails.length > 0; else noData">
             <table class="table table-bordered table-striped">
@@ -188,21 +169,33 @@
             <p>No data available.</p>
           </ng-template>
         </div>
+        
+        </div>
+        <div class="tab-pane fade" id="v-pills-acts" role="tabpanel" aria-labelledby="v-pills-acts-tab" tabindex="0">
+            
+            <div class="d-flex justify-content-between">
+                <h3>BRN : 98756454564</h3>
+
+                <div class="d-md-flex  align-items-center gap-2">
+            
+                    Export 
+            
+                <button class="btn btn-outline-success">
+                    <i class="bi bi-file-earmark-excel-fill"></i>
+                </button>
+                <button class="btn btn-outline-danger">
+                    <i class="bi bi-filetype-pdf"></i>
+                </button>
+            </div>
+            </div>
+           
+        <div class="clearfix"></div>
+ <app-dashboard-details></app-dashboard-details>
 
         </div>
          <div class="tab-pane fade" id="v-pills-regions" role="tabpanel" aria-labelledby="v-pills-regions-tab" tabindex="0">
-
-            <div class="file-drop-area">
-                <span class="choose-file-button">Choose files</span>
-                <span class="file-message">or drag and drop files here</span>
-                <input type="file" class="file-input" (change)="onFileChange($event)" multiple>
-                <span class="file-info">{{fileInfo}}</span>  
-              </div>
-              <div *ngIf="uploadProgress > 0">
-                <progress [value]="uploadProgress" max="100"></progress>
-                <span>{{uploadProgress}}%</span>
-            </div>
-              <button class="btn btn-primary mt-3" (click)="uploadFile()">Upload</button> 
+            <app-upload-csv></app-upload-csv>
+          
 
         </div>
       

@@ -1,0 +1,23 @@
+ button {
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+border: 1px solid #48A5FF;
+margin-bottom: 5px;
+text-align: left;
+display: block;
+width: 100%;
+}
+ button.active,button:hover {
+    background: #004056;
+    color: #fff;
+}
+
+button img, 
+button svg {
+    margin-right: 10px ;
+}
+ 
+.dashboardTab label {
+    color: #fff;
+}

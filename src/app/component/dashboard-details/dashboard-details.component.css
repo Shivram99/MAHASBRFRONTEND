@@ -1,0 +1,24 @@
+ul.details {
+    padding: 20px;
+    margin: 20px 0 0 0;
+
+    border: 1px solid #D4EBFF;
+
+}
+ul.details li {
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+    color: #2676C3;
+font-size: 14px;
+font-style: normal;
+line-height: 30px; /* 185.714% */
+text-transform: capitalize;
+border-bottom: 1px dashed #ddd;
+}
+
+ul.details li span {
+    color: #555;
+    width: 30%;
+    text-align: right;
+}
