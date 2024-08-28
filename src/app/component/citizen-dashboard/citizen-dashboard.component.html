@@ -39,12 +39,14 @@
         <div class="table-responsive mt-2">
             <table class="table table-bordered table-striped">
                 <thead>
+                    <tr>
                     <th class="first">Sr.No</th>
                     <th>BRN </th>
                     <th>Establishment Name</th>
                     <th>City</th>
                     <th>District</th>
                     <th>Institution Type</th>
+                    </tr>
                 </thead>
                 <tbody>
                     <tr>
@@ -164,12 +166,14 @@
             <div *ngIf="registryDetails.length > 0; else noData">
             <table class="table table-bordered table-striped">
                 <thead>
+                    <tr>
                     <th class="first">Sr.No</th>
                     <th>BRN </th>
                     <th>Establishment Name</th>
                     <th>City</th>
                     <th>District</th>
                     <th>Institution Type</th>
+                </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let detail of registryDetails; let i = index">
@@ -203,9 +207,29 @@
                 <span>{{uploadProgress}}%</span>
             </div>
               <button class="btn btn-primary mt-3" (click)="uploadFile()">Upload</button> 
-
+              <div *ngIf="brnGenerationRecordCount"> 
+                <h4>BRN Generation Status:</h4>
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Total BRN Generation</th>
+                      <th>Concern Data</th>
+                      <th>Duplicate Generation</th>
+                      <th>Total Generation</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{ brnGenerationRecordCount?.totalBRNGeneretion }}</td>
+                      <td>{{ brnGenerationRecordCount?.concernData }}</td>
+                      <td>{{ brnGenerationRecordCount?.duplicateGeneration }}</td>
+                      <td>{{ brnGenerationRecordCount?.totalGeneration }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div> 
         </div>
-      
+         
       </div>
     </div>
   
