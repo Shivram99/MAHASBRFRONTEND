@@ -20,11 +20,11 @@ export class ChartfilterComponent {
 
 
   registration: any = {
-    year: null,
-    region: '',
-    district: '',
-    quarter: '',
-    industry: '',
+    year: "Select Year",
+    region: 'Select Region',
+    district: 'Select District',
+    quarter: 'Select Quarter',
+    industry: 'Select Industry',
     registrationType: ''
   };
 
