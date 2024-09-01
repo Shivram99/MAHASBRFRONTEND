@@ -11,7 +11,7 @@ export class IdleTimeoutService {
 
   private isLoggedIn:boolean = false;
   private readonly idleTime: number = 3 ; // 3 minutes in seconds
-  private readonly timeoutPeriod: number = 25; // 5 seconds warning before logout
+  private readonly timeoutPeriod: number = 25*60; // 5 seconds warning before logout
 
   constructor(private idle: Idle, 
               private keepalive: Keepalive, 
@@ -36,7 +36,9 @@ export class IdleTimeoutService {
 
     // Subscribe to timeout warning event
     this.idle.onTimeoutWarning.subscribe((countdown: number) => {
-      console.log(`You will be logged out in ${countdown} seconds!`);
+      let minutes = Math.floor(countdown / 60); // calculate minutes
+      let seconds = countdown % 60; // calculate remaining seconds
+      console.log(`You will be logged out in ${minutes} minute(s) and ${seconds} second(s)`);
     });
 
     // Start watching for idle state
@@ -57,8 +59,9 @@ export class IdleTimeoutService {
   }
 
   logout() {
+    this.authService.logout();
     this.idle.stop(); // Stop watching for idle state
-    this.authService.logout(); // Clear authentication tokens and handle logout
+     // Clear authentication tokens and handle logout
     this.router.navigate(['/login']); // Redirect to login page
     console.log("Logged out due to inactivity.");
   }

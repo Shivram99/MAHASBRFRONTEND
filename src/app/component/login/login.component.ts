@@ -82,8 +82,12 @@ export class LoginComponent implements OnInit,AfterViewInit {
     
     this.authService.login(this.loginForm.value.username, this.loginForm.value.password, this.loginForm.value.recaptchaResponse).subscribe(() => {
       grecaptcha.reset();
-      
-      if(this.authService.responseData.roles.includes(["ROLE_DES_STATE"])){
+       debugger;
+       if(this.authService.responseData.isFirstTimeLogin){
+        this.router.navigate(['/changePassword']);
+        this.idleTimeoutService.reset();
+       }
+      else if(this.authService.responseData.roles.includes(["ROLE_DES_STATE"])){
 
         this.router.navigate(['/admin/dashboardadmin']);
         this.idleTimeoutService.reset();
@@ -96,8 +100,8 @@ export class LoginComponent implements OnInit,AfterViewInit {
         this.router.navigate(['/developer/developerDashboard']);
         this.idleTimeoutService.reset();
 
-      }else if(this.authService.responseData.roles.includes("ROLE_USER")){
-        this.router.navigate(['/admin/dashboard']);
+      }else{
+        this.router.navigate(['/citizen-dashboard']);
         this.idleTimeoutService.reset();
 
       }

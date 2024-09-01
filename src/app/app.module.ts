@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -45,12 +45,17 @@ import { CircularComponent } from './component/circular/circular.component';
 import { NgIdleModule } from '@ng-idle/core';
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 import { DashboardDetailsComponent } from './component/dashboard-details/dashboard-details.component';
+import { BRNregistoryDetailsComponent } from './component/brnregistory-details/brnregistory-details.component';
+import { DuplicatedeatilsComponent } from './component/duplicatedeatils/duplicatedeatils.component';
+import { ConcerndetailsComponent } from './component/concerndetails/concerndetails.component';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 
 //import { ChartfilterComponent } from './component/chartfilter/chartfilter.component';
 
 
 @NgModule({
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   declarations: [
     AppComponent,
     HeaderComponent,
@@ -87,6 +92,9 @@ import { DashboardDetailsComponent } from './component/dashboard-details/dashboa
     UploadCsvComponent,
     CircularComponent,
     DashboardDetailsComponent,
+    BRNregistoryDetailsComponent,
+    DuplicatedeatilsComponent,
+    ConcerndetailsComponent,
     
    
     
@@ -115,6 +123,7 @@ import { DashboardDetailsComponent } from './component/dashboard-details/dashboa
     provideClientHydration(),provideHttpClient(withFetch()),
     authGuard,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    provideAnimationsAsync(),
   ],
   bootstrap: [AppComponent]
 })

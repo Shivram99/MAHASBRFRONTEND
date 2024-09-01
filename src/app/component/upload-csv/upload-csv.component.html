@@ -17,5 +17,12 @@
     <progress [value]="uploadProgress" max="100"></progress>
     <span>{{ uploadProgress }}%</span>
 </div>
+<div *ngIf="bRNGenerationRecordCount">
+   
+    <span>total Record | {{ bRNGenerationRecordCount.totalGeneration }}  </span> <br/>
+    <span> total concern Record | {{ bRNGenerationRecordCount.concernData }}</span> <br/>
+    <span> total BRN Generated  Record | {{ bRNGenerationRecordCount.totalBRNGeneretion }} </span> <br/>
+    <span> total BRN duplicate  Record | {{ bRNGenerationRecordCount.duplicateGeneration }} </span> <br/>
+</div>
 
 <button class="btn btn-primary mt-3" (click)="uploadFile()">Upload</button>
