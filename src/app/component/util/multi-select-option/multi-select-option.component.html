@@ -1,0 +1,27 @@
+<div class="filters">
+    <small>{{ getSelectedText() }}</small>
+</div>
+<br />
+<div class="dropdown" [class.open]="dropdownOpen" (mouseleave)="onMouseLeave($event)">
+    <button class="form-control  dropdown-toggle" type="button" (click)="toggleDropdown()"
+    
+    >
+        {{placeholder}} <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        <li>
+            <label>
+                <input type="checkbox" [checked]="isAllSelected()"
+                    (change)="isAllSelected() ? deselectAll() : selectAll()" />
+                {{ isAllSelected() ? 'Deselect All' : 'Select All' }}
+            </label>
+        </li>
+        <li *ngFor="let item of items">
+            <label>
+                <input type="checkbox" (change)="onCheckboxChange($event, item)" [checked]="isSelected(item)" />
+                {{ item.name }}
+            </label>
+        </li>
+    </ul>
+    <br/>
+</div>

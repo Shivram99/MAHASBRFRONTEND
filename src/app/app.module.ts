@@ -49,6 +49,7 @@ import { BRNregistoryDetailsComponent } from './component/brnregistory-details/b
 import { DuplicatedeatilsComponent } from './component/duplicatedeatils/duplicatedeatils.component';
 import { ConcerndetailsComponent } from './component/concerndetails/concerndetails.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { MultiSelectOptionComponent } from './component/util/multi-select-option/multi-select-option.component';
 
 
 //import { ChartfilterComponent } from './component/chartfilter/chartfilter.component';
@@ -95,6 +96,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     BRNregistoryDetailsComponent,
     DuplicatedeatilsComponent,
     ConcerndetailsComponent,
+    MultiSelectOptionComponent,
     
    
     

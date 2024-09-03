@@ -61,6 +61,21 @@ export class FileUploadService {
     return this.http.request<BRNGenerationRecordCount>(req);
   }
 
+ 
+  postLoginDashboardData(page: number, size: number, sortBy: string, selectedDistrictIds: number[], selectedTalukaIds: number[], filters: { registerDateFrom: string, registerDateTo: string }): Observable<PaginatedResponse<MstRegistryDetailsPage>> {
+    const requestBody = {
+        page,
+        size,
+        sortBy,
+        selectedDistrictIds, // Corrected key to pluralize for consistency with the array
+        selectedTalukaIds,
+        filters
+    };
+
+    return this.http.post<PaginatedResponse<MstRegistryDetailsPage>>(`${this.apiUrl}/api/auth/getPostLoginDashboardData`, requestBody, {
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+    });
+}
 
   
 }

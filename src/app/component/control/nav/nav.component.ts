@@ -24,7 +24,7 @@ export class NavComponent {
     { label: "Dashboard", url: null, routerLink: "/dashboard", class: "", roles: ['ROLE_USER'] },
     { label: "FAQ", url: null, routerLink: "/faq", class: "", roles: ['ROLE_USER'] },
     { label: "Circular", url: null, routerLink: "/circular", class: "", roles: ['ROLE_USER'] },
-    { label: "citizen-dashboard", url: null, routerLink: "/citizen-dashboard", class: "", roles: ['ROLE_ADMIN','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV'] },
+    { label: "Dashboard", url: null, routerLink: "/citizen-dashboard", class: "", roles: ['ROLE_ADMIN','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV'] },
     { label: "changePassword", url: null, routerLink: "/changePassword", class: "", roles: ['ROLE_ADMIN','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV'] }
   ];
  //'ROLE_ADMIN','ROLE_USER' ,'ROLE_MODERATOR' 

@@ -1,108 +1,42 @@
+<div class="row form-group">
+  <div class="col-md-6"><app-multi-select-option [items]="districts"
+      (selectionChange)="onSelectionDistrictChange($event)" [placeholder]="'District'" /></div>
+  <div class="col-md-6"><app-multi-select-option [items]="talukas" (selectionChange)="onSelectionTalukaChange($event)"
+      [placeholder]="'Taluka'" /></div>
+
+</div>
+
+<div class="row form-group">
+  <div class="col-md-6">
+    <div style="display: block">
+      <label for="registerDateFrom">Registration From Date:</label>
+      <input type="date" id="registerDateFrom" name="registerDateFrom" class="form-control"
+        [(ngModel)]="filters.registerDateFrom" (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div style="display: block">
+      <label for="registerDateTo">Registration To Date:</label>
+      <input type="date" id="registerDateTo" class="form-control" [(ngModel)]="filters.registerDateTo"
+        (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
+    </div>
+  </div>
+</div>
+<br />
+<div class="row form-group">
+  <div class="col-md-6">
+    <label>BNR :</label>
+    <input type="text" class="form-control" id="BNR" name="BNR" [(ngModel)]="BNR"><br />
+    <button type="button" class="btn btn-primary" [disabled]="!BNR" (click)="searchBRN()">
+      Search BRN
+    </button>
+  </div>
+</div>
+<br />
+
 <div *ngIf="registryDetails.length > 0; else noData">
-  <!-- <div class="filters">Filters: 
-    <small class="filter-list">30/04/2024, 25/02/2024, 22012451025, Akola, Akola</small>
-  </div>
-  <div class="row form-group">
-    <div class="col-md-5">
-      <div class="input-group mb-3">
-        <div class="input-group-append">
-          <span class="input-group-text btn-orange">From Date</span>
-        </div>
-        <input type="text" class="form-control">
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="input-group mb-3">
-        <div class="input-group-append">
-          <span class="input-group-text btn-orange">District</span>
-        </div>
-        <select class="form-control">
-          <option>1</option>
-        </select>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="input-group mb-3">
-        <div class="input-group-append">
-          <span class="input-group-text btn-orange">BRN</span>
-        </div>
-        <input type="text" class="form-control">
-      </div>
-    </div>
-  </div>
-  <div class="form-group row">
-    <div class="col-md-5">
-      <div class="input-group mb-3">
-        <div class="input-group-append">
-          <span class="input-group-text btn-orange">To Date</span>
-        </div>
-        <input type="text" class="form-control">
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="input-group mb-3">
-        <div class="input-group-append">
-          <span class="input-group-text btn-orange">Taluka</span>
-        </div>
-        <select class="form-control">
-          <option>1</option>
-        </select>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <input type="button" class="btn btn-orange" value="Search" />
-    </div>
-  </div>
-  <br /> -->
-  <div class="row">
-    <div class="col-md-4 blk">
-      <div style="display: block">
-        <label for="registerDateFrom">Registration From Date:</label>
-        <input type="date" id="registerDateFrom" name="registerDateFrom" class="form-control"
-          [(ngModel)]="filters.registerDateFrom" (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
-      </div>
-    </div>
 
-    <div class="col-md-4 blk">
-      
-      <label for="district">District:</label>
-      <select class="form-control" id="district" name="district" [(ngModel)]="filters.district"
-        (change)="onChangeFunction($event)">
-        <option [value]="11111">All</option>
-        <option *ngFor="let district of districts" [value]="district.censusDistrictCode">
-          {{ district.districtName }}
-        </option>
-      </select>
-    </div>
 
-    <div class="col-md-4 blk">
-      <label>BNR :</label>
-      <input type="text" class="form-control" id="BNR" name="BNR" [(ngModel)]="BNR">
-      <button type="button" class="btn btn-primary" [disabled]="!BNR" (click)="searchBRN()">
-        Search BRN
-      </button>
-    </div>
-
-    <div class="col-md-4 blk">
-      <div style="display: block">
-        <label for="registerDateTo">Registration To Date:</label>
-        <input type="date" id="registerDateTo" class="form-control" [(ngModel)]="filters.registerDateTo"
-          (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
-      </div>
-    </div>
-
-    <div class="col-md-4 blk">
-      <label for="talukas">Taluka:</label>
-      <select class="form-control" id="talukas" name="talukas" [(ngModel)]="filters.talukas"
-        (ngModelChange)="applyFilters()">
-        <option *ngFor="let taluka of talukas" [value]="taluka.censusTalukaCode">
-          {{ taluka.talukaName }}
-        </option>
-      </select>
-    </div>
-  </div>
-
-  <br />
   <!-- filter component start -->
   <table class="table table-bordered table-striped">
     <thead>

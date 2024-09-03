@@ -1,12 +1,13 @@
 // src/app/data.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import {  HttpErrorResponse } from '@angular/common/http';
 import { District } from '../../interface/district';
 import { Talukas } from '../../interface/talukas';
 import { environment } from '../../../environments/environment';
 import { DetailsPageDTO } from '../../interface/details-page-dto';
 import { Page } from '../../interface/page';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -33,8 +34,10 @@ export class DataService {
     return this.http.get<District[]>(`${this.apiUrl}/user/getAllDistricts`);
   }
   
-  getAllTaluka(selectedValue:number): Observable<Talukas[]> {
-    return this.http.get<Talukas[]>(`${this.apiUrl}/user/getDistrictTaluka/${selectedValue}`);
+  getAllTaluka(selectedValue: any): Observable<Talukas[]> {
+    return this.http.post<Talukas[]>(`${this.apiUrl}/user/getDistrictTaluka`, selectedValue, {
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+    });
   }
 
   getDashBoardData(currentPage: number, pageSize: number): Observable<Page<DetailsPageDTO>> {
@@ -64,4 +67,6 @@ export class DataService {
     console.log("params "+params)
     return this.http.get<Page<DetailsPageDTO>>(`${this.apiUrl}/admin/getFilterData`, { params });
   }
+    
+   
 }
