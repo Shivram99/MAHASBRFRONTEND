@@ -45,3 +45,11 @@
 .dropdown-toggle::after {
     margin-left: 65% !important;
 }
+.cust-dropdown-menu {
+  max-height: 200px !important;
+  overflow-y: auto !important;
+}
+.filters{
+  max-height: 150px;
+  overflow-y: auto;
+}

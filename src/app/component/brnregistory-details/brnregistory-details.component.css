@@ -37,3 +37,11 @@ input#BNR,
 input#registerDateTo {
   width: 200px !important;
 }
+#v-pills-tabContent ul.dropdown-menu {
+  max-height: 200px;
+  overflow-y: auto;
+}
+.filters{
+  max-height: 150px;
+  overflow-y: auto;
+}

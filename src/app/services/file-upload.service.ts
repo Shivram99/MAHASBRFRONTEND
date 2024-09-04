@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders,  HttpEvent, HttpRequest, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { MstRegistryDetailsPage } from '../model/mst-registry-details-page';
 import { PaginatedResponse } from '../interface/paginated-response';
@@ -77,5 +77,23 @@ export class FileUploadService {
     });
 }
 
+getBRNDetails(BNR: any): Observable<PaginatedResponse<MstRegistryDetailsPage>> {
+ // return this.http.get<Page<DetailsPageDTO>>(`${this.apiUrl}/admin/detailsPages`, { params });
+  return this.http.get<PaginatedResponse<MstRegistryDetailsPage>>(`${this.apiUrl}/api/auth/brn-details/${BNR}`);
+}
+
+
+
+downloadFile(fileName: string): Observable<Blob> {
+  return this.http.get(`${this.apiUrl}/api/auth/download`, {
+    params: { fileName },
+    responseType: 'blob'
+  }).pipe(
+    map((res: Blob) => {
+      console.log("Blob :"+Blob)
+      return res;
+    })
+  );
+}
   
 }

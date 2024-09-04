@@ -3,7 +3,10 @@
     <span class="file-message">or drag and drop files here</span>
     <input type="file" class="file-input" (change)="onFileChange($event)" multiple>
 </div>
-
+<p class="text-right">
+    <button (click)="downloadFile('sample.xlsx')" class="text text-success">Sample Excel File</button>
+    
+</p>
 <div *ngIf="selectedFiles.length > 0" class="file-list">
     <ul>
         <li class="border mb-2 p-3" *ngFor="let file of selectedFiles; let i = index">
@@ -28,10 +31,22 @@
 <button class="btn btn-primary mt-3" (click)="uploadFile()">Upload</button>
 
 
-<div class="status d-flex gap-3 mt-3" *ngIf="bRNGenerationRecordCount">
-    <div>Total BRN Generation  : {{ bRNGenerationRecordCount.totalBRNGeneretion }} | </div>
-    <div>Concern Data : {{ bRNGenerationRecordCount.concernData }} |</div>
-        <div>Duplicate Generation : {{ bRNGenerationRecordCount.duplicateGeneration }} | </div>
-            <div>Total Generation :{{ bRNGenerationRecordCount.totalGeneration }} </div>
-    
+<div class="status" *ngIf="bRNGenerationRecordCount">
+    <div class="row form-group dash-box-main">
+        <div class="col-md-3">
+            <div class="dash-box dash-box1">Total BRN Generation <p>{{ bRNGenerationRecordCount.totalBRNGeneretion }} </p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="dash-box dash-box2">Concern Data <p>{{ bRNGenerationRecordCount.concernData }} </p></div>
+        </div>
+        <div class="col-md-3">
+            <div class="dash-box dash-box3">Duplicate Generation <p>{{ bRNGenerationRecordCount.duplicateGeneration }} </p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="dash-box dash-box4">Total Generation <p>{{ bRNGenerationRecordCount.totalGeneration }} </p></div>
+        </div>
+    </div>
+
 </div>

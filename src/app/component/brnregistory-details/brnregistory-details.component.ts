@@ -71,22 +71,22 @@ export class BRNregistoryDetailsComponent {
   applyFilters() {
     this.postLoginDashboardData(this.currentPage, this.pageSize, this.sortBy);
   }
-  searchBRN() {
-    if (this.BNR) {
-      this.dataService.getBRNDetails(this.BNR).subscribe(
-        (response: Page<DetailsPageDTO>) => {
-          this.totalPages = response.totalPages;
-          this.totalElements = response.totalElements;
-          this.tableData1 = response.content;
-          console.log(this.tableData1);
-        },
-        (error) => {
-          this.tableData1 = [];
-          this.totalElements = 0;
-        }
-      );
-    }
-  }
+  // searchBRN() {
+  //   if (this.BNR) {
+  //     this.dataService.getBRNDetails(this.BNR).subscribe(
+  //       (response: Page<DetailsPageDTO>) => {
+  //         this.totalPages = response.totalPages;
+  //         this.totalElements = response.totalElements;
+  //         this.tableData1 = response.content;
+  //         console.log(this.tableData1);
+  //       },
+  //       (error) => {
+  //         this.tableData1 = [];
+  //         this.totalElements = 0;
+  //       }
+  //     );
+  //   }
+  // }
   //pagination data
   goToDetails(brnNo: string) {
     this.router.navigate(['citizen-dashboard/dashboard-details', brnNo]);
@@ -179,14 +179,46 @@ export class BRNregistoryDetailsComponent {
       this.registryDetails = response.content;
       this.totalPages = response.totalPages;
       this.totalElements = response.totalElements;
-
-      console
     },
     (error) => {
       console.error('Error submitting form', error);
     }
   );
 }
+
+// searchBRN() {
+//   if (this.BNR) {
+//     this.fileUploadService.getBRNDetails(page: number, size: number,this.BNR).subscribe(
+//       (response: PaginatedResponse<MstRegistryDetailsPage>) => {
+//         this.totalPages = response.totalPages;
+//         this.totalElements = response.totalElements;
+//         this.registryDetails = response.content;
+//         console.log(this.tableData1);
+//       },
+//       (error) => {
+//         this.tableData1 = [];
+//         this.totalElements = 0;
+//       }
+//     );
+//   }
+// }
+
+searchBRN() {
+    if (this.BNR) {
+      this.fileUploadService.getBRNDetails(this.BNR).subscribe(
+        (response: PaginatedResponse<MstRegistryDetailsPage>) => {
+          // Expecting an array of MstRegistryDetailsPage
+          this.registryDetails = response.content;
+          this.totalPages = response.totalPages;
+          this.totalElements = response.totalElements;
+        },
+        (error) => {
+          console.error('Error to Find the BRN', error);
+        }
+      );
+    }
+  }
+
 }
 
 // getRegistryDetails(talukas: string[], districts: string[], page: number, size: number, sort: string): Observable<Page<MstRegistryDetailsPageEntity>> {
