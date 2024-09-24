@@ -50,6 +50,7 @@ import { DuplicatedeatilsComponent } from './component/duplicatedeatils/duplicat
 import { ConcerndetailsComponent } from './component/concerndetails/concerndetails.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MultiSelectOptionComponent } from './component/util/multi-select-option/multi-select-option.component';
+import { PostLoginDashboardComponent } from './component/post-login-dashboard/post-login-dashboard.component';
 
 
 //import { ChartfilterComponent } from './component/chartfilter/chartfilter.component';
@@ -97,6 +98,7 @@ import { MultiSelectOptionComponent } from './component/util/multi-select-option
     DuplicatedeatilsComponent,
     ConcerndetailsComponent,
     MultiSelectOptionComponent,
+    PostLoginDashboardComponent,
     
    
     

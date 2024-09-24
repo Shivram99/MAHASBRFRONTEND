@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MstRegistryDetailsPage } from '../../model/mst-registry-details-page';
 import { DashboardDetailsService } from '../../services/dashboard-details.service';
+import { PaginatedResponse } from '../../interface/paginated-response';
 
 @Component({
   selector: 'app-dashboard-details',
@@ -24,8 +25,8 @@ export class DashboardDetailsComponent implements OnInit {
   
   getBRNDetails(): void {
     this.dashboardDetailsService.getBRNDetails(this.brn).subscribe(
-      (data: MstRegistryDetailsPage) => {
-        this.mstRegistryDetailsPage = data;
+      (data: PaginatedResponse<MstRegistryDetailsPage>) => {
+        this.mstRegistryDetailsPage = data.content[0];
         console.log('BRN Details:', this.mstRegistryDetailsPage);
       },
       (error: any) => {

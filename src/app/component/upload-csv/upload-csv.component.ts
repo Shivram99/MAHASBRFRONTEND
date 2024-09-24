@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FileUploadService } from '../../services/file-upload.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { BRNGenerationRecordCount } from '../../interfaces/brngeneration-record-count';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-upload-csv',
@@ -45,12 +46,21 @@ export class UploadCsvComponent {
           if (event.body !== null) {  // Check if event.body is not null
             this.bRNGenerationRecordCount = event.body;  // Assign only if it's not null
             console.log('Upload successful:', this.bRNGenerationRecordCount);
-            alert('Files uploaded successfully!');
+            Swal.fire({
+              title: "File Upload successful",
+              text: "File Upload successful",
+              icon: "success"
+            });
             this.uploadProgress = 0;  // Reset progress after upload
             this.selectedFiles = [];  // Clear file list after upload
           } else {
             console.error('Upload failed: Response body is null');
             alert('Upload failed: Response body is null');
+            Swal.fire({
+              title: "File Upload failed",
+              text: "File Upload failed",
+              icon: "error"
+            });
             this.uploadProgress = 0;
           }
         }

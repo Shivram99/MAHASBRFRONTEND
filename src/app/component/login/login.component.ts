@@ -101,7 +101,7 @@ export class LoginComponent implements OnInit,AfterViewInit {
         this.idleTimeoutService.reset();
 
       }else{
-        this.router.navigate(['/citizen-dashboard']);
+        this.router.navigate(['/des-registry']);
         this.idleTimeoutService.reset();
 
       }

@@ -1,0 +1,43 @@
+<div class="bglightblue">
+    <div class="container">
+        <div class="content">
+            <div class="d-md-flex justify-content-between border-b-org p-3">
+                <h1>Dashboard</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="p-3">
+                <div class="d-flex align-items-start dashboardTabs">
+                    <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist"
+                        aria-orientation="vertical">
+                        <button [routerLink]="['detailsPage']" class="nav-link active" id="v-Pills-dashboard-tab"
+                            data-bs-toggle="pill" data-bs-target="#v-Pills-dashboard" type="button" role="tab"
+                            aria-controls="v-Pills-dashboard" aria-selected="true"
+                            ><img src="../../../assets/images/icon/dashboard.png"
+                                /> Dashboard</button>
+                        <button [routerLink]="['upload-csv']" class="nav-link" data-bs-toggle="pill" type="button"
+                            role="tab" aria-controls="v-pills-regions" aria-selected="false"
+                           ><img src="../../../assets/images/icon/region.png"
+                                /> Upload
+                            CSV</button>
+                            <button [routerLink]="['duplicate-details']" class="nav-link" data-bs-toggle="pill" type="button"
+                            role="tab" aria-controls="v-pills-regions" aria-selected="false"
+                           ><img src="../../../assets/images/icon/region.png"
+                                />Duplicate Record</button> 
+                        <button [routerLink]="['concern-details']" class="nav-link" data-bs-toggle="pill" type="button"
+                            role="tab" aria-controls="v-pills-regions" aria-selected="false"
+                           ><img src="../../../assets/images/icon/region.png"
+                                />Concern Record</button>   
+                    </div>
+                    <div class="tab-content" id="v-pills-tabContent">
+                        <router-outlet></router-outlet>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -69,6 +69,7 @@ const routes: Routes = [
   { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
   { path: 'moderator', loadChildren: () => import('./moderator/moderator.module').then(m => m.ModeratorModule) },
   { path: 'developer', loadChildren: () => import('./developer/developer.module').then(m => m.DeveloperModule) },
+  { path: 'des-registry', loadChildren: () => import('./desregistry/desregistry.module').then(m => m.DESRegistryModule) },
  // { path: 'dashboard-details/:brnNo', component: DashboardDetailsComponent }
  // {path:"register",component:RegisterUserComponent},
   /*{

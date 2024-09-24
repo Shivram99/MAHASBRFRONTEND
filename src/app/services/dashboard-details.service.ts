@@ -4,6 +4,7 @@ import { MstRegistryDetailsPage } from '../model/mst-registry-details-page';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { PaginatedResponse } from '../interface/paginated-response';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class DashboardDetailsService {
 
   }
 
-  getBRNDetails(brn: any): Observable<MstRegistryDetailsPage> {
-    return this.http.get<MstRegistryDetailsPage>(`${this.apiUrl}/api/auth/brn-details/${brn}`);
+  getBRNDetails(brn: any): Observable<PaginatedResponse<MstRegistryDetailsPage>> {
+    return this.http.get<PaginatedResponse<MstRegistryDetailsPage>>(`${this.apiUrl}/api/auth/brn-details/${brn}`);
   }
 }
