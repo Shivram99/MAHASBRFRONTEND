@@ -6,5 +6,7 @@ import { Component } from '@angular/core';
   styleUrl: './topbar.component.css'
 })
 export class TopbarComponent {
- emblemImg : string = 'assets/images/emblem.png'
+ emblemImg : string = 'assets/images/emblem.png';
+
+ isLoggedIn: boolean = false;
 }

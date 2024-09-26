@@ -85,9 +85,10 @@ body {
 }
 
 .table th {
-  background: var(--darkblue);
-  color: #fff;
-  padding: 10px;
+  background: var(--darkblue) !important;
+  color: #fff !important;
+  padding: 10px !important;
+  font-weight: normal !important;
 }
 .table td{
   padding: 10px;

@@ -1,6 +1,6 @@
 <div class="darkblue p-2">
   <div class="container d-flex justify-content-between  mx-auto">
-  <div class="searchPannel d-flex">
+  <!-- <div class="searchPannel d-flex">
     <div class="search d-flex me-3">
       <input placeholder="Search here" class="pl-2" />
       <button class="btn btn-org"><i class="bi bi-search"></i> </button>
@@ -8,7 +8,7 @@
     <div class="text-white pl-3 pt-2">
     Toll Free:  <a  class="text-white " routerLink="tel:0141-1234567">0141-1234567</a> </div>
 
-  </div>
+  </div> -->
   <div class="emblem">
     <a routerLink="https://www.india.gov.in/" target="_blank" class="emb">
       <img [src]="emblemImg" alt="Example Image">
@@ -18,16 +18,17 @@
   <div class="rightPannel">
 
     <ul class="accessibility-menu posHome m-0">
-      <li ><a routerLink="#SkipNavigation">Skip to Navigation</a></li>
+      <!-- <li ><a routerLink="#SkipNavigation">Skip to Navigation</a></li>
       <li ><a routerLink="#Content">Skip to Content</a></li>
       <li ><a routerLink="#" id="decrease_font" title="Set to Small Font" >A-</a></li>
       <li ><a routerLink="#" id="normal_font" title="Set to Medium Font" >A</a></li>
       <li ><a routerLink="#" id="increase_font" title="Set to Larger Font" >A+</a></li>
     
       <li ><a class="bg-light border bg-white text-black" title="High Contrast" routerLink="#link">A</a></li>
-      <li ><a class="bg-dark border bg-black text-light" title="Low Contrast" routerLink="#link">A</a></li>
+      <li ><a class="bg-dark border bg-black text-light" title="Low Contrast" routerLink="#link">A</a></li> -->
       <li><a routerLink="#link2">मराठी</a></li>
-      
+      <li class="text-light">|</li>
+      <li><a *ngIf="!isLoggedIn"  routerLink="/login">Login</a></li>
   </ul>
   </div>
 </div>

@@ -1,10 +1,10 @@
 .dropdown {
     position: relative;
-    display: inline-block;
+    display: block;
   }
   
   .dropdown-toggle {
-    width: 200px;
+    display: block;
     text-align: left;
   }
   
@@ -18,7 +18,7 @@
     float: left;
     min-width: 160px;
     padding: 5px 0;
-    margin: 2px 0 0;
+    margin: -10px 0 0;
     font-size: 14px;
     text-align: left;
     list-style: none;
@@ -37,13 +37,13 @@
   }
   .filters {
     text-align: justify;
-    border: 1px solid #ddd;
-    padding: 5px 5px;
-    background: #f0f8ff;
-    border-radius: 10px 10px;
-}
+    border: 1px solid #e0e5ed;
+    padding: 7px;
+    background: #ebf5ff;
+  }
+  
 .dropdown-toggle::after {
-    margin-left: 65% !important;
+    margin-left: 80% !important;
 }
 .cust-dropdown-menu {
   max-height: 200px !important;
