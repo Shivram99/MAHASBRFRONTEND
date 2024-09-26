@@ -6,7 +6,8 @@ import { HttpEvent, HttpEventType, HttpResponse } from '@angular/common/http';
 
 import { MstRegistryDetailsPage } from '../../model/mst-registry-details-page';
 import { BRNGenerationRecordCount } from '../../interfaces/brngeneration-record-count';
-import { PaginatedResponse } from '../../interfaces/paginated-response';
+import { PaginatedResponse } from '../../interface/paginated-response';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-citizen-dashboard',
@@ -14,8 +15,10 @@ import { PaginatedResponse } from '../../interfaces/paginated-response';
   styleUrl: './citizen-dashboard.component.css'
 })
 export class CitizenDashboardComponent {
+
   registryDetails: MstRegistryDetailsPage[]=[];
   brnGenerationRecordCount?: BRNGenerationRecordCount
+
 
 
   currentTemplate: string = '';
@@ -107,5 +110,9 @@ export class CitizenDashboardComponent {
   //     fileInput.value = ''; // Reset the file input
   //   }
   // }
+
+
+  
+  constructor(private router: Router,private fileUploadService:FileUploadService) {}
 
 }

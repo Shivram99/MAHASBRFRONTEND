@@ -1,0 +1,47 @@
+.nav-dflex {
+  justify-content: space-between;
+}
+.no-form-control {
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--bs-body-color);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: var(--bs-body-bg);
+  background-clip: padding-box;
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  margin-left: 10px;
+}
+.btn-orange {
+  background: #ff7600;
+  color: #fff;
+}
+.filters {
+  background: #f7f7f7;
+  padding: 2px 15px;
+  margin-bottom: 10px;
+  color: #777;
+}
+.full-width {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+input#registerDateFrom,
+input#BNR,
+input#registerDateTo {
+  width: 200px !important;
+}
+#v-pills-tabContent ul.dropdown-menu {
+  max-height: 200px;
+  overflow-y: auto;
+}
+.filters{
+  max-height: 150px;
+  overflow-y: auto;
+}

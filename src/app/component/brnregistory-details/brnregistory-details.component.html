@@ -1,0 +1,93 @@
+<div class="row form-group">
+  <div class="col-md-6"><app-multi-select-option [items]="districts"
+      (selectionChange)="onSelectionDistrictChange($event)" [placeholder]="'District'" /></div>
+  <div class="col-md-6"><app-multi-select-option [items]="talukas" (selectionChange)="onSelectionTalukaChange($event)"
+      [placeholder]="'Taluka'" /></div>
+
+</div>
+
+<div class="row form-group">
+  <div class="col-md-6">
+    <div style="display: block">
+      <label for="registerDateFrom">Registration From Date:</label>
+      <input type="date" id="registerDateFrom" name="registerDateFrom" class="form-control"
+        [(ngModel)]="filters.registerDateFrom" (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div style="display: block">
+      <label for="registerDateTo">Registration To Date:</label>
+      <input type="date" id="registerDateTo" class="form-control" [(ngModel)]="filters.registerDateTo"
+        (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
+    </div>
+  </div>
+</div>
+<br />
+<div class="row form-group">
+  <div class="col-md-6">
+    <label>BNR :</label>
+    <input type="text" class="form-control" id="BNR" name="BNR" [(ngModel)]="BNR"><br />
+    <button type="button" class="btn btn-primary" [disabled]="!BNR" (click)="searchBRN()">
+      Search BRN
+    </button>
+  </div>
+</div>
+<br />
+
+
+<div *ngIf="registryDetails.length > 0; else noData">
+
+
+  <!-- filter component start -->
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th class="first">Sr.No</th>
+        <th>BRN </th>
+        <th>Establishment Name</th>
+        <th>City</th>
+        <th>District</th>
+        <th>Institution Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let detail of registryDetails; let i = index" (click)="goToDetails(detail.brnNo)">
+        <td>{{ i + 1 }}</td>
+        <td>{{ detail.brnNo }}</td>
+        <td>{{ detail.nameOfEstablishmentOrOwner }}</td>
+        <td>{{ detail.district }}</td>
+        <td>{{ detail.district }}</td>
+        <td>{{ detail.sector }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div  *ngIf="totalPages != 1"class="d-flex nav-dflex">
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+        <li class="page-item" [class.disabled]="currentPage === 0">
+          <a class="page-link" (click)="goToPage(currentPage - 1)" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index"
+          [class.active]="i === currentPage">
+          <a class="page-link" (click)="goToPage(i)">{{ i + 1 }}</a>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+          <a class="page-link" (click)="goToPage(currentPage + 1)" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div class="form-group">
+      <label for="pageSize">Page Size:</label>
+      <select id="pageSize" [(ngModel)]="pageSize" (change)="onPageSizeChange($event)" class="no-form-control">
+        <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+      </select>
+    </div>
+  </div>
+</div>
+<ng-template #noData>
+  <p>No data available.</p>
+</ng-template>

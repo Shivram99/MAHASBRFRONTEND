@@ -18,7 +18,7 @@ export class AuthService {
   private roles = 'roles';
   private roles1: string[] = [];
   private rolesSubject = new BehaviorSubject<string[]>(this.roles1);
-  private defaultRole: string = 'ROLE_USER';
+  //private defaultRole: string = 'ROLE_USER';
   responseData: any;
 
   private isLoggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -31,7 +31,7 @@ export class AuthService {
       .pipe(
         tap(response => {
           this.responseData = response;
-          
+         // console.log(" this.responseData.isFirstTimeLogin :"+JSON.stringify(this.responseData.isFirstTimeLogin));
           // for set the role for nav
           this.roles1 = response.roles; // Store roles
           this.rolesSubject.next(this.roles1); // Notify subscribers
@@ -83,6 +83,7 @@ export class AuthService {
     localStorage.removeItem(this.username);
     localStorage.removeItem(this.id);
     localStorage.removeItem("isAuthenticated");
+    this.rolesSubject.next([]);
     this.setIsLoggedIn(false);
   }
 

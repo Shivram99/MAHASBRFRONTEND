@@ -1,10 +1,10 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders,  HttpEvent, HttpRequest } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders,  HttpEvent, HttpRequest, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { MstRegistryDetailsPage } from '../model/mst-registry-details-page';
+import { PaginatedResponse } from '../interface/paginated-response';
 import { BRNGenerationRecordCount } from '../interfaces/brngeneration-record-count';
-import { PaginatedResponse } from '../interfaces/paginated-response';
 
 
 @Injectable({
@@ -15,45 +15,6 @@ export class FileUploadService {
   constructor(private http: HttpClient) {
     this.apiUrl=environment.apiUrl;
    }
-
-
-  //  uploadFile(file: File): Observable<any> {
-  //   const formData = new FormData();
-  //   formData.append('file', file);
-
-  //   return this.http.post(`${this.apiUrl}/api/auth/upload`, formData, {
-  //     headers: new HttpHeaders({
-  //       // 'Content-Type': 'multipart/form-data'  // Note: No need to set this header, FormData will set it automatically
-  //     }),
-  //     reportProgress: true,
-  //     observe: 'events'
-  //   }).pipe(
-  //     catchError(this.handleError)
-  //   );
-  // }
-
-  //  uploadFile(file: File): Observable<any> {
-  //   const formData = new FormData();
-  //   formData.append('file', file);
-  //   // return this.http.post<BRNGenerationRecordCount>(`${this.apiUrl}/api/auth/upload`, formData, {
-  //   //   headers: new HttpHeaders({
-  //   //     // 'Content-Type': 'multipart/form-data'  // Note: No need to set this header, FormData will set it automatically
-  //   //   }),
-  //   //   reportProgress: true,
-  //   //   observe: 'body'  // Observe the response body directly
-  //   // }).pipe(
-  //   //   catchError(this.handleError)
-  //   // );
-  //   return this.http.post(`${this.apiUrl}/api/auth/upload`, formData, {
-  //     headers: new HttpHeaders({}),
-  //     reportProgress: true,
-  //     observe: 'response',  // Observe the full response
-  //     responseType: 'text'  // Expect a plain text response
-  // }).pipe(
-  //     catchError(this.handleError)
-  // );
-  // }
-
 
   // Error handling
   private handleError(error: HttpErrorResponse): Observable<never> {
@@ -67,21 +28,72 @@ export class FileUploadService {
     }
     return throwError(errorMessage);
   }
-  getRegistryDetailsPage(): Observable<PaginatedResponse<MstRegistryDetailsPage>> {
-    return this.http.get<PaginatedResponse<MstRegistryDetailsPage>>(`${this.apiUrl}/api/auth/registoryData`);
+  getRegistryDetailsPage(page: number, size: number, sortBy: string): Observable<PaginatedResponse<MstRegistryDetailsPage>> {
+    const params = new HttpParams()
+    .set('page', page.toString())
+    .set('size', size.toString())
+    .set('sortBy', sortBy);
+    return this.http.get<PaginatedResponse<MstRegistryDetailsPage>>(`${this.apiUrl}/api/auth/registoryData`, { params });
   }
 
-  private uploadUrl = 'YOUR_UPLOAD_ENDPOINT'; // Replace with your actual API endpoint
-
-
+  getDuplicateDetailsPage(page: number, size: number, sortBy: string): Observable<PaginatedResponse<MstRegistryDetailsPage>> {
+    const params = new HttpParams()
+    .set('page', page.toString())
+    .set('size', size.toString())
+    .set('sortBy', sortBy);
+    return this.http.get<PaginatedResponse<MstRegistryDetailsPage>>(`${this.apiUrl}/api/auth/registoryDuplicateData`, { params });
+  }
+  getConcernDetailsPage(page: number, size: number, sortBy: string): Observable<PaginatedResponse<MstRegistryDetailsPage>> {
+    const params = new HttpParams()
+    .set('page', page.toString())
+    .set('size', size.toString())
+    .set('sortBy', sortBy);
+    return this.http.get<PaginatedResponse<MstRegistryDetailsPage>>(`${this.apiUrl}/api/auth/registoryConcernData`, { params });
+  }
+  
+  
   // Change the method to accept FormData instead of File
-  uploadFile(formData: FormData): Observable<HttpEvent<any>> {
-    const req = new HttpRequest('POST', this.uploadUrl, formData, {
+  uploadFile(formData: FormData): Observable<HttpEvent<BRNGenerationRecordCount>> {
+    console.log("formData : "+formData.getAll);
+    const req = new HttpRequest('POST', `${this.apiUrl}/api/auth/upload`, formData, {
       reportProgress: true,
     });
-    return this.http.request(req);
+    return this.http.request<BRNGenerationRecordCount>(req);
   }
 
+ 
+  postLoginDashboardData(page: number, size: number, sortBy: string, selectedDistrictIds: number[], selectedTalukaIds: number[], filters: { registerDateFrom: string, registerDateTo: string }): Observable<PaginatedResponse<MstRegistryDetailsPage>> {
+    const requestBody = {
+        page,
+        size,
+        sortBy,
+        selectedDistrictIds, // Corrected key to pluralize for consistency with the array
+        selectedTalukaIds,
+        filters
+    };
 
+    return this.http.post<PaginatedResponse<MstRegistryDetailsPage>>(`${this.apiUrl}/api/auth/getPostLoginDashboardData`, requestBody, {
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+    });
+}
+
+getBRNDetails(BNR: any): Observable<PaginatedResponse<MstRegistryDetailsPage>> {
+ // return this.http.get<Page<DetailsPageDTO>>(`${this.apiUrl}/admin/detailsPages`, { params });
+  return this.http.get<PaginatedResponse<MstRegistryDetailsPage>>(`${this.apiUrl}/api/auth/brn-details/${BNR}`);
+}
+
+
+
+downloadFile(fileName: string): Observable<Blob> {
+  return this.http.get(`${this.apiUrl}/api/auth/download`, {
+    params: { fileName },
+    responseType: 'blob'
+  }).pipe(
+    map((res: Blob) => {
+      console.log("Blob :"+Blob)
+      return res;
+    })
+  );
+}
   
 }

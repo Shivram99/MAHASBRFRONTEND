@@ -18,14 +18,14 @@ export class NavComponent {
     class: string;
     roles: string[];
   }[] = [
-    { label: "Home", url: "/", routerLink: null, class: "", roles: ['ROLE_USER','ROLE_ADMIN','ROLE_DEVELOPER','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV'] },
-    { label: "About Us", url: null, routerLink: "/aboutus", class: "", roles: ['ROLE_USER','ROLE_ADMIN','ROLE_DEVELOPER','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV'] },
-    { label: "Search BRN", url: null, routerLink: "/search-brn", class: "", roles: ['ROLE_USER','ROLE_ADMIN','ROLE_DEVELOPER','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV'] },
-    { label: "Dashboard", url: null, routerLink: "/dashboard", class: "", roles: ['ROLE_USER','ROLE_ADMIN','ROLE_DEVELOPER','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV'] },
-    { label: "FAQ", url: null, routerLink: "/faq", class: "", roles: ['ROLE_USER','ROLE_ADMIN','ROLE_DEVELOPER','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV'] },
-    { label: "Circular", url: null, routerLink: "/circular", class: "", roles: ['ROLE_USER','ROLE_ADMIN','ROLE_DEVELOPER','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV'] },
-    { label: "citizen-dashboard", url: null, routerLink: "/citizen-dashboard", class: "", roles: ['ROLE_USER','ROLE_ADMIN','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV'] }
-    
+    { label: "Home", url: "/", routerLink: null, class: "", roles: ['ROLE_USER'] },
+    { label: "About Us", url: null, routerLink: "/aboutus", class: "", roles: ['ROLE_USER'] },
+    { label: "Search BRN", url: null, routerLink: "/search-brn", class: "", roles: ['ROLE_USER'] },
+    { label: "Dashboard", url: null, routerLink: "/dashboard", class: "", roles: ['ROLE_USER'] },
+    { label: "FAQ", url: null, routerLink: "/faq", class: "", roles: ['ROLE_USER'] },
+    { label: "Circular", url: null, routerLink: "/circular", class: "", roles: ['ROLE_USER'] },
+    { label: "Dashboard", url: null, routerLink: "/des-registry", class: "", roles: ['ROLE_ADMIN','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV'] },
+    { label: "changePassword", url: null, routerLink: "/changePassword", class: "", roles: ['ROLE_ADMIN','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV'] }
   ];
  //'ROLE_ADMIN','ROLE_USER' ,'ROLE_MODERATOR' 
   filteredNavLinks: {
@@ -35,6 +35,7 @@ export class NavComponent {
     class: string;
     roles: string[];
   }[] = [];
+
   constructor(private authService: AuthService, private router: Router) {}
   ngOnInit() {
     
@@ -44,22 +45,32 @@ export class NavComponent {
   
 }
 filterLinks() {
-  const userRoles = this.authService.getUserRoles();
   this.authService.getIsLoggedIn().subscribe(isLoggedIn => {
     this.isLoggedIn = isLoggedIn;
-    if(!this.isLoggedIn){
-      userRoles.push('ROLE_USER')
+  
+    // Fetch roles if the user is logged in, otherwise assign default roles
+    if (this.isLoggedIn) {
+      // Fetch user roles from authService
+      this.authService.getUserRolesObservable().subscribe(userRoles => {
+        this.filterNavLinks(userRoles);
+      });
+    } 
+    else {
+    //   // Assign default role if not logged in
+     const defaultRoles = ['ROLE_USER'];
+      this.filterNavLinks(defaultRoles);
     }
   });
-
   
+}
+private filterNavLinks(userRoles: string[]): void {
   this.filteredNavLinks = this.navLinks.filter(link =>
     link.roles.length === 0 || link.roles.some(role => userRoles.includes(role))
-  );
-}
+  );}
 logout() :void{
-
+  
   this.authService.logout();
+  //this.filterLinks();
   this.router.navigate(['/']);
 
 }
