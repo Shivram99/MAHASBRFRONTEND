@@ -16,14 +16,12 @@
   
     <div class="d-flex align-items-start dashboardTabs">
       <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-        <button class="nav-link active" id="v-Pills-dashboard-tab" data-bs-toggle="pill" data-bs-target="#v-Pills-dashboard" type="button" role="tab" aria-controls="v-Pills-dashboard" aria-selected="true"><img src="../../../assets/images/icon/dashboard.png" /> Dashboard</button>
-        <button class="nav-link" id="v-pills-acts-tab" data-bs-toggle="pill" data-bs-target="#v-pills-acts" type="button" role="tab" aria-controls="v-pills-acts" aria-selected="false"><img src="../../../assets/images/icon/act.png" /> Detailed Page</button>
-    
-        <button class="nav-link" id="v-pills-regions-tab" data-bs-toggle="pill" data-bs-target="#v-pills-regions" type="button" role="tab" aria-controls="v-pills-regions" aria-selected="false"><img src="../../../assets/images/icon/region.png" /> Upload CSV</button>
-        
+        <button class="nav-link active" (click)="showTemplate('dashboard')"><img src="../../../assets/images/icon/dashboard.png" /> Dashboard</button>
+        <button class="nav-link" (click)="showTemplate('upload')"><img src="../../../assets/images/icon/region.png" /> Upload CSV</button>
       </div>
       <div class="tab-content" id="v-pills-tabContent">
-        <div class="tab-pane fade show active" id="v-Pills-dashboard" role="tabpanel" aria-labelledby="v-Pills-dashboard-tab" tabindex="0">
+        <ng-template #dashboard>
+       
             <div class="float-end d-md-flex  align-items-center gap-2">
         
                 Export 
@@ -37,6 +35,7 @@
         </div>
         <div class="clearfix"></div>
         <div class="table-responsive mt-2">
+
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
@@ -52,7 +51,7 @@
                     <tr>
                         <td>1.</td>
                         <td>
-                            0914870000000374
+                           <a routerLink="/">0914870000000374</a>
                         </td>
                         <td>
                             SAGART GALLEY & UNISEX SALON
@@ -168,75 +167,38 @@
                     </tr>
                 </tbody>
             </table>
+           
         </div>
-        <ng-template #noData>
-            <p>No data available.</p>
-          </ng-template>
         </div>
         
-        </div>
-        <div class="tab-pane fade" id="v-pills-acts" role="tabpanel" aria-labelledby="v-pills-acts-tab" tabindex="0">
-            
-            <div class="d-flex justify-content-between">
-                <h3>BRN : 98756454564</h3>
-
-                <div class="d-md-flex  align-items-center gap-2">
-            
-                    Export 
-            
-                <button class="btn btn-outline-success">
-                    <i class="bi bi-file-earmark-excel-fill"></i>
-                </button>
-                <button class="btn btn-outline-danger">
-                    <i class="bi bi-filetype-pdf"></i>
-                </button>
+   
+    </ng-template>
+        <ng-template #details>
+            <div>
+                <div class="d-flex justify-content-between">
+                    <h3>BRN : 98756454564</h3>
+                    <div class="d-md-flex align-items-center gap-2">
+                        Export 
+                        <button class="btn btn-outline-success">
+                            <i class="bi bi-file-earmark-excel-fill"></i>
+                        </button>
+                        <button class="btn btn-outline-danger">
+                            <i class="bi bi-filetype-pdf"></i>
+                        </button>
+                    </div>
+                </div>
+                <app-dashboard-details></app-dashboard-details>
+                <div class="clearfix"></div>
             </div>
-            </div>
-           
-        <div class="clearfix"></div>
- <app-dashboard-details></app-dashboard-details>
+        </ng-template>
+        
+        <!-- No Data ng-template -->
+        <ng-template #noData>
+            <app-upload-csv></app-upload-csv>
+        </ng-template>
+        
+     
 
-        </div>
-         <div class="tab-pane fade" id="v-pills-regions" role="tabpanel" aria-labelledby="v-pills-regions-tab" tabindex="0">
-           <app-upload-csv></app-upload-csv>
-          
-
-
-
-            <!-- <div class="file-drop-area">
-                <span class="choose-file-button">Choose files</span>
-                <span class="file-message">or drag and drop files here</span>
-                <input type="file" class="file-input" (change)="onFileChange($event)" multiple>
-                <span class="file-info">{{fileInfo}}</span>  
-              </div>
-              <div *ngIf="uploadProgress > 0">
-                <progress [value]="uploadProgress" max="100"></progress>
-                <span>{{uploadProgress}}%</span>
-            </div>
-              <button class="btn btn-primary mt-3" (click)="uploadFile()">Upload</button>  -->
-              <!-- <div *ngIf="brnGenerationRecordCount"> 
-                <h4>BRN Generation Status:</h4>
-                <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th>Total BRN Generation</th>
-                      <th>Concern Data</th>
-                      <th>Duplicate Generation</th>
-                      <th>Total Generation</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>{{ brnGenerationRecordCount?.totalBRNGeneretion }}</td>
-                      <td>{{ brnGenerationRecordCount?.concernData }}</td>
-                      <td>{{ brnGenerationRecordCount?.duplicateGeneration }}</td>
-                      <td>{{ brnGenerationRecordCount?.totalGeneration }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>  -->
-
-        </div>
          
       </div>
     </div>

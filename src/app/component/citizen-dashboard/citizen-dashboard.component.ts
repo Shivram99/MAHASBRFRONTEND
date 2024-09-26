@@ -17,6 +17,12 @@ export class CitizenDashboardComponent {
   registryDetails: MstRegistryDetailsPage[]=[];
   brnGenerationRecordCount?: BRNGenerationRecordCount
 
+
+  currentTemplate: string = '';
+
+  showTemplate(template: string): void {
+    this.currentTemplate = template;
+  }
   // ngOnInit(): void {
 
   //   this.getRegistryDetailsPage()
