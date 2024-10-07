@@ -54,7 +54,7 @@
     <tbody>
       <tr *ngFor="let detail of registryDetails; let i = index" (click)="goToDetails(detail.brnNo)">
         <td>{{ i + 1 }}</td>
-        <td>{{ detail.brnNo }}</td>
+        <td><a class="nav-link">{{detail.brnNo }}</a> </td>
         <td>{{ detail.nameOfEstablishmentOrOwner }}</td>
         <td>{{ detail.district }}</td>
         <td>{{ detail.district }}</td>
@@ -90,5 +90,5 @@
   </div>
 </div>
 <ng-template #noData>
-  <p>No data available.</p>
+  <p class="py-5">No data available.</p>
 </ng-template>

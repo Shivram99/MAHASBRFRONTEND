@@ -6,3 +6,16 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+    background: #D4EBFF;
+}
+
+.table a.nav-link {
+    color: #1467b7;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.table a.nav-link:hover {
+    color: #000;
+}

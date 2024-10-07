@@ -22,3 +22,9 @@ ul.details li span {
     width: 30%;
     text-align: right;
 }
+
+ul.details li strong {
+    color: #2676C3;
+font-size: 13px;
+font-weight: 500;
+}
