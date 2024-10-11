@@ -89,7 +89,8 @@ export class BRNregistoryDetailsComponent {
   // }
   //pagination data
   goToDetails(brnNo: string) {
-    this.router.navigate(['citizen-dashboard/dashboard-details', brnNo]);
+    console.log("brnNo "+brnNo)
+    this.router.navigate(['des-registry/dashboard-details', brnNo]);
   }
 
   loadRegistryDetails(page: number, size: number, sortBy: string): void {
