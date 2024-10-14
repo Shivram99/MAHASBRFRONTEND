@@ -1,5 +1,5 @@
 <div class="filters">
-    <small>{{ getSelectedText() }}</small>
+    <small>{{ getSelectedText() | capitalize }}</small>
 </div>
 <br />
 <div class="dropdown" [class.open]="dropdownOpen" (mouseleave)="onMouseLeave($event)">
@@ -19,7 +19,7 @@
         <li *ngFor="let item of items">
             <label>
                 <input type="checkbox" (change)="onCheckboxChange($event, item)" [checked]="isSelected(item)" />
-                {{ item.name }}
+                {{ item.name |capitalize }}
             </label>
         </li>
     </ul>

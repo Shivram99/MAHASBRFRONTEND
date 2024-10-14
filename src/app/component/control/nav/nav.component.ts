@@ -18,13 +18,16 @@ export class NavComponent {
     class: string;
     roles: string[];
   }[] = [
+    
     { label: "Home", url: "/", routerLink: null, class: "", roles: ['ROLE_USER'] },
     { label: "About Us", url: null, routerLink: "/aboutus", class: "", roles: ['ROLE_USER'] },
     { label: "Search BRN", url: null, routerLink: "/search-brn", class: "", roles: ['ROLE_USER'] },
     { label: "Dashboard", url: null, routerLink: "/dashboard", class: "", roles: ['ROLE_USER'] },
     { label: "FAQ", url: null, routerLink: "/faq", class: "", roles: ['ROLE_USER'] },
     { label: "Circular", url: null, routerLink: "/circular", class: "", roles: ['ROLE_USER'] },
-    { label: "Dashboard", url: null, routerLink: "/des-registry", class: "", roles: ['ROLE_ADMIN','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV'] },
+    { label: "Dashboard", url: null, routerLink: "/des-registry", class: "", roles: ['ROLE_ADMIN','ROLE_DES_STATE','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV'] },
+    { label: "Dashboard", url: null, routerLink: "/des-region", class: "", roles: ['ROLE_DES_REGION'] },
+    { label: "Dashboard", url: null, routerLink: "/des-district-brn-details", class: "", roles: ['ROLE_DES_DISTRICT'] },
     { label: "changePassword", url: null, routerLink: "/changePassword", class: "", roles: ['ROLE_ADMIN','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV'] }
   ];
  //'ROLE_ADMIN','ROLE_USER' ,'ROLE_MODERATOR' 

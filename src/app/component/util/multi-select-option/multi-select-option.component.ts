@@ -10,6 +10,7 @@ export class MultiSelectOptionComponent {
   @Output() selectionChange = new EventEmitter<{ id: number, name: string }[]>();
 
   @Input() placeholder: string = 'Select District'; 
+  
 
   selectedItems: any[] = [];
   dropdownOpen = false;
@@ -47,7 +48,10 @@ export class MultiSelectOptionComponent {
     if (this.selectedItems.length === 0) {
       return this.placeholder;
     }
-    return this.selectedItems.map(item => item.name).join(', ');
+   return this.selectedItems.map(item => item.name).join(', ');
+  //  return this.selectedItems
+  //  .map(item => this.capitalizePipe.transform(item.name)) // Apply the pipe
+  //  .join(', ');
   }
 
   selectAll() {

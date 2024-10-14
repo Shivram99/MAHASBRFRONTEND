@@ -24,7 +24,7 @@
               <select class="form-select" formControlName="district">
                 <option [value]="-1">--Select--</option>
                 <option *ngFor="let district of districts" [value]="district.censusDistrictCode">
-                    {{ district.districtName }}
+                    {{ district.districtName | capitalize }}
                   </option>
               </select>
               <div *ngIf="searchBrnFilter.get('district')?.hasError('forbiddenValue')">

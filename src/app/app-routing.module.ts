@@ -70,6 +70,8 @@ const routes: Routes = [
   { path: 'moderator', loadChildren: () => import('./moderator/moderator.module').then(m => m.ModeratorModule) },
   { path: 'developer', loadChildren: () => import('./developer/developer.module').then(m => m.DeveloperModule) },
   { path: 'des-registry', loadChildren: () => import('./desregistry/desregistry.module').then(m => m.DESRegistryModule) },
+  { path: 'des-region', loadChildren: () => import('./des-region/des-region.module').then(m => m.DesRegionModule) },
+  { path: 'des-district-brn-details', loadChildren: () => import('./des-district-brn-details/des-district-brn-details.module').then(m => m.DesDistrictBrnDetailsModule) },
  // { path: 'dashboard-details/:brnNo', component: DashboardDetailsComponent }
  // {path:"register",component:RegisterUserComponent},
   /*{

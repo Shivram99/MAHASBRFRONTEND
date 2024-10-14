@@ -1,19 +1,19 @@
 import { Component } from '@angular/core';
 import { MstRegistryDetailsPage } from '../../model/mst-registry-details-page';
-import { FileUploadService } from '../../services/file-upload.service';
 import { PaginatedResponse } from '../../interface/paginated-response';
+import { RegionBrnDetailsService } from '../../services/region-brn-details.service';
+import { FileUploadService } from '../../services/file-upload.service';
 import { Router } from '@angular/router';
-import { DetailsPageDTO } from '../../interface/details-page-dto';
 import { DataService } from '../../services/dashboard/data-service.service';
-import { Page } from '../../interface/page';
+import { DetailsPageDTO } from '../../interface/details-page-dto';
+import { DistrictBrnDetailsService } from '../../services/district-brn-details.service';
 
 @Component({
-  selector: 'app-brnregistory-details',
-  templateUrl: './brnregistory-details.component.html',
-  styleUrl: './brnregistory-details.component.css',
+  selector: 'app-district-brndetails',
+  templateUrl: './district-brndetails.component.html',
+  styleUrl: './district-brndetails.component.css'
 })
-export class BRNregistoryDetailsComponent {
-  //filter variable data
+export class DistrictBRNDetailsComponent {
 
   districts: { id: number; name: string }[] = [];
   talukas: { id: number; name: string }[] = [];
@@ -42,6 +42,7 @@ export class BRNregistoryDetailsComponent {
   pageSizeOptions: number[] = [5, 10, 20, 50]; // Options for page size
   sortBy: string = 'siNo'; // Default sorting parameter
   constructor(
+    private districtBrnDetailsService: DistrictBrnDetailsService,
     private fileUploadService: FileUploadService,
     private router: Router,
     private dataService: DataService
@@ -74,13 +75,14 @@ export class BRNregistoryDetailsComponent {
   
   goToDetails(brnNo: string) {
     console.log("brnNo "+brnNo)
-    this.router.navigate(['des-registry/dashboard-details', brnNo]);
+    this.router.navigate(['des-district-brn-details/dashboard-details', brnNo]);
   }
 
   loadRegistryDetails(page: number, size: number, sortBy: string): void {
-    this.fileUploadService.getRegistryDetailsPage(page, size, sortBy).subscribe(
+    this.districtBrnDetailsService.getRegistryDetailsPage(page, size, sortBy).subscribe(
       (response: PaginatedResponse<MstRegistryDetailsPage>) => {
         // Expecting an array of MstRegistryDetailsPage
+        console.log(response.content)
         this.registryDetails = response.content;
         this.totalPages = response.totalPages;
         this.totalElements = response.totalElements;
@@ -171,23 +173,6 @@ export class BRNregistoryDetailsComponent {
   );
 }
 
-// searchBRN() {
-//   if (this.BNR) {
-//     this.fileUploadService.getBRNDetails(page: number, size: number,this.BNR).subscribe(
-//       (response: PaginatedResponse<MstRegistryDetailsPage>) => {
-//         this.totalPages = response.totalPages;
-//         this.totalElements = response.totalElements;
-//         this.registryDetails = response.content;
-//         console.log(this.tableData1);
-//       },
-//       (error) => {
-//         this.tableData1 = [];
-//         this.totalElements = 0;
-//       }
-//     );
-//   }
-// }
-
 searchBRN() {
     if (this.BNR) {
       this.fileUploadService.getBRNDetails(this.BNR).subscribe(
@@ -203,18 +188,4 @@ searchBRN() {
       );
     }
   }
-
 }
-
-// getRegistryDetails(talukas: string[], districts: string[], page: number, size: number, sort: string): Observable<Page<MstRegistryDetailsPageEntity>> {
-//   let params = new HttpParams()
-//     .set('page', page)
-//     .set('size', size)
-//     .set('sort', sort);
-
-//   // Append talukas and districts to the request parameters
-//   talukas.forEach(taluka => params = params.append('talukas', taluka));
-//   districts.forEach(district => params = params.append('districts', district));
-
-//   return this.http.get<Page<MstRegistryDetailsPageEntity>>(this.apiUrl, { params });
-// }

@@ -37,8 +37,6 @@
 
 
 <div *ngIf="registryDetails.length > 0; else noData" class="mt-3">
-
-
   <!-- filter component start -->
   <table class="table table-bordered table-striped">
     <thead>
@@ -54,11 +52,11 @@
     <tbody>
       <tr *ngFor="let detail of registryDetails; let i = index" (click)="goToDetails(detail.brnNo)">
         <td>{{ i + 1 }}</td>
-        <td><a class="nav-link">{{detail.brnNo }}</a> </td>
-        <td>{{ detail.nameOfEstablishmentOrOwner }}</td>
-        <td>{{ detail.district }}</td>
-        <td>{{ detail.district }}</td>
-        <td>{{ detail.sector }}</td>
+        <td><a class="nav-link">{{ detail.brnNo | capitalize }}</a></td> <!-- Pipe applied -->
+        <td>{{ detail.nameOfEstablishmentOrOwner | capitalize }}</td> <!-- Pipe applied -->
+        <td>{{ detail.district | capitalize }}</td> <!-- Pipe applied -->
+        <td>{{ detail.district | capitalize }}</td> <!-- Pipe applied -->
+        <td>{{ detail.sector | capitalize }}</td> <!-- Pipe applied -->
       </tr>
     </tbody>
   </table>

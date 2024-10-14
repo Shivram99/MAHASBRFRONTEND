@@ -51,6 +51,9 @@ import { ConcerndetailsComponent } from './component/concerndetails/concerndetai
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MultiSelectOptionComponent } from './component/util/multi-select-option/multi-select-option.component';
 import { PostLoginDashboardComponent } from './component/post-login-dashboard/post-login-dashboard.component';
+import { RegionBRNDetailsComponent } from './component/region-brndetails/region-brndetails.component';
+import { DistrictBRNDetailsComponent } from './component/district-brndetails/district-brndetails.component';
+import { CapitalizePipe } from './pipes/capitalize.pipe';
 
 
 //import { ChartfilterComponent } from './component/chartfilter/chartfilter.component';
@@ -99,6 +102,9 @@ import { PostLoginDashboardComponent } from './component/post-login-dashboard/po
     ConcerndetailsComponent,
     MultiSelectOptionComponent,
     PostLoginDashboardComponent,
+    RegionBRNDetailsComponent,
+    DistrictBRNDetailsComponent,
+    CapitalizePipe,
     
    
     

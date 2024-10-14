@@ -79,7 +79,7 @@ export class LoginComponent implements OnInit,AfterViewInit {
       return;
     }
     this.authService.logout();
-    
+    debugger;
     this.authService.login(this.loginForm.value.username, this.loginForm.value.password, this.loginForm.value.recaptchaResponse).subscribe(() => {
       grecaptcha.reset();
        debugger;
@@ -100,7 +100,14 @@ export class LoginComponent implements OnInit,AfterViewInit {
         this.router.navigate(['/developer/developerDashboard']);
         this.idleTimeoutService.reset();
 
-      }else{
+      }else if(this.authService.responseData.roles.includes("ROLE_DES_REGION")){
+        this.router.navigate(['/des-region']);
+        this.idleTimeoutService.reset();
+      }else if(this.authService.responseData.roles.includes("ROLE_DES_DISTRICT")){
+        this.router.navigate(['/des-district-brn-details']);
+        this.idleTimeoutService.reset();
+      }
+      else{
         this.router.navigate(['/des-registry']);
         this.idleTimeoutService.reset();
 

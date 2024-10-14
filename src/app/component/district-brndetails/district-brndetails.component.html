@@ -1,0 +1,54 @@
+<div *ngIf="registryDetails.length > 0; else noData" class="mt-3">
+    <!-- filter component start -->
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th class="first">Sr.No</th>
+          <th>BRN </th>
+          <th>Establishment Name</th>
+          <th>City</th>
+          <th>District</th>
+          <th>Institution Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let detail of registryDetails; let i = index" (click)="goToDetails(detail.brnNo)">
+          <td>{{ i + 1 }}</td>
+          <td><a class="nav-link">{{detail.brnNo }}</a> </td>
+          <td>{{ detail.nameOfEstablishmentOrOwner }}</td>
+          <td>{{ detail.district }}</td>
+          <td>{{ detail.district }}</td>
+          <td>{{ detail.sector }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div  *ngIf="totalPages != 1"class="d-flex nav-dflex">
+      <nav aria-label="Page navigation">
+        <ul class="pagination">
+          <li class="page-item" [class.disabled]="currentPage === 0">
+            <a class="page-link" (click)="goToPage(currentPage - 1)" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index"
+            [class.active]="i === currentPage">
+            <a class="page-link" (click)="goToPage(i)">{{ i + 1 }}</a>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+            <a class="page-link" (click)="goToPage(currentPage + 1)" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <div class="form-group">
+        <label for="pageSize">Page Size:</label>
+        <select id="pageSize" [(ngModel)]="pageSize" (change)="onPageSizeChange($event)" class="no-form-control">
+          <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <ng-template #noData>
+    <p class="py-5">No data available.</p>
+  </ng-template>

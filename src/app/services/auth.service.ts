@@ -33,6 +33,7 @@ export class AuthService {
           this.responseData = response;
          // console.log(" this.responseData.isFirstTimeLogin :"+JSON.stringify(this.responseData.isFirstTimeLogin));
           // for set the role for nav
+          debugger;
           this.roles1 = response.roles; // Store roles
           this.rolesSubject.next(this.roles1); // Notify subscribers
           // JWT token to decode
