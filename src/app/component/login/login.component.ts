@@ -87,7 +87,7 @@ export class LoginComponent implements OnInit,AfterViewInit {
         this.router.navigate(['/changePassword']);
         this.idleTimeoutService.reset();
        }
-      else if(this.authService.responseData.roles.includes(["ROLE_DES_STATE"])){
+      else if(this.authService.responseData.roles.includes("ROLE_ADMIN")){
 
         this.router.navigate(['/admin/dashboardadmin']);
         this.idleTimeoutService.reset();
@@ -105,6 +105,14 @@ export class LoginComponent implements OnInit,AfterViewInit {
         this.idleTimeoutService.reset();
       }else if(this.authService.responseData.roles.includes("ROLE_DES_DISTRICT")){
         this.router.navigate(['/des-district-brn-details']);
+        this.idleTimeoutService.reset();
+      } 
+      else if(this.authService.responseData.roles.includes("ROLE_REG_AUTH_API")){
+        this.router.navigate(['/des-district-brn-details']);
+        this.idleTimeoutService.reset();
+      }
+      else if(this.authService.responseData.roles.includes("ROLE_REG_AUTH_CSV")){
+        this.router.navigate(['/des-registry']);
         this.idleTimeoutService.reset();
       }
       else{

@@ -16,6 +16,8 @@ export class SearchBrnComponent implements OnInit{
   searchBrnFilter!: FormGroup;
 
   registryDetails: MstRegistryDetailsPage[]=[];
+
+  showNoDataAlert = false;
   
 
   constructor(private fb: FormBuilder,private dataService: SerachBrnService) { }
@@ -72,6 +74,7 @@ export class SearchBrnComponent implements OnInit{
     return { atLeastOneRequired: true }; // Invalid
   }
   onSubmit() {
+    debugger;
     console.log("searchBrnFilter :"+this.searchBrnFilter.get('district')?.value );
     console.log("searchBrnFilter :"+this.searchBrnFilter.get('nameOfEstablishmentOrOwner')?.value );
     console.log("searchBrnFilter :"+this.searchBrnFilter.get('brnNo')?.value );
@@ -80,6 +83,7 @@ export class SearchBrnComponent implements OnInit{
       this.dataService.submitForm(this.searchBrnFilter.value).subscribe(
         (response: MstRegistryDetailsPage[]) => { // Expecting an array of MstRegistryDetailsPage
           this.registryDetails = response;
+          this.checkForNoData();
           console.log('Form submitted successfully', this.registryDetails);
         },
         error => {
@@ -91,5 +95,14 @@ export class SearchBrnComponent implements OnInit{
       console.log('Form is invalid');
     }
     }
+
+    checkForNoData(): void {
+    if (!this.registryDetails || this.registryDetails.length === 0) {
+      this.showNoDataAlert = true;
+      setTimeout(() => {
+        this.showNoDataAlert = false;
+      }, 30000); // Hide after 30 seconds
+    }
+  }
 
 }

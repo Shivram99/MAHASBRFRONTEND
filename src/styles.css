@@ -19,3 +19,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .table a.nav-link:hover {
     color: #000;
 }
+
+.bglightblue {
+    min-height: 67vh;
+}

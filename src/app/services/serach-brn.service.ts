@@ -16,10 +16,10 @@ export class SerachBrnService {
    }
 
    submitForm(data: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/user/searchBRN`, data);
+    return this.http.post<any>(`${this.apiUrl}/api/v1/BRN/searchBRN`, data);
   }
   getAllDistricts(): Observable<District[]> {
-    return this.http.get<District[]>(`${this.apiUrl}/user/getAllDistricts`);
+    return this.http.get<District[]>(`${this.apiUrl}/api/v1/BRN/districts`);
   }
   
 }
