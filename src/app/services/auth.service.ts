@@ -30,10 +30,9 @@ export class AuthService {
     return this.http.post<any>(`${environment.apiUrl}/api/auth/signin`, { username, password ,recaptchaResponse})
       .pipe(
         tap(response => {
+          debugger
           this.responseData = response;
-         // console.log(" this.responseData.isFirstTimeLogin :"+JSON.stringify(this.responseData.isFirstTimeLogin));
-          // for set the role for nav
-          debugger;
+         
           this.roles1 = response.roles; // Store roles
           this.rolesSubject.next(this.roles1); // Notify subscribers
           // JWT token to decode
@@ -61,7 +60,7 @@ export class AuthService {
   
 
   private setSession(authResult: any): void {
-
+ debugger
     const currentDate = new Date();
     const tomorrowDate = new Date(currentDate.getTime() + 86400000);
     console.log(tomorrowDate);

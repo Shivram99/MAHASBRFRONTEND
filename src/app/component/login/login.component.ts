@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Inject, OnInit, PLATFORM_ID, Renderer2, inject } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../../services/login.service';
 import { take } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
@@ -39,8 +39,9 @@ export class LoginComponent implements OnInit,AfterViewInit {
   errorMessage: string | null = null; // Explicitly define errorMessage property
 
   currentLanguage: string="en";
+  serverErrors: any = {};
 
- constructor(private authService: AuthService,private router: Router,private languageService:LanguageService,private renderer: Renderer2,@Inject(PLATFORM_ID) private platformId: Object, private idleTimeoutService: IdleTimeoutService) { }
+ constructor(private authService: AuthService,private router: Router,private languageService:LanguageService,private renderer: Renderer2,@Inject(PLATFORM_ID) private platformId: Object, private idleTimeoutService: IdleTimeoutService,private fb: FormBuilder) { }
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -51,25 +52,46 @@ export class LoginComponent implements OnInit,AfterViewInit {
       this.currentLanguage = language;
     });
     
-    this.loginForm = new FormGroup({
-      username: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required]),
-      recaptchaResponse: new FormControl('', [Validators.required]),
+     this.loginForm = this.fb.group({
+      username: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      recaptchaResponse: [''] 
     });
 
-    this.registrationForm = new FormGroup({
-      username: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required]),
-      recaptchaResponse: new FormControl('', [Validators.required]),
+    
+  // Clear backend error when the field changes
+  Object.keys(this.loginForm.controls).forEach(field => {
+    this.loginForm.get(field)?.valueChanges.subscribe(() => {
+      const control = this.loginForm.get(field);
+      if (control?.hasError('backend')) {
+        const newErrors = { ...control.errors };
+        delete newErrors['backend'];
+        if (Object.keys(newErrors).length === 0) {
+          control.setErrors(null);
+        } else {
+          control.setErrors(newErrors);
+        }
+      }
     });
+  });
+
   }
 
+passwordVisible = false;
 
+togglePasswordVisibility(): void {
+  this.passwordVisible = !this.passwordVisible;
+}
 
   login(): void {
-   // const tokenInput = document.getElementsByName('g-recaptcha-response')[0] as HTMLInputElement;
-    //const token = tokenInput.value;
-    //this.recaptchaResponse=token;
+    this.serverErrors = {};
+
+    this.errorMessage = null;
+
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
     const response = grecaptcha.getResponse();
 
     this.loginForm.get('recaptchaResponse')?.setValue(response);
@@ -121,45 +143,31 @@ export class LoginComponent implements OnInit,AfterViewInit {
 
       }
 
-     
-    
-    }, (error: HttpErrorResponse) => {
+    }, (err: HttpErrorResponse) => {
+
+      debugger
       grecaptcha.reset();
-      if (error.status === 401) {
+       if (err.status === 400 && err.error && typeof err.error === 'object') {
+        // Backend sent field-specific errors
+        this.serverErrors = err.error;
+        Object.keys(this.serverErrors).forEach(field => {
+          const control = this.loginForm.get(field);
+          if (control) {
+            control.setErrors({ backend: this.serverErrors[field] });
+          }
+        });
+      } 
+      else if (err.status === 401) {
+        // Invalid credentials
         this.errorMessage = 'Invalid username or password';
-      } else {
+      } 
+      else {
+        // Fallback error
         this.errorMessage = 'An error occurred. Please try again later.';
       }
     });
   }
   
-
-  /*login() {
-    alert(localStorage);
-    this.appService
-      .login(this.loginForm.value.username, this.loginForm.value.password)
-      .pipe(take(1))
-      .subscribe((response) => {
-        console.log(response);
-    
-        alert(localStorage);
-        this.responseData = response.body;
-        console.log('Response Data:', this.responseData); // Log the entire response data
-        alert('User ID:'+this.responseData.id); 
-        alert('Login Successful:');
-        this.appService.setRoles(this.responseData.roles);
-
-       localStorage.setItem(
-          'accessToken',
-          this.responseData.accessToken || ''
-        );
-        if (localStorage.getItem('accessToken') !== '') {
-          this.isLoggedIn = true;
-          this.setName();
-        }
-      });
-  }*/
-
   register() {
     this.appService
       .register(

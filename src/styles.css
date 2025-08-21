@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; font-family: 'Noto Sans Devanagari', sans-serif;}
 .table-striped > tbody > tr:nth-of-type(odd) > * {
     background: #D4EBFF;
 }

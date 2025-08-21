@@ -16,9 +16,10 @@ const routes: Routes = [
   {path:"developerDashboard",component:DeveloperDashboardComponent,canActivate: [authGuard], data: { expectedRole: ['ROLE_DEVELOPER'] } }
       
  ];
+ 
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(routes),RouterModule],
   exports: [RouterModule,]
 })
 export class DeveloperRoutingModule { }

@@ -72,13 +72,7 @@ const routes: Routes = [
   { path: 'des-registry', loadChildren: () => import('./desregistry/desregistry.module').then(m => m.DESRegistryModule) },
   { path: 'des-region', loadChildren: () => import('./des-region/des-region.module').then(m => m.DesRegionModule) },
   { path: 'des-district-brn-details', loadChildren: () => import('./des-district-brn-details/des-district-brn-details.module').then(m => m.DesDistrictBrnDetailsModule) },
- // { path: 'dashboard-details/:brnNo', component: DashboardDetailsComponent }
- // {path:"register",component:RegisterUserComponent},
-  /*{
-    path: "admin",
-    loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
-    canActivate: [authGuard], data: { expectedRole: 'ROLE_ADMIN' } // Load only when authenticated
-  },*/
+  
 ];
 
 @NgModule({

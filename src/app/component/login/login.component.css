@@ -19,3 +19,14 @@ form {
     width: 80%;
     margin: 0 auto;
 }
+
+.bi {
+  font-size: 1.2rem;
+  color: #6c757d;
+}
+.bi:hover {
+  color: #000;
+}
+.nyEye {
+    margin-top: 11px !important;
+}

@@ -54,6 +54,7 @@ import { PostLoginDashboardComponent } from './component/post-login-dashboard/po
 import { RegionBRNDetailsComponent } from './component/region-brndetails/region-brndetails.component';
 import { DistrictBRNDetailsComponent } from './component/district-brndetails/district-brndetails.component';
 import { CapitalizePipe } from './pipes/capitalize.pipe';
+import { LanguageSwitcherComponent } from './shared/components/language-switcher/language-switcher.component';
 
 
 //import { ChartfilterComponent } from './component/chartfilter/chartfilter.component';
@@ -105,6 +106,7 @@ import { CapitalizePipe } from './pipes/capitalize.pipe';
     RegionBRNDetailsComponent,
     DistrictBRNDetailsComponent,
     CapitalizePipe,
+    LanguageSwitcherComponent,
     
    
     
@@ -120,14 +122,14 @@ import { CapitalizePipe } from './pipes/capitalize.pipe';
     //RecaptchaModule.forRoot(),
     NgIdleModule.forRoot(), // Initialize NgIdleModule
     NgIdleKeepaliveModule.forRoot(),
-   TranslateModule.forRoot({
-    loader: {
-      provide: TranslateLoader,
-      useFactory: HttpLoaderFactory,
-      deps: [HttpClient] // If using HttpLoaderFactory
-    },
-    
-  }),
+    TranslateModule.forRoot({
+      defaultLanguage: 'en', // default
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ],
   providers: [
     provideClientHydration(),provideHttpClient(withFetch()),
