@@ -8,9 +8,10 @@ interface ChartData {
 }
 
 @Component({
-  selector: 'app-dashboard-bar-chart',
-  templateUrl: './dashboard-bar-chart.component.html',
-  styleUrls: ['./dashboard-bar-chart.component.css']
+    selector: 'app-dashboard-bar-chart',
+    templateUrl: './dashboard-bar-chart.component.html',
+    styleUrls: ['./dashboard-bar-chart.component.css'],
+    standalone: false
 })
 
 

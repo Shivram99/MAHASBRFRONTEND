@@ -11,7 +11,7 @@ import { DashboarddataComponent } from '../component/dashboarddata/dashboarddata
 import { ChartfilterComponent } from '../component/chartfilter/chartfilter.component';
 import { DashboardTabComponent } from '../component/dashboard-tab/dashboard-tab.component';
 
-console.log("properly loaded")
+console.log("properly loaded 1")
 @NgModule({
   declarations: [RegisterUserComponent,DashboardComponent,DashboardBarChartComponent,
     DashboarddataComponent,

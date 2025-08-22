@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-chartfilter',
-  templateUrl: './chartfilter.component.html',
-  styleUrl: './chartfilter.component.css'
+    selector: 'app-chartfilter',
+    templateUrl: './chartfilter.component.html',
+    styleUrl: './chartfilter.component.css',
+    standalone: false
 })
 export class ChartfilterComponent {
 

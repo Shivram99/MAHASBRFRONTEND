@@ -5,9 +5,10 @@ import { DashboardDetailsService } from '../../services/dashboard-details.servic
 import { PaginatedResponse } from '../../interface/paginated-response';
 
 @Component({
-  selector: 'app-dashboard-details',
-  templateUrl: './dashboard-details.component.html',
-  styleUrl: './dashboard-details.component.css'
+    selector: 'app-dashboard-details',
+    templateUrl: './dashboard-details.component.html',
+    styleUrl: './dashboard-details.component.css',
+    standalone: false
 })
 export class DashboardDetailsComponent implements OnInit {
   brn:any;

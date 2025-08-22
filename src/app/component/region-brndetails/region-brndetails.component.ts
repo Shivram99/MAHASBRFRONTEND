@@ -8,9 +8,10 @@ import { DetailsPageDTO } from '../../interface/details-page-dto';
 import { RegionBrnDetailsService } from '../../services/region-brn-details.service';
 
 @Component({
-  selector: 'app-region-brndetails',
-  templateUrl: './region-brndetails.component.html',
-  styleUrl: './region-brndetails.component.css'
+    selector: 'app-region-brndetails',
+    templateUrl: './region-brndetails.component.html',
+    styleUrl: './region-brndetails.component.css',
+    standalone: false
 })
 export class RegionBRNDetailsComponent {
   districts: { id: number; name: string }[] = [];

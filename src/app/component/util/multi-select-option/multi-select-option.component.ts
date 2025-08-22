@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-multi-select-option',
-  templateUrl: './multi-select-option.component.html',
-  styleUrl: './multi-select-option.component.css'
+    selector: 'app-multi-select-option',
+    templateUrl: './multi-select-option.component.html',
+    styleUrl: './multi-select-option.component.css',
+    standalone: false
 })
 export class MultiSelectOptionComponent {
   @Input() items: { id: number, name: string }[] = [];

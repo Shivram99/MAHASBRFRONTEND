@@ -7,9 +7,10 @@ import { MenuService } from '../../services/menu.service';
 import { Role } from '../../model/user';
 
 @Component({
-  selector: 'app-menu-role-mapping',
-  templateUrl: './menu-role-mapping.component.html',
-  styleUrl: './menu-role-mapping.component.css'
+    selector: 'app-menu-role-mapping',
+    templateUrl: './menu-role-mapping.component.html',
+    styleUrl: './menu-role-mapping.component.css',
+    standalone: false
 })
 export class MenuRoleMappingComponent  implements OnInit {
 

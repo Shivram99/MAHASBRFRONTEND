@@ -5,9 +5,10 @@ import { BRNGenerationRecordCount } from '../../interfaces/brngeneration-record-
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-upload-csv',
-  templateUrl: './upload-csv.component.html',
-  styleUrls: ['./upload-csv.component.css']
+    selector: 'app-upload-csv',
+    templateUrl: './upload-csv.component.html',
+    styleUrls: ['./upload-csv.component.css'],
+    standalone: false
 })
 export class UploadCsvComponent {
   selectedFiles: File[] = [];

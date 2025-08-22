@@ -3,9 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { DataService } from '../../../services/dashboard/data-service.service'; 
 
 @Component({
-  selector: 'app-dashboarddata',
-  templateUrl: './dashboarddata.component.html',
-  styleUrls: ['./dashboarddata.component.css']
+    selector: 'app-dashboarddata',
+    templateUrl: './dashboarddata.component.html',
+    styleUrls: ['./dashboarddata.component.css'],
+    standalone: false
 })
 export class DashboarddataComponent implements OnInit {
   filter = '';

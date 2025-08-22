@@ -3,9 +3,10 @@ import { LanguageService } from '../../language.service';
 
 
 @Component({
-  selector: 'app-private-footer',
-  templateUrl: './private-footer.component.html',
-  styleUrl: './private-footer.component.css'
+    selector: 'app-private-footer',
+    templateUrl: './private-footer.component.html',
+    styleUrl: './private-footer.component.css',
+    standalone: false
 })
 export class PrivateFooterComponent implements OnInit {
 

@@ -2,9 +2,10 @@ import { Component, OnInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core
 import { isPlatformBrowser } from '@angular/common';
 
 @Component({
-  selector: 'app-news-ticker',
-  templateUrl: './news-ticker.component.html',
-  styleUrls: ['./news-ticker.component.css']
+    selector: 'app-news-ticker',
+    templateUrl: './news-ticker.component.html',
+    styleUrls: ['./news-ticker.component.css'],
+    standalone: false
 })
 export class NewsTickerComponent implements OnInit, OnDestroy {
   newsItems: string[] = [

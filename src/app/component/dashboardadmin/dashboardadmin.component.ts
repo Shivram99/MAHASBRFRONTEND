@@ -10,9 +10,10 @@ import { DetailsPageDTO } from '../../interface/details-page-dto';
 import { Page } from '../../interface/page';
 
 @Component({
-  selector: 'app-dashboardadmin',
-  templateUrl: './dashboardadmin.component.html',
-  styleUrl: './dashboardadmin.component.css'
+    selector: 'app-dashboardadmin',
+    templateUrl: './dashboardadmin.component.html',
+    styleUrl: './dashboardadmin.component.css',
+    standalone: false
 })
 export class DashboardadminComponent  { 
  

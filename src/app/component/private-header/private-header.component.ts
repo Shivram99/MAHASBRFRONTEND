@@ -9,9 +9,10 @@ import { CommonService } from '../../services/common.service';
 
 
 @Component({
-  selector: 'app-private-header',
-  templateUrl: './private-header.component.html',
-  styleUrl: './private-header.component.css'
+    selector: 'app-private-header',
+    templateUrl: './private-header.component.html',
+    styleUrl: './private-header.component.css',
+    standalone: false
 })
 export class PrivateHeaderComponent implements OnInit{
   isChecked: boolean = true;

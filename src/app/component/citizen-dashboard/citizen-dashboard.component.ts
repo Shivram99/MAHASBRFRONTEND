@@ -10,9 +10,10 @@ import { PaginatedResponse } from '../../interface/paginated-response';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-citizen-dashboard',
-  templateUrl: './citizen-dashboard.component.html',
-  styleUrl: './citizen-dashboard.component.css'
+    selector: 'app-citizen-dashboard',
+    templateUrl: './citizen-dashboard.component.html',
+    styleUrl: './citizen-dashboard.component.css',
+    standalone: false
 })
 export class CitizenDashboardComponent {
 

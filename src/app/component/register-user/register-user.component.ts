@@ -5,9 +5,10 @@ import { HttpClient } from '@angular/common/http';
 import { DepartmentMst } from '../../model/department-mst';
 
 @Component({
-  selector: 'app-register-user',
-  templateUrl: './register-user.component.html',
-  styleUrl: './register-user.component.css'
+    selector: 'app-register-user',
+    templateUrl: './register-user.component.html',
+    styleUrl: './register-user.component.css',
+    standalone: false
 })
 export class RegisterUserComponent implements OnInit {
   user: User = {

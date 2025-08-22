@@ -9,9 +9,10 @@ import { DetailsPageDTO } from '../../interface/details-page-dto';
 import { DistrictBrnDetailsService } from '../../services/district-brn-details.service';
 
 @Component({
-  selector: 'app-district-brndetails',
-  templateUrl: './district-brndetails.component.html',
-  styleUrl: './district-brndetails.component.css'
+    selector: 'app-district-brndetails',
+    templateUrl: './district-brndetails.component.html',
+    styleUrl: './district-brndetails.component.css',
+    standalone: false
 })
 export class DistrictBRNDetailsComponent {
 

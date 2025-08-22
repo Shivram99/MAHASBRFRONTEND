@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 
 
 @Component({
-  selector: 'app-owl-corosal',
-  templateUrl: './owl-corosal.component.html',
-  styleUrl: './owl-corosal.component.css'
+    selector: 'app-owl-corosal',
+    templateUrl: './owl-corosal.component.html',
+    styleUrl: './owl-corosal.component.css',
+    standalone: false
 })
 export class OwlCorosalComponent {
 

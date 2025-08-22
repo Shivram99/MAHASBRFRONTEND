@@ -9,7 +9,7 @@ import { HomepageComponent } from './component/homepage/homepage.component';
 import { DashboardComponent } from './component/dashboard/dashboard.component';
 import { AboutusComponent } from './component/aboutus/aboutus.component';
 import { ContactusComponent } from './component/contactus/contactus.component';
-import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -60,85 +60,75 @@ import { LanguageSwitcherComponent } from './shared/components/language-switcher
 //import { ChartfilterComponent } from './component/chartfilter/chartfilter.component';
 
 
-@NgModule({
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  declarations: [
-    AppComponent,
-    HeaderComponent,
-    FooterComponent,
-    HomepageComponent,
-    // DashboardComponent,
-    AboutusComponent,
-    ContactusComponent,
-    LoginComponent,
-    UnauthorizedComponent,
-    ChangePasswordComponent,
-   // RegisterUserComponent,
-    DepartmentMstComponent,
-    RoleComponent,
-    DashboardadminComponent,
-    ViewDetailsAdminDashBoardComponent,
-    PrivateHeaderComponent,
-    PrivateFooterComponent,
-    PrivateLayoutComponent,
-    TopbarComponent,
-    NavComponent,
-    CaroselComponent,
-    NewsTickerComponent,
-    AwardsComponent,
-    CirclularComponent,
-    FeedbackComponent,
-    OwlCorosalComponent,
-    FaqComponent,
-    ImportantDocumentComponent,
-    SearchBrnComponent,
-    DashboardNavComponent,
-    CitizenDashboardComponent,
-    DetailsComponent,
-    UploadCsvComponent,
-    CircularComponent,
-    DashboardDetailsComponent,
-    BRNregistoryDetailsComponent,
-    DuplicatedeatilsComponent,
-    ConcerndetailsComponent,
-    MultiSelectOptionComponent,
-    PostLoginDashboardComponent,
-    RegionBRNDetailsComponent,
-    DistrictBRNDetailsComponent,
-    CapitalizePipe,
-    LanguageSwitcherComponent,
-    
-   
-    
-
-   // ChartfilterComponent,
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    FormsModule, 
-    //RecaptchaModule.forRoot(),
-    NgIdleModule.forRoot(), // Initialize NgIdleModule
-    NgIdleKeepaliveModule.forRoot(),
-    TranslateModule.forRoot({
-      defaultLanguage: 'en', // default
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
-    })
-  ],
-  providers: [
-    provideClientHydration(),provideHttpClient(withFetch()),
-    authGuard,
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    provideAnimationsAsync(),
-  ],
-  bootstrap: [AppComponent]
-})
+@NgModule({ schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    declarations: [
+        AppComponent,
+        HeaderComponent,
+        FooterComponent,
+        HomepageComponent,
+        // DashboardComponent,
+        AboutusComponent,
+        ContactusComponent,
+        LoginComponent,
+        UnauthorizedComponent,
+        ChangePasswordComponent,
+        // RegisterUserComponent,
+        DepartmentMstComponent,
+        RoleComponent,
+        DashboardadminComponent,
+        ViewDetailsAdminDashBoardComponent,
+        PrivateHeaderComponent,
+        PrivateFooterComponent,
+        PrivateLayoutComponent,
+        TopbarComponent,
+        NavComponent,
+        CaroselComponent,
+        NewsTickerComponent,
+        AwardsComponent,
+        CirclularComponent,
+        FeedbackComponent,
+        OwlCorosalComponent,
+        FaqComponent,
+        ImportantDocumentComponent,
+        SearchBrnComponent,
+        DashboardNavComponent,
+        CitizenDashboardComponent,
+        DetailsComponent,
+        UploadCsvComponent,
+        CircularComponent,
+        DashboardDetailsComponent,
+        BRNregistoryDetailsComponent,
+        DuplicatedeatilsComponent,
+        ConcerndetailsComponent,
+        MultiSelectOptionComponent,
+        PostLoginDashboardComponent,
+        RegionBRNDetailsComponent,
+        DistrictBRNDetailsComponent,
+        CapitalizePipe,
+        LanguageSwitcherComponent,
+        // ChartfilterComponent,
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        AppRoutingModule,
+        ReactiveFormsModule,
+        FormsModule,
+        //RecaptchaModule.forRoot(),
+        NgIdleModule.forRoot(), // Initialize NgIdleModule
+        NgIdleKeepaliveModule.forRoot(),
+        TranslateModule.forRoot({
+            defaultLanguage: 'en', // default
+            loader: {
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient]
+            }
+        })], providers: [
+        provideClientHydration(), provideHttpClient(withFetch()),
+        authGuard,
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+        provideAnimationsAsync(),
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule { }
 
 

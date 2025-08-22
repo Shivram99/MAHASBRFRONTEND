@@ -5,9 +5,10 @@ import { response } from 'express';
 import { MstRegistryDetailsPage } from '../../model/mst-registry-details-page';
 
 @Component({
-  selector: 'app-search-brn',
-  templateUrl: './search-brn.component.html',
-  styleUrl: './search-brn.component.css'
+    selector: 'app-search-brn',
+    templateUrl: './search-brn.component.html',
+    styleUrl: './search-brn.component.css',
+    standalone: false
 })
 export class SearchBrnComponent implements OnInit{
 

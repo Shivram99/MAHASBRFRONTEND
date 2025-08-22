@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { LanguageService } from '../../language.service';
 
 @Component({
-  selector: 'app-homepage',
-  templateUrl: './homepage.component.html',
-  styleUrl: './homepage.component.css'
+    selector: 'app-homepage',
+    templateUrl: './homepage.component.html',
+    styleUrl: './homepage.component.css',
+    standalone: false
 })
 export class HomepageComponent  implements OnInit{
 

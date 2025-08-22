@@ -9,9 +9,10 @@ import { FileUploadService } from '../services/file-upload.service';
 import { RegionBrnDetailsService } from '../services/region-brn-details.service';
 
 @Component({
-  selector: 'app-des-region',
-  templateUrl: './des-region.component.html',
-  styleUrl: './des-region.component.css'
+    selector: 'app-des-region',
+    templateUrl: './des-region.component.html',
+    styleUrl: './des-region.component.css',
+    standalone: false
 })
 export class DesRegionComponent {
 }

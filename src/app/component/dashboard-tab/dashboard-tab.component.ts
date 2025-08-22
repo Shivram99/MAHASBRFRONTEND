@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-dashboard-tab',
-  templateUrl: './dashboard-tab.component.html',
-  styleUrl: './dashboard-tab.component.css'
+    selector: 'app-dashboard-tab',
+    templateUrl: './dashboard-tab.component.html',
+    styleUrl: './dashboard-tab.component.css',
+    standalone: false
 })
 export class DashboardTabComponent {
   user: string = "ADMIN";

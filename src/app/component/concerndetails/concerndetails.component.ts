@@ -5,9 +5,10 @@ import { Router } from '@angular/router';
 import { PaginatedResponse } from '../../interface/paginated-response';
 
 @Component({
-  selector: 'app-concerndetails',
-  templateUrl: './concerndetails.component.html',
-  styleUrl: './concerndetails.component.css'
+    selector: 'app-concerndetails',
+    templateUrl: './concerndetails.component.html',
+    styleUrl: './concerndetails.component.css',
+    standalone: false
 })
 export class ConcerndetailsComponent {
   concernDetails: MstRegistryDetailsPage[]=[];

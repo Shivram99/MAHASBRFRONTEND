@@ -6,9 +6,10 @@ import { Subject } from 'rxjs';
 
 
 @Component({
-  selector: 'app-department-mst',
-  templateUrl: './department-mst.component.html',
-  styleUrl: './department-mst.component.css'
+    selector: 'app-department-mst',
+    templateUrl: './department-mst.component.html',
+    styleUrl: './department-mst.component.css',
+    standalone: false
 })
 export class DepartmentMstComponent implements OnInit, OnDestroy {
 

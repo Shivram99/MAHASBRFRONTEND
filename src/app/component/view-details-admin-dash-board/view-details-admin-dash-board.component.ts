@@ -5,9 +5,10 @@ import * as html2canvas from 'html2canvas';
 
 
 @Component({
-  selector: 'app-view-details-admin-dash-board',
-  templateUrl: './view-details-admin-dash-board.component.html',
-  styleUrl: './view-details-admin-dash-board.component.css'
+    selector: 'app-view-details-admin-dash-board',
+    templateUrl: './view-details-admin-dash-board.component.html',
+    styleUrl: './view-details-admin-dash-board.component.css',
+    standalone: false
 })
 export class ViewDetailsAdminDashBoardComponent {
   @Input() dummyData: any;

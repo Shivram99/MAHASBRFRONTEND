@@ -6,9 +6,10 @@ import { MstMenu } from '../../model/mst-menu';
 import { MenuService } from '../../services/menu.service';
 
 @Component({
-  selector: 'app-sub-menu',
-  templateUrl: './sub-menu.component.html',
-  styleUrl: './sub-menu.component.css'
+    selector: 'app-sub-menu',
+    templateUrl: './sub-menu.component.html',
+    styleUrl: './sub-menu.component.css',
+    standalone: false
 })
 export class SubMenuComponent implements OnInit {
   subMenus: MstSubMenu[] = []; // Initialize with an empty array

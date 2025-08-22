@@ -8,9 +8,10 @@ import { DataService } from '../../services/dashboard/data-service.service';
 import { Page } from '../../interface/page';
 
 @Component({
-  selector: 'app-brnregistory-details',
-  templateUrl: './brnregistory-details.component.html',
-  styleUrl: './brnregistory-details.component.css',
+    selector: 'app-brnregistory-details',
+    templateUrl: './brnregistory-details.component.html',
+    styleUrl: './brnregistory-details.component.css',
+    standalone: false
 })
 export class BRNregistoryDetailsComponent {
   //filter variable data

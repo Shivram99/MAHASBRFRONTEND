@@ -3,9 +3,10 @@ import { RoleService } from '../../services/role.service';
 import { Role } from '../../model/role';
 
 @Component({
-  selector: 'app-role',
-  templateUrl: './role.component.html',
-  styleUrl: './role.component.css'
+    selector: 'app-role',
+    templateUrl: './role.component.html',
+    styleUrl: './role.component.css',
+    standalone: false
 })
 export class RoleComponent implements OnInit {
 

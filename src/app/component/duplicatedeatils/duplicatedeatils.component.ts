@@ -5,9 +5,10 @@ import { Router } from '@angular/router';
 import { PaginatedResponse } from '../../interface/paginated-response';
 
 @Component({
-  selector: 'app-duplicatedeatils',
-  templateUrl: './duplicatedeatils.component.html',
-  styleUrl: './duplicatedeatils.component.css'
+    selector: 'app-duplicatedeatils',
+    templateUrl: './duplicatedeatils.component.html',
+    styleUrl: './duplicatedeatils.component.css',
+    standalone: false
 })
 export class DuplicatedeatilsComponent {
   deuplicateDetails: MstRegistryDetailsPage[]=[];
