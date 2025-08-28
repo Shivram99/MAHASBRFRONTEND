@@ -1,10 +1,9 @@
-export class District {
-    name: string;
-    region: string;
+    export class District {
+  constructor(
+    public name?: string,
+    public region?: string
+  ) {}
+}
+
   
-    constructor(name: string, region: string) {
-      this.name = name;
-      this.region = region;
-    }
-  }
   

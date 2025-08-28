@@ -1,125 +1,133 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { AutologoutService } from './autologout.service';
-import { Observable } from 'rxjs/internal/Observable';
-import { BehaviorSubject, tap } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { BehaviorSubject, catchError, switchMap, tap, throwError } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 
-import jwt_decode from 'jwt-decode';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { isPlatformBrowser } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private authTokenKey = 'accessToken';
-  private tokenExpirationKey = 'tokenExpiration';
-  private id = 'id';
-  private username = 'username';
-  private roles = 'roles';
-  private roles1: string[] = [];
-  private rolesSubject = new BehaviorSubject<string[]>(this.roles1);
-  //private defaultRole: string = 'ROLE_USER';
-  responseData: any;
+  private helper = new JwtHelperService();
 
-  private isLoggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  //private isLoggedInSubject = new BehaviorSubject<boolean>(false);
+  private isLoggedInSubject = new BehaviorSubject<boolean>(this.hasValidToken());
+  private rolesSubject = new BehaviorSubject<string[]>(this.getRolesFromToken());
 
-  constructor(private http: HttpClient) { }
+  private isBrowser: boolean;
 
-  login(username: string, password: string,recaptchaResponse:string): Observable<any> {
-    return this.http.post<any>(`${environment.apiUrl}/api/auth/signin`, { username, password ,recaptchaResponse})
-      .pipe(
-        tap(response => {
-          debugger
-          this.responseData = response;
-         
-          this.roles1 = response.roles; // Store roles
-          this.rolesSubject.next(this.roles1); // Notify subscribers
-          // JWT token to decode
-          const token =this.responseData.accessToken;
-          if(this.responseData.id!=null){
-            this.setSession(response);
-          }
-        })
-      );
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+
+    if (this.isBrowser) {
+      this.isLoggedInSubject.next(this.hasValidToken());
+      this.rolesSubject.next(this.getRolesFromToken());
+    }
   }
 
-  fetchSecureEndpoint(): Observable<{ msg: string }> {
-    return this.http.get<{ msg: string }>(`${environment.apiUrl}git `);
+  // 🔹 Login and store tokens
+  login(username: string, password: string, recaptchaResponse: string) {
+    return this.http.post<any>(`${environment.apiUrl}/api/auth/signin`, {
+      username,
+      password,
+      recaptchaResponse
+    }).pipe(
+      tap(response => {
+        this.setSession(response.accessToken);
+      }),
+      catchError(this.handleError)
+    );
   }
 
-  fetchSecureAdminEndpoint(): Observable<{ msg: string }> {
-    return this.http.get<{ msg: string }>(`${environment.apiUrl}/api/test/secured-admin`);
-  }
+  // 🔹 Refresh token API
+  // refreshAccessToken() {
+  //   const refreshToken = this.getRefreshToken();
+  //   if (!refreshToken) return throwError(() => new Error('No refresh token available'));
 
-  fetchUnsecureEndpoint(): Observable<{ msg: string }> {
-    return this.http.get<{ msg: string }>(`${environment.apiUrl}/api/test/unsecured`);
-  }
+  //   return this.http.post<any>(`${environment.apiUrl}/api/auth/refresh`, { refreshToken })
+  //     .pipe(
+  //       tap(response => {
+  //         this.setSession(response.accessToken, response.refreshToken);
+  //       }),
+  //       catchError(err => {
+  //         this.logout();
+  //         return throwError(() => err);
+  //       })
+  //     );
+  // }
 
+  private setSession(token: string): void {
+    debugger
+    if (!this.isBrowser) return;
 
-  
-
-  private setSession(authResult: any): void {
- debugger
-    const currentDate = new Date();
-    const tomorrowDate = new Date(currentDate.getTime() + 86400000);
-    console.log(tomorrowDate);
-
-    const { id, username, roles, accessToken } = authResult;
-    localStorage.setItem(this.authTokenKey, accessToken);
-    localStorage.setItem(this.tokenExpirationKey, tomorrowDate.toString());
-    localStorage.setItem(this.roles, roles);
-    localStorage.setItem(this.username, username);
-    localStorage.setItem(this.id, id);
-
-    localStorage.setItem("isAuthenticated","true");
-    this.setIsLoggedIn(true);
+    sessionStorage.setItem(this.authTokenKey, token);
+    this.isLoggedInSubject.next(true);
+    this.rolesSubject.next(this.getRolesFromToken());
   }
 
   logout(): void {
-    localStorage.removeItem(this.authTokenKey);
-    localStorage.removeItem(this.tokenExpirationKey);
-    localStorage.removeItem(this.roles);
-    localStorage.removeItem(this.username);
-    localStorage.removeItem(this.id);
-    localStorage.removeItem("isAuthenticated");
+    if (!this.isBrowser) return;
+
+    this.clearSession();
+
+  }
+
+  private clearSession(): void {
+    debugger
+    sessionStorage.removeItem(this.authTokenKey);
+    this.isLoggedInSubject.next(false);
     this.rolesSubject.next([]);
-    this.setIsLoggedIn(false);
+    this.router.navigate(['/login']);
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.authTokenKey);
+    if (!this.isBrowser) return null;
+    return sessionStorage.getItem(this.authTokenKey);
+  }
+
+  // 🔹 Automatically refresh token if expired
+  getValidAccessToken() {
+    const token = this.getToken();
+
+    return [token];
   }
 
   isAuthenticated(): boolean {
-    const expiration = localStorage.getItem(this.tokenExpirationKey);
-    if (!expiration || new Date(expiration) <= new Date()) {
-      this.logout();
-      this.setIsLoggedIn(false);
-      return false;
-    }
-    return true;
-  }
-
-  getTokenExpiration(): Date {
-    const expiration = localStorage.getItem(this.tokenExpirationKey);
-    return expiration ? new Date(expiration) : new Date();
-  }
-
- 
-  setIsLoggedIn(value: boolean) {
-    this.isLoggedInSubject.next(value);
+    return this.isBrowser && this.hasValidToken();
   }
 
   getIsLoggedIn() {
-    return this.isLoggedInSubject.asObservable();
-  }
-
-  getUserRoles(): string[] {
-    return this.roles1;
-  }
+    return this.isLoggedInSubject.asObservable();  }
 
   getUserRolesObservable() {
     return this.rolesSubject.asObservable();
+  }
+
+  getUserRoles(): string[] {
+    return this.rolesSubject.value;
+  }
+
+  private hasValidToken(): boolean {
+    const token = this.getToken();
+    return !!token && !this.helper.isTokenExpired(token);
+  }
+
+  private getRolesFromToken(): string[] {
+    const token = this.getToken();
+    if (!token) return [];
+    const decoded = this.helper.decodeToken(token);
+    return decoded?.roles || [];
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    console.error('Auth error:', error);
+    return throwError(() => error);
   }
 }

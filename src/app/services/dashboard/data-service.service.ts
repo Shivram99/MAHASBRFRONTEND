@@ -31,11 +31,11 @@ export class DataService {
    }
 
   getAllDistricts(): Observable<District[]> {
-    return this.http.get<District[]>(`${this.apiUrl}/api/v1/BRN/districts`);
+    return this.http.get<District[]>(`${this.apiUrl}/citizenSearch/districts`);
   }
   
   getAllTaluka(selectedValue: any): Observable<Talukas[]> {
-    return this.http.post<Talukas[]>(`${this.apiUrl}/api/v1/BRN/districtTaluka`, selectedValue, {
+    return this.http.post<Talukas[]>(`${this.apiUrl}/citizenSearch/districtTaluka`, selectedValue, {
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
     });
   }

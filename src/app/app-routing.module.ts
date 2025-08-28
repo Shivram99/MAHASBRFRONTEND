@@ -15,38 +15,28 @@ import { FaqComponent } from './component/faq/faq.component';
 import { ImportantDocumentComponent } from './component/important-document/important-document.component';
 import { SearchBrnComponent } from './component/search-brn/search-brn.component';
 import { FeedbackComponent } from './component/feedback/feedback.component';
-import { CirclularComponent } from './component/circlular/circlular.component';
 import { CircularComponent } from './component/circular/circular.component';
 import { CitizenDashboardComponent } from './component/citizen-dashboard/citizen-dashboard.component';
 import { DashboardDetailsComponent } from './component/dashboard-details/dashboard-details.component';
-import { UploadCsvComponent } from './component/upload-csv/upload-csv.component';
-import { BRNregistoryDetailsComponent } from './component/brnregistory-details/brnregistory-details.component';
 import { DuplicatedeatilsComponent } from './component/duplicatedeatils/duplicatedeatils.component';
 import { ConcerndetailsComponent } from './component/concerndetails/concerndetails.component';
+
+
 
 
 const routes: Routes = [
   {path:"",component:HomepageComponent},
   {path:"aboutus",component:AboutusComponent},
+  {path:"search-brn",component:SearchBrnComponent},
+  {path:"faq",component:FaqComponent},
   {path:"contactus",component:ContactusComponent},
   {path:"login",component:LoginComponent},
-  {path:"faq",component:FaqComponent},
+  
   {path:"important-document",component:ImportantDocumentComponent},
   {path:"circular",component:CircularComponent},
   {path:"dashboard",component:DashboardComponent},
   {path:"citizen-dashboard",component:CitizenDashboardComponent,children: [
-    {
-      path: '',
-      component: BRNregistoryDetailsComponent
-    },
-    {
-      path: 'detailsPage',
-      component: BRNregistoryDetailsComponent
-    },
-    {
-      path: 'upload-csv',
-      component: UploadCsvComponent
-    },
+    
     {
       path: 'dashboard-details/:brnNo',
       component: DashboardDetailsComponent
@@ -63,15 +53,14 @@ const routes: Routes = [
     
   ]},
   {path:"feedback",component:FeedbackComponent},
-  {path:"search-brn",component:SearchBrnComponent},
+  
   {path:"unauthorized",component:UnauthorizedComponent},
   {path:"changePassword",component:ChangePasswordComponent},
   { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
   { path: 'moderator', loadChildren: () => import('./moderator/moderator.module').then(m => m.ModeratorModule) },
   { path: 'developer', loadChildren: () => import('./developer/developer.module').then(m => m.DeveloperModule) },
-  { path: 'des-registry', loadChildren: () => import('./desregistry/desregistry.module').then(m => m.DESRegistryModule) },
-  { path: 'des-region', loadChildren: () => import('./des-region/des-region.module').then(m => m.DesRegionModule) },
   { path: 'des-district-brn-details', loadChildren: () => import('./des-district-brn-details/des-district-brn-details.module').then(m => m.DesDistrictBrnDetailsModule) },
+  { path: 'common-post-login', loadChildren: () => import('./common-post-login/common-post-login.module').then(m => m.CommonPostLoginModule) },
   
 ];
 
@@ -79,4 +68,9 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule { 
+
+
+
+  
+}

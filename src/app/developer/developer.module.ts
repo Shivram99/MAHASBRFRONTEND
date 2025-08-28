@@ -1,9 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { DeveloperRoutingModule } from './developer-routing.module';
-import { MenuComponent } from '../component/menu/menu.component';
-import { SubMenuComponent } from '../component/sub-menu/sub-menu.component';
 import { MenuRoleMappingComponent } from '../component/menu-role-mapping/menu-role-mapping.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DeveloperDashboardComponent } from '../component/developer-dashboard/developer-dashboard.component';
@@ -14,8 +11,6 @@ import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [    
-    MenuComponent,
-    SubMenuComponent,
     MenuRoleMappingComponent,
     DeveloperDashboardComponent,
     AdduserComponent,

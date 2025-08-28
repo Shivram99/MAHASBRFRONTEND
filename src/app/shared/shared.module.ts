@@ -1,16 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LanguageSwitcherComponent } from './components/language-switcher/language-switcher.component';
-import { LayoutComponent } from './layout/layout.component';
+import { LayoutComponent } from './components/layout/layout.component';
+import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 
 
 @NgModule({
-  declarations: [LanguageSwitcherComponent, LayoutComponent],
-  exports: [LanguageSwitcherComponent],
+  declarations: [LayoutComponent],
+  exports: [LayoutComponent],
   imports: [
     CommonModule,
-  ]
+    RouterModule,TranslateModule  
+  ],
 })
 export class SharedModule { }

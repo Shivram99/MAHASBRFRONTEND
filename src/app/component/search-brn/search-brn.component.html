@@ -15,8 +15,7 @@
         <form [formGroup]="searchBrnFilter" (ngSubmit)="onSubmit()">
           <div class="form row px-3 mt-3 ">
             <p class="col-md-12">
-              This functionality is to allow users to search for a BRN (Business Register Number), which is an unique
-              identification number for institutions or organizations within the state of Maharashtra.
+              {{'search-brn.instruction' | translate }}
             </p>
 
             <div class="col-md-3">

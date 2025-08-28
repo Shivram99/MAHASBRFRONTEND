@@ -61,6 +61,18 @@ export class FileUploadService {
     return this.http.request<BRNGenerationRecordCount>(req);
   }
 
+  upload(files: File[]): Observable<HttpEvent<any>> {
+    debugger
+    const formData: FormData = new FormData();
+    files.forEach(file => formData.append('files', file));
+
+    const req = new HttpRequest('POST', `${this.apiUrl}/api/auth/upload`, formData, {
+      reportProgress: true,
+      responseType: 'json'
+    });
+
+    return this.http.request(req);
+  }
  
   postLoginDashboardData(page: number, size: number, sortBy: string, selectedDistrictIds: number[], selectedTalukaIds: number[], filters: { registerDateFrom: string, registerDateTo: string }): Observable<PaginatedResponse<MstRegistryDetailsPage>> {
     const requestBody = {
