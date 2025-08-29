@@ -2,12 +2,12 @@
   <div class="container">
     <div class="content">
       <div class="d-md-flex justify-content-between border-b-org p-3">
-        <h1>Search BRN</h1>
+        <h1>{{'search-brn.search-BRN' | translate}}</h1>
         <nav aria-label="breadcrumb">
 
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Search BRN</li>
+            <li class="breadcrumb-item active" aria-current="page">{{'search-brn.search-BRN' | translate}}</li>
           </ol>
         </nav>
       </div>
@@ -20,7 +20,7 @@
 
             <div class="col-md-3">
               <div class="form-group">
-                <label>DISTRICT </label>
+                <label> {{'search-brn.district' | translate }} </label>
                 <select class="form-select" formControlName="district">
                   <option [value]="-1">--Select--</option>
                   <option *ngFor="let district of districts" [value]="district.censusDistrictCode">
@@ -34,30 +34,29 @@
             </div>
             <div class="col-md-4">
               <div class="form-group">
-                <label>ESTABLISHMENT NAME </label>
+                <label>{{'search-brn.establishment-name' | translate }} </label>
                 <textarea class="form-control" formControlName="nameOfEstablishmentOrOwner"></textarea>
 
                 <div *ngIf="searchBrnFilter.hasError('atLeastOneRequired')">
-                  At least one of the fields 'Name of Establishment' or 'BRN No' is required.
+                 {{'search-brn.establishment-name-instruction' | translate }}
                 </div>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label> BRN </label>
+                <label> {{'search-brn.brn' | translate }} </label>
                 <input type="text" class="form-control" id="brnNo" formControlName="brnNo"
-                  placeholder="Enter BRN number" />
+                  placeholder="{{'search-brn.brn-placeholder' | translate}}" />
                 <div
                   *ngIf="searchBrnFilter.get('brnNo')?.invalid && (searchBrnFilter.get('brnNo')?.dirty || searchBrnFilter.get('brnNo')?.touched)">
-                  <div *ngIf="searchBrnFilter.get('brnNo')?.errors?.['pattern']">Only alphanumeric characters are
-                    allowed.</div>
+                  <div *ngIf="searchBrnFilter.get('brnNo')?.errors?.['pattern']"> {{'search-brn.brn-instruction' | translate}}</div>
                 </div>
                 <div *ngIf="searchBrnFilter.hasError('atLeastOneRequired')">
-                  At least one of the fields 'Name of Establishment' or 'BRN No' is required.
+                  {{'search-brn.establishment-name-instruction' | translate }}
                 </div>
                 <div
                   *ngIf="searchBrnFilter.get('brnNo')?.hasError('minlength') || searchBrnFilter.get('brnNo')?.hasError('maxlength')">
-                  BRN number must be exactly 16 characters long.
+                  {{'search-brn.brn-instruction1' | translate}}
                 </div>
               </div>
             </div>

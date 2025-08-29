@@ -121,6 +121,53 @@
     "FILEESIZE" :"❌ File too large: {{file}} (Max 5MB)"
   },
   "search-brn" :{
-    "instruction" : "This functionality is to allow users to search for a BRN (Business Register Number), which is an unique identification number for institutions or organizations within the state of Maharashtra."
-  }
+    "search-BRN" : "search BRN",
+    "instruction" : "This functionality is to allow users to search for a BRN (Business Register Number), which is an unique identification number for institutions or organizations within the state of Maharashtra.",
+    "district" : "district",
+    "establishment-name" : "ESTABLISHMENT NAME",
+    "establishment-name-instruction" : "At least one of the fields 'Name of Establishment' or 'BRN No' is required.",
+    "brn" : "BRN",
+    "brn-instruction" : "Only alphanumeric characters are allowed.",
+    "brn-instruction1" : "BRN number must be exactly 16 characters long.",
+    "brn-placeholder" : "Enter BRN number"
+  },
+  "aboutus" :{
+    "aboutUs" : "About us",
+    "aboutDES" : "About DES",
+    "aboutDESP1" : "The Directorate of Economics and Statistics (DES) is functioning as a principal Statistical Organisation of Government of Maharashtra, which is administratively under control of the Planning Department at Mantralaya. The office of the DES, headed by Dr. J. V. Chaudhari, is housed on 8th floor of the Administrative Building, Mumbai Suburban District, Bandra (East), where as the EDP centre of DES is functioning on 4th and 7th floors of New Administrative Building, opposite Mantralaya, Mumbai.",
+    "aboutDESP2" : "The main functions of the Directorate are to collect official statistics, to collect data through surveys, censuses and type studies on such matters for which official statistics are inadequate; to analyse the data so collected; to undertake evaluation of important programmes; to bring out statistical publications regularly; to impart training to statistical personnel; to co-ordinate the work of statistical sections in different departments of the State Government and give them technical guidance and to give advice to the State Government on economic and statistical matters. As the principal statistical office in the State, the Directorate has to act as liaison between the State Government and the Central Government on all statistical matters. The processing of statistical information collected by this Directorate and other departments of the Government is done at Electronic Data Processing Section of this Directorate.",
+    "about-state-business-register" : "About state business register",
+    "about-state-business-register-P1" : "State Business Register is the up-to-date list of all establishments pursuing various economic activities relating to the production and/or distribution of goods and/or services at a place. The State Business Register, once get completed, will provide an ideal frame for conducting sample surveys and undertaking studies of various economic activities. Initially, it is proposed to prepare and update the list of establishments registered under the major acts viz. the Companies Act, 2013, Factories (Maharashtra Amendment) Act, 2015, Maharashtra Shops and Establishments (Regulation of Employment and Conditions of Service) Act, 2017, The Maharashtra Public Trust Act (Amendment) / Societies Registration Act, 1860, Maharashtra Co-operative Societies Act 1960/Maharashtra Co-operative Society Rules 1961, Khadi and Village Industries Board, 1960 and Micro, Small and Medium Industries Act, 2006. A 16-digit long location code and 16-digit long Business Register Number will be allocated to all the uniquely identified business establishments.",
+    "about-state-business-register-P2" : "Enterprise data of the new registration, renewals, expiry, etc. would be captured periodically from each registering authority and the same to be reflected in the SBR system. The State will have its online Dynamic Business Register which will aid in reducing administrative burden and improving efficiency in registering system, National accounting, and effective policy formulation, monitoring, and planning.",
+    "list-of-concerned-officer" : "List of Concerned Officers",
+    "mr": "Mr",
+    "designation" : "Designation",
+    "contact-details" : "Contact Details"
+   },
+   "faq" : {
+    "FAQ" : "FAQ",
+    "FAQ1" : "Can I add other information to be added to an invoice? ",
+    "FAQ1-P1" : "The Directorate of Economics and Statistics (DES) is functioning as a principal Statistical Organisation of Government of Maharashtra, which is administratively under control of the Planning Department at Mantralaya. The office of the DES, headed by Dr. J. V. Chaudhari, is housed on 8th floor of the Administrative Building, Mumbai Suburban District, Bandra (East), where as the EDP centre of DES is functioning on 4th and 7th floors of New Administrative Building, opposite Mantralaya, Mumbai.",
+    "FAQ1-P2" : "The main functions of the Directorate are to collect official statistics, to collect data through surveys, censuses and type studies on such matters for which official statistics are inadequate; to analyse the data so collected; to undertake evaluation of important programmes; to bring out statistical publications regularly; to impart training to statistical personnel; to co-ordinate the work of statistical sections in different departments of the State Government and give them technical guidance and to give advice to the State Government on economic and statistical matters. As the principal statistical office in the State, the Directorate has to act as liaison between the State Government and the Central Government on all statistical matters. The processing of statistical information collected by this Directorate and other departments of the Government is done at Electronic Data Processing Section of this Directorate.",
+    "FAQ2" : "When should I use in a new table? ",
+    "FAQ2-P1" : "State Business Register is the up-to-date list of all establishments pursuing various economic activities relating to the production and/or distribution of goods and/or services at a place. The State Business Register, once get completed, will provide an ideal frame for conducting sample surveys and undertaking studies of various economic activities. Initially, it is proposed to prepare and update the list of establishments registered under the major acts viz. the Companies Act, 2013, Factories (Maharashtra Amendment) Act, 2015, Maharashtra Shops and Establishments (Regulation of Employment and Conditions of Service) Act, 2017, The Maharashtra Public Trust Act (Amendment) / Societies Registration Act, 1860, Maharashtra Co-operative Societies Act 1960/Maharashtra Co-operative Society Rules 1961, Khadi and Village Industries Board, 1960 and Micro, Small and Medium Industries Act, 2006. A 16-digit long location code and 16-digit long Business Register Number will be allocated to all the uniquely identified business establishments.",
+    "FAQ2-P2" : "Enterprise data of the new registration, renewals, expiry, etc. would be captured periodically from each registering authority and the same to be reflected in the SBR system. The State will have its online Dynamic Business Register which will aid in reducing administrative burden and improving efficiency in registering system, National accounting, and effective policy formulation, monitoring, and planning.",
+    "FAQ3" : " How can I transfer data from one to another?"
+   },
+   "circular" : {
+    "Circular" : "Circular",
+    "SEARCH" : "SEARCH",
+    "FROM-DATE" : "FROM DATE",
+    "TO-DATE" : "TO DATE"
+   },
+   "contactus" : {
+    "Contact-us" : "Contact Us",
+    "Office-Location" : "Office Location",
+    "Office-Location-Address" : "Directorate of Economics & Statistics, Yojana Bhawan Tilak Marg, Jaipur (Raj.)",
+    "Phone-Number" : "Phone Number",
+    "Helpline" : "Helpline (Office Hours):",
+    "number" : "1800-180-6785 (Toll Free), 0141-2850219",
+    "Email-Address" : "Email Address",
+    "Tel-no":"Tel. No."
+   }
 }
