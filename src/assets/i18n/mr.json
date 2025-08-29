@@ -162,7 +162,8 @@
     "Circular" : "परिपत्रक",
     "SEARCH" : "शोधा",
     "FROM-DATE" : "दिनांक पासून",
-    "TO-DATE" : "दिनांक पर्यंत"
+    "TO-DATE" : "दिनांक पर्यंत",
+    "Search-placeholder" : "कीवर्ड प्रविष्ट करा"
    },
    "contactus" : {
     "Contact-us" : "आमच्याशी संपर्क साधा",

@@ -158,7 +158,8 @@
     "Circular" : "Circular",
     "SEARCH" : "SEARCH",
     "FROM-DATE" : "FROM DATE",
-    "TO-DATE" : "TO DATE"
+    "TO-DATE" : "TO DATE",
+    "Search-placeholder" : "Enter Keywords"
    },
    "contactus" : {
     "Contact-us" : "Contact Us",
