@@ -18,19 +18,11 @@
   <div class="rightPannel">
 
     <ul class="accessibility-menu posHome m-0">
-      <!-- <li ><a routerLink="#SkipNavigation">Skip to Navigation</a></li>
-      <li ><a routerLink="#Content">Skip to Content</a></li>
-      <li ><a routerLink="#" id="decrease_font" title="Set to Small Font" >A-</a></li>
-      <li ><a routerLink="#" id="normal_font" title="Set to Medium Font" >A</a></li>
-      <li ><a routerLink="#" id="increase_font" title="Set to Larger Font" >A+</a></li>
-    
-      <li ><a class="bg-light border bg-white text-black" title="High Contrast" routerLink="#link">A</a></li>
-      <li ><a class="bg-dark border bg-black text-light" title="Low Contrast" routerLink="#link">A</a></li> -->
-      <li><a routerLink="#link2">मराठी</a></li>
+      <li><app-language-switcher></app-language-switcher></li>
       <li class="text-light">|</li>
       <li><a *ngIf="!isLoggedIn"  routerLink="/login">Login</a></li>
   </ul>
-  <app-language-switcher></app-language-switcher>
+  
   </div>
 </div>
 </div>

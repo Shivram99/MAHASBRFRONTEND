@@ -33,24 +33,43 @@
                            ><img src="../../../assets/images/icon/region.png"
                                 />Concern Record</button>   
                     </div> -->
-                    <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-  <button *ngFor="let item of menuItems; let i = index"
-          [routerLink]="item.routerLink"
-          class="nav-link"
-          id="v-pills-{{ item.label | lowercase }}-tab"
-          data-bs-toggle="pill"
-          type="button"
-          role="tab"
-          [attr.aria-controls]="'v-pills-' + (item.label | lowercase)"
-          [attr.aria-selected]="i === 0"
-          [ngClass]="{ 'active': i === 0 }">
+                    <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist"
+                        aria-orientation="vertical">
+                        <button *ngFor="let item of menuItems; let i = index" [routerLink]="item.routerLink"
+                            class="nav-link" id="v-pills-{{ item.label | lowercase }}-tab" data-bs-toggle="pill"
+                            type="button" role="tab" [attr.aria-controls]="'v-pills-' + (item.label | lowercase)"
+                            [attr.aria-selected]="i === 0" [ngClass]="{ 'active': i === 0 }">
 
-    <img [src]="item.icon" /> {{ item.label }}
-  </button>
-</div>
+                            <img [src]="item.icon" /> {{ item.label }}
+                        </button>
+                    </div>
 
+                    <div class="cust-butns d-flex align-items-center">
+                        <!-- Logout Button -->
+                        <button class="btn btn-warning btn-sm me-2" (click)="logout()">Log out</button>
 
-                    <div class="tab-content" id="v-pills-tabContent">
+                        <!-- Admin Dropdown -->
+                        <div class="dropdown" id="adminDropdown">
+                            <button class="btn btn-primary btn-sm dropdown-toggle d-flex align-items-center"
+                                type="button" data-bs-toggle="dropdown">
+                                <img [src]="progfileIcon" style="width: 19px; margin-right: 5px;" /> Admin Name
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">Profile</a></li>
+                                <li><a class="dropdown-item" href="#">Settings</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <button class="dropdown-item text-danger" (click)="logout()">
+                                        Log out
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="tab-content tab-content-set " id="v-pills-tabContent">
                         <router-outlet></router-outlet>
                     </div>
                 </div>

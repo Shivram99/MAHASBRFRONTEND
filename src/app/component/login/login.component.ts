@@ -5,7 +5,7 @@ import { take } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { LanguageService } from '../../language.service';
+import { LanguageService } from '../../core/services/language.service';
 import { isPlatformBrowser } from '@angular/common';
 import { IdleTimeoutService } from '../../services/idle-timeout.service';
 declare var grecaptcha: any;
@@ -25,6 +25,18 @@ export class LoginComponent implements OnInit, AfterViewInit {
   serverErrors: any = {};
   currentLanguage: string = "en";
   passwordVisible = false;
+
+  readonly ALLOWED_ROLES = [
+    "ROLE_USER",
+    "ROLE_MODERATOR",
+    "ROLE_ADMIN",
+    "ROLE_DEVELOPER",
+    "ROLE_DES_STATE",
+    "ROLE_DES_REGION",
+    "ROLE_DES_DISTRICT",
+    "ROLE_REG_AUTH_API",
+    "ROLE_REG_AUTH_CSV"
+  ];
 
   constructor(
     private authService: AuthService,
@@ -103,25 +115,12 @@ export class LoginComponent implements OnInit, AfterViewInit {
         grecaptcha.reset();
 
         const roles = this.authService.getUserRoles();
-      
-        if (roles.includes("ROLE_ADMIN")) {
-          this.router.navigate(['/admin/dashboardadmin']);
-        } else if (roles.includes("ROLE_MODERATOR")) {
-          this.router.navigate(['/moderator/moderatorDashboard']);
-        } else if (roles.includes("ROLE_DEVELOPER")) {
-          this.router.navigate(['/developer/developerDashboard']);
-        } else if (roles.includes("ROLE_DES_REGION")) {
-          this.router.navigate(['/des-region']);
-        } else if (roles.includes("ROLE_DES_DISTRICT")) {
-          this.router.navigate(['/des-district-brn-details']);
-        } else if (roles.includes("ROLE_REG_AUTH_API")) {
-          this.router.navigate(['/des-district-brn-details']);
-        } else if (roles.includes("ROLE_REG_AUTH_CSV")) {
+        debugger
+        if (roles.some(role => this.ALLOWED_ROLES.includes(role))) {
           this.router.navigate(['/common-post-login']);
         } else {
-          this.router.navigate(['/des-registry']);
+          this.router.navigate(['/unauthorized']);
         }
-
         this.idleTimeoutService.reset();
       },
       error: (err: HttpErrorResponse) => {

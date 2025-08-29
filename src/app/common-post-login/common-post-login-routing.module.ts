@@ -4,7 +4,6 @@ import { LayoutComponent } from '../shared/components/layout/layout.component';
 import { BRNregistoryDetailsComponent } from './components/brn-registry-details/brn-registry-details.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
-import { DashboardDetailsComponent } from '../component/dashboard-details/dashboard-details.component';
 import { DashboardBrnDetailsComponent } from './components/dashboard-brn-details/dashboard-brn-details.component';
 import { CsvUploadComponent } from './components/csv-upload/csv-upload.component';
 import { DuplicateBrnDetailsComponent } from './components/duplicate-brn-details/duplicate-brn-details.component';

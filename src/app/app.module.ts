@@ -40,7 +40,6 @@ import { NgIdleModule } from '@ng-idle/core';
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 import { DashboardDetailsComponent } from './component/dashboard-details/dashboard-details.component';
 import { DuplicatedeatilsComponent } from './component/duplicatedeatils/duplicatedeatils.component';
-import { ConcerndetailsComponent } from './component/concerndetails/concerndetails.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MultiSelectOptionComponent } from './component/util/multi-select-option/multi-select-option.component';
 import { PostLoginDashboardComponent } from './component/post-login-dashboard/post-login-dashboard.component';
@@ -48,6 +47,7 @@ import { RegionBRNDetailsComponent } from './component/region-brndetails/region-
 import { DistrictBRNDetailsComponent } from './component/district-brndetails/district-brndetails.component';
 import { CapitalizePipe } from './pipes/capitalize.pipe';
 import { LanguageSwitcherComponent } from './shared/components/language-switcher/language-switcher.component';
+
 // import { LanguageSwitcherComponent } from './shared/components/language-switcher/language-switcher.component';
 
 
@@ -85,7 +85,6 @@ import { LanguageSwitcherComponent } from './shared/components/language-switcher
         CircularComponent,
         DashboardDetailsComponent,
         DuplicatedeatilsComponent,
-        ConcerndetailsComponent,
         MultiSelectOptionComponent,
         PostLoginDashboardComponent,
         RegionBRNDetailsComponent,

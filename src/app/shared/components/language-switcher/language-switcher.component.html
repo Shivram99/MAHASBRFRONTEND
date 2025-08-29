@@ -1,5 +1,9 @@
-<select [value]="selectedLang" (change)="onLanguageChange($event)">
+<!-- <select [value]="selectedLang" (change)="onLanguageChange($event)">
   <option *ngFor="let lang of languages" [value]="lang">
     {{ lang === 'en' ? 'English' : 'मराठी' }}
   </option>
-</select>
+</select> -->
+
+<a (click)="toggleLanguage()" class="lang-toggle">
+  {{ selectedLang === 'en' ? 'English' : 'मराठी' }}
+</a>

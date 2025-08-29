@@ -8,22 +8,38 @@ import { LanguageService } from '../../../core/services/language.service';
     standalone: false
 })
 export class LanguageSwitcherComponent {
-  languages: string[];
-  selectedLang: string;
+  languages = ['en', 'mr'];
+selectedLang: string = 'en'; 
 
   constructor(private langService: LanguageService) {
     this.languages = this.langService.getAvailableLanguages();
     this.selectedLang = this.langService.getCurrentLanguage();
   }
 
+//   toggleLanguage() {
+//   this.selectedLang = this.selectedLang === 'en' ? 'mr' : 'en';
+//   this.onLanguageChange(this.selectedLang);
+// }
+ // default language
 
-onLanguageChange(event: Event) {
-  const selectElement = event.target as HTMLSelectElement | null;
-  if (selectElement) {
-    const lang = selectElement.value;
-    this.selectedLang = lang;
-    this.langService.setLanguage(lang);
-  }
+toggleLanguage() {
+  this.selectedLang = this.selectedLang === 'en' ? 'mr' : 'en';
+  this.onLanguageChange(this.selectedLang);
 }
+
+onLanguageChange(lang: string) {
+   this.selectedLang = lang;
+   this.langService.setLanguage(lang);
+  // console.log("Language changed to:", lang);
+}
+
+// onLanguageChange(event: Event) {
+//   const selectElement = event.target as HTMLSelectElement | null;
+//   if (selectElement) {
+//     const lang = selectElement.value;
+//     this.selectedLang = lang;
+//     this.langService.setLanguage(lang);
+//   }
+// }
 
 }

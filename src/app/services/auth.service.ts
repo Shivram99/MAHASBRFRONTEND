@@ -73,6 +73,7 @@ export class AuthService {
   }
 
   logout(): void {
+    debugger
     if (!this.isBrowser) return;
 
     this.clearSession();
@@ -80,11 +81,10 @@ export class AuthService {
   }
 
   private clearSession(): void {
-    debugger
     sessionStorage.removeItem(this.authTokenKey);
     this.isLoggedInSubject.next(false);
-    this.rolesSubject.next([]);
-    this.router.navigate(['/login']);
+    this.rolesSubject.next(['ROLE_USER']);
+    // this.router.navigate(['/login']);
   }
 
   getToken(): string | null {

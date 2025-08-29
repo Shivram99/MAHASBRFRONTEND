@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { SerachBrnService } from '../../services/serach-brn.service';
-import { response } from 'express';
 import { MstRegistryDetailsPage } from '../../model/mst-registry-details-page';
 
 @Component({

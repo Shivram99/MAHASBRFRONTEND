@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from '../../../environments/environment.development';
-import { LanguageService } from '../../language.service';
+import { LanguageService } from '../../core/services/language.service'; 
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -56,7 +56,7 @@ export class HeaderComponent  implements OnInit{
 
   switchLang(lang: string) {
 
-    this.languageService.setCurrentLanguage(lang);
+    this.languageService.setLanguage(lang);
 
    // alert(environment.apiUrl);
 
