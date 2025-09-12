@@ -40,7 +40,7 @@ text-align: left;
 .cust-butns {
     z-index: 99;
     position: absolute;
-    right: 11%;
+    right: 1%;
 } 
 .tab-content-set {
     margin-top: 3%;
@@ -49,4 +49,7 @@ text-align: left;
   display: block;
   margin-top: 0; /* remove gap */
   min-width: 134px !important;
+}
+.content {
+    position: relative;
 }

@@ -36,10 +36,10 @@ export class BRNregistoryDetailsComponent {
   registryDetails: MstRegistryDetailsPage[] = [];
   selectComponent: string | undefined;
   currentPage: number = 0;
-  pageSize: number = 10; // Default page size
+  pageSize: number = 12; // Default page size
   totalPages: number = 0;
   totalElements: number = 0;
-  pageSizeOptions: number[] = [5, 10, 20, 50]; // Options for page size
+  pageSizeOptions: number[] = [10, 12, 20, 50]; // Options for page size
   sortBy: string = 'siNo'; // Default sorting parameter
   constructor(
     private fileUploadService: FileUploadService,
@@ -95,41 +95,39 @@ export class BRNregistoryDetailsComponent {
   }
 
   goToPage(page: number): void {
-    this.currentPage = page;
-    if (this.selectedDistrictIds.length === 0){
-      this.loadRegistryDetails(this.currentPage, this.pageSize, this.sortBy);
-     console.log("loadRegistryDetails")
-    }
-      else{
-      this.postLoginDashboardData(this.currentPage, this.pageSize, this.sortBy);
-      }
+  if (page < 0 || page >= this.totalPages || page === this.currentPage) {
+    return; // Prevent invalid or duplicate page navigation
   }
+  this.currentPage = page;
+  this.fetchData();
+}
 
-  onPageSizeChange(event: any): void {
-    this.pageSize = event.target.value;
-    this.currentPage = 0; // Reset to first page whenever the page size changes
-    if (this.selectedDistrictIds.length === 0){
-      this.loadRegistryDetails(this.currentPage, this.pageSize, this.sortBy);
-     console.log("loadRegistryDetails")
-    }
-      else{
-      this.postLoginDashboardData(this.currentPage, this.pageSize, this.sortBy);
-      console.log("loadRegistryDetails 1");
-      
-      }
-  }
+onPageSizeChange(event: any): void {
+  this.pageSize = +event.target.value; // ensure number
+  this.currentPage = 0; // Reset to first page whenever page size changes
+  this.fetchData();
+}
 
-  onSortByChange(sortBy: string): void {
-    this.sortBy = sortBy;
-    if (this.selectedDistrictIds.length === 0){
-      this.loadRegistryDetails(this.currentPage, this.pageSize, this.sortBy);
-     console.log("loadRegistryDetails")
-    }
-      else{
-      this.postLoginDashboardData(this.currentPage, this.pageSize, this.sortBy);
-      console.log("loadRegistryDetails 1");
-      }
+onSortByChange(sortBy: string): void {
+  this.sortBy = sortBy;
+  this.currentPage = 0; // optional: reset page when sorting
+  this.fetchData();
+}
+
+/**
+ * 🔹 Centralized data fetching logic
+ *    Decides which API to call (filtered vs normal)
+ */
+private fetchData(): void {
+  if (this.selectedDistrictIds.length === 0) {
+    this.loadRegistryDetails(this.currentPage, this.pageSize, this.sortBy);
+    console.log("loadRegistryDetails", { page: this.currentPage, size: this.pageSize, sort: this.sortBy });
+  } else {
+    this.postLoginDashboardData(this.currentPage, this.pageSize, this.sortBy);
+    console.log("postLoginDashboardData", { page: this.currentPage, size: this.pageSize, sort: this.sortBy });
   }
+}
+
   //
 
   onSelectionTalukaChange(selectedItems: { id: number; name: string }[]) {

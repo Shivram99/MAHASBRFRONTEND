@@ -1,1 +1,55 @@
-<p>profile works!</p>
+<div class="container">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h3 class="mb-4 fw-semibold">Profile</h3>
+
+      <div class="row g-4">
+        <!-- Photo column -->
+        <div class="col-md-4 text-center">
+          <div class="photo-frame mb-3">
+            <img [src]="profileImage || placeHolder" 
+      alt="Profile Photo" 
+      class="img-fluid rounded">
+          </div>
+          <small class="text-muted">JPG/PNG, max 2MB</small>
+        </div>
+
+        <!-- Details column -->
+        <div class="col-md-8">
+          <div class="row g-3">
+            <div class="col-sm-6">
+              <label class="fw-bold">Name:</label>
+              <div>{{ user?.userProfile?.fullName || 'Admin' }}</div>
+            </div>
+            <div class="col-sm-6">
+              <label class=" fw-bold">Designation:</label>
+              <div>XYZ</div>
+            </div>
+            <div class="col-sm-6">
+              <label class=" fw-bold">Department:</label>
+              <div>{{ user?.userProfile?.officeName || 'Admin' }}</div>
+            </div>
+            <div class="col-sm-6">
+              <label class=" fw-bold">Email:</label>
+              <div> {{ user?.email || 'Admin' }}</div>
+            </div>
+            <div class="col-sm-6">
+              <label class=" fw-bold">Contact No.:</label>
+              <div>{{ user?.userProfile?.mobileNumber || 'Admin' }}</div>
+            </div>
+            <div class="col-sm-6">
+              <label class=" fw-bold">Location:</label>
+              <div>Mumbai, India</div>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <!-- <button class="btn btn-primary px-4">Edit</button> -->
+            <!-- <a href="/change-password" class="btn btn-outline-secondary ms-2">Change Password</a> -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

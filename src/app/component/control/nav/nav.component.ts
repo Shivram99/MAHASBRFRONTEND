@@ -28,10 +28,10 @@ export class NavComponent {
   { label: "FAQ", url: null, routerLink: "/faq", class: "", roles: ['ROLE_USER'] },
   { label: "CIRCULAR", url: null, routerLink: "/circular", class: "", roles: ['ROLE_USER'] },
   { label: "Contact_Us", url: null, routerLink: "/contactus", class: "", roles: ['ROLE_USER'] },
-  { label: "REGISTRY", url: null, routerLink: "/des-registry", class: "", roles: ['ROLE_ADMIN','ROLE_DES_STATE','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV'] },
-  { label: "REGION", url: null, routerLink: "/des-region", class: "", roles: ['ROLE_DES_REGION'] },
-  { label: "DISTRICT_DETAILS", url: null, routerLink: "/des-district-brn-details", class: "", roles: ['ROLE_DES_DISTRICT'] },
-  { label: "CHANGE_PASSWORD", url: null, routerLink: "/changePassword", class: "", roles: ['ROLE_ADMIN','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV'] },
+  { label: "MENU.DASHBOARD", url: null, routerLink: "/common-post-login/detailsPage", class: "", roles: ['ROLE_ADMIN','ROLE_DES_STATE','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV','ROLE_DES_REGION','ROLE_DES_DISTRICT'] },
+  // { label: "Dashboard", url: null, routerLink: "/common-post-login/detailsPage", class: "", roles: ['ROLE_DES_REGION'] },
+  // { label: "Dashboard", url: null, routerLink: "/common-post-login/detailsPage", class: "", roles: ['ROLE_DES_DISTRICT'] },
+  { label: "CHANGE_PASSWORD", url: null, routerLink: "/common-post-login/changePassword", class: "", roles: ['ROLE_ADMIN','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV'] },
   
 ];
 

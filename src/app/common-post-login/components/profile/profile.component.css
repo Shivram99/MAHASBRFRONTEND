@@ -1,0 +1,7 @@
+ .photo-frame.mb-3 {
+    padding: 10px;
+    box-shadow: 0 0px 3px #ccc;
+}
+img.img-fluid.rounded {
+    width: 70%;
+}

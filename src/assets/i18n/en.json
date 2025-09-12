@@ -170,5 +170,18 @@
     "number" : "1800-180-6785 (Toll Free), 0141-2850219",
     "Email-Address" : "Email Address",
     "Tel-no":"Tel. No."
-   }
+   },
+   "MENU": {
+    "DASHBOARD": "Dashboard",
+    "DUPLICATE_RECORD": "Duplicate Record",
+    "CONCERN_RECORD": "Concern Record",
+    "UPLOAD_CSV": "Upload CSV",
+    "PROFILE": "Profile",
+    "USER": "User"
+  },
+  "BUTTON": {
+    "LOGOUT": "Log out",
+    "LOGIN": "Login"
+  }
+
 }

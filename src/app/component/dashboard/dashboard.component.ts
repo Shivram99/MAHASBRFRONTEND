@@ -158,41 +158,6 @@ export class DashboardComponent  {
   secureAdmin!: string;
   showRegistration = false;
 
-
-  // fetchUnsecure() {
-  //   this.appService
-  //     .fetchUnsecureEndpoint()
-  //     .pipe(take(1))
-  //     .subscribe((response) => {
-  //       this.unsecure = response.msg;
-  //     });
-  // }
-
-  // fetchSecure() {
-  //   this.appService
-  //     .fetchSecureEndpoint()
-  //     .pipe(take(1))
-  //     .subscribe({
-  //       next: (response) => (this.secure = response.msg),
-  //       error: (err) => {
-  //         this.secure = err.statusText;
-  //       },
-  //     });
-  // }
-
-  // fetchSecureAdmin() {
-  //   this.appService
-  //     .fetchSecureAdminEndpoint()
-  //     .pipe(take(1))
-  //     .subscribe({
-  //       next: (response) => (this.secureAdmin = response.msg),
-  //       error: (err) => {
-  //         this.secureAdmin = err.statusText;
-  //       },
-  //     });
-  // }
-
-  // Dummy data
   dummyData = [
     { id: 1, name: 'Item 1', status: 'Pending' },
     { id: 2, name: 'Item 2', status: 'Approved' },

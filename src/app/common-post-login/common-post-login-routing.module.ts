@@ -8,6 +8,7 @@ import { DashboardBrnDetailsComponent } from './components/dashboard-brn-details
 import { CsvUploadComponent } from './components/csv-upload/csv-upload.component';
 import { DuplicateBrnDetailsComponent } from './components/duplicate-brn-details/duplicate-brn-details.component';
 import { ConcernRegDetailsComponent } from './components/concern-reg-details/concern-reg-details.component';
+import { UserListComponent } from './components/user-list/user-list.component';
 
 const routes: Routes = [{
   path: '', component: LayoutComponent, children: [
@@ -25,6 +26,7 @@ const routes: Routes = [{
   { path: 'csv-upload', component: CsvUploadComponent },
   { path: 'dup-brn-details', component: DuplicateBrnDetailsComponent },
   { path: 'con-reg-details', component: ConcernRegDetailsComponent },
+  { path: 'user', component: UserListComponent },
 
   ]
 }];

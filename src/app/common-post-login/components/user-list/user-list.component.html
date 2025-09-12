@@ -1,0 +1,168 @@
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">User Management</h2>
+
+  <form (ngSubmit)="addUser(userForm)" #userForm="ngForm" novalidate class="border p-4 rounded shadow-sm bg-light">
+
+    <!-- Username & Email -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
+        <input
+          [(ngModel)]="newUser.username"
+          name="username"
+          id="username"
+          class="form-control"
+          placeholder="Enter Username"
+          required
+          #username="ngModel"
+        />
+        <div class="text-danger small mt-1" *ngIf="username.invalid && username.touched">
+          Username is required
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+        <input
+          [(ngModel)]="newUser.email"
+          name="email"
+          id="email"
+          class="form-control"
+          placeholder="Enter Email"
+          required
+          email
+          #email="ngModel"
+        />
+        <div class="text-danger small mt-1" *ngIf="email.invalid && email.touched">
+          Valid email is required
+        </div>
+      </div>
+    </div>
+
+    <!-- Full Name & Office Name -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="fullName" class="form-label">Full Name</label>
+        <input
+          [(ngModel)]="newUser.userProfile!.fullName"
+          name="fullName"
+          id="fullName"
+          class="form-control"
+          placeholder="Enter Full Name"
+        />
+      </div>
+
+      <div class="col-md-6">
+        <label for="officeName" class="form-label">Office Name</label>
+        <input
+          [(ngModel)]="newUser.userProfile!.officeName"
+          name="officeName"
+          id="officeName"
+          class="form-control"
+          placeholder="Enter Office Name"
+        />
+      </div>
+    </div>
+
+    <!-- Office Address & Mobile Number -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="officeAddress" class="form-label">Office Address</label>
+        <input
+          [(ngModel)]="newUser.userProfile!.officeAddress"
+          name="officeAddress"
+          id="officeAddress"
+          class="form-control"
+          placeholder="Enter Office Address"
+        />
+      </div>
+
+      <div class="col-md-6">
+        <label for="mobileNumber" class="form-label">Mobile Number</label>
+        <input
+          [(ngModel)]="newUser.userProfile!.mobileNumber"
+          name="mobileNumber"
+          id="mobileNumber"
+          class="form-control"
+          placeholder="Enter Mobile Number"
+          pattern="^[0-9]{10}$"
+          #mobileNumber="ngModel"
+        />
+        <div class="text-danger small mt-1" *ngIf="mobileNumber.invalid && mobileNumber.touched">
+          Mobile number must be 10 digits
+        </div>
+      </div>
+    </div>
+
+    <!-- Roles -->
+    <div class="row mb-3">
+  <div class="col-md-6">
+    <label for="roles" class="form-label">Role <span class="text-danger">*</span></label>
+    <select
+      [(ngModel)]="newUser.roles"
+      name="roles"
+      id="roles"
+      class="form-select"
+      required
+      #roles="ngModel"
+      multiple
+    >
+      <option *ngFor="let role of rolesList" [value]="role.name">
+        {{ role.name }}
+      </option>
+    </select>
+    <div class="text-danger small mt-1" *ngIf="roles.invalid && roles.touched">
+      At least one role must be selected
+    </div>
+  </div>
+</div>
+
+
+    <!-- Submit Button -->
+    <div class="d-flex justify-content-end">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="userForm.invalid"
+      >
+        Create User
+      </button>
+    </div>
+
+  </form>
+
+  <!-- User List Table -->
+   <div class="mt-5">
+    <h4>User List</h4>
+    <table class="table table-bordered table-striped mt-3 shadow-sm">
+      <thead class="table-light">
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Roles</th>
+          <th>Full Name</th>
+          <th>Office</th>
+          <th>Mobile</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.id }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.roles?.join(', ') }}</td>
+          <td>{{ user.userProfile?.fullName }}</td>
+          <td>{{ user.userProfile?.officeName }}</td>
+          <td>{{ user.userProfile?.mobileNumber }}</td>
+          <td>
+            <button class="btn btn-sm btn-warning me-1" (click)="editUser(user)">Edit</button>
+            <button class="btn btn-sm btn-danger" (click)="deleteUser(user.id!)">Delete</button>
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div> 
+</div>

@@ -13,6 +13,7 @@ import { CsvUploadComponent } from './components/csv-upload/csv-upload.component
 import { DuplicateBrnDetailsComponent } from './components/duplicate-brn-details/duplicate-brn-details.component';
 import { ConcernRegDetailsComponent } from './components/concern-reg-details/concern-reg-details.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { UserListComponent } from './components/user-list/user-list.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { TranslateModule } from '@ngx-translate/core';
     DashboardBrnDetailsComponent,
     CsvUploadComponent,
     DuplicateBrnDetailsComponent,
-    ConcernRegDetailsComponent
+    ConcernRegDetailsComponent,
+    UserListComponent
   ],
   imports: [
     CommonModule,TranslateModule,

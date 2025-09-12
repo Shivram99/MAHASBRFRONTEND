@@ -2,37 +2,16 @@
     <div class="container">
         <div class="content">
             <div class="d-md-flex justify-content-between border-b-org p-3">
-                <h1>Dashboard</h1>
+                <h1>{{activeLabel | uppercase | translate }} </h1>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                        <li class="breadcrumb-item"><a [routerLink]="['/']">{{ 'HOME' | translate }}</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ activeLabel | uppercase | translate }}</li>
                     </ol>
                 </nav>
             </div>
             <div class="p-3">
                 <div class="d-flex align-items-stretch align-items-start dashboardTabs">
-                    <!-- <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist"
-                        aria-orientation="vertical">
-                        <button [routerLink]="['detailsPage']" class="nav-link active" id="v-Pills-dashboard-tab"
-                            data-bs-toggle="pill" data-bs-target="#v-Pills-dashboard" type="button" role="tab"
-                            aria-controls="v-Pills-dashboard" aria-selected="true"
-                            ><img src="../../../assets/images/icon/dashboard.png"
-                                /> Dashboard</button>
-                        <button [routerLink]="['upload-csv']" class="nav-link" data-bs-toggle="pill" type="button"
-                            role="tab" aria-controls="v-pills-regions" aria-selected="false"
-                           ><img src="../../../assets/images/icon/region.png"
-                                /> Upload
-                            CSV</button>
-                            <button [routerLink]="['duplicate-details']" class="nav-link" data-bs-toggle="pill" type="button"
-                            role="tab" aria-controls="v-pills-regions" aria-selected="false"
-                           ><img src="../../../assets/images/icon/region.png"
-                                />Duplicate Record</button> 
-                        <button [routerLink]="['concern-details']" class="nav-link" data-bs-toggle="pill" type="button"
-                            role="tab" aria-controls="v-pills-regions" aria-selected="false"
-                           ><img src="../../../assets/images/icon/region.png"
-                                />Concern Record</button>   
-                    </div> -->
                     <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist"
                         aria-orientation="vertical">
                         <button *ngFor="let item of menuItems; let i = index" [routerLink]="item.routerLink"
@@ -40,31 +19,35 @@
                             type="button" role="tab" [attr.aria-controls]="'v-pills-' + (item.label | lowercase)"
                             [attr.aria-selected]="i === 0" [ngClass]="{ 'active': i === 0 }">
 
-                            <img [src]="item.icon" /> {{ item.label }}
+                            <img [src]="item.icon" /> {{ item.label | translate }} 
                         </button>
                     </div>
 
                     <div class="cust-butns d-flex align-items-center">
                         <!-- Logout Button -->
-                        <button class="btn btn-warning btn-sm me-2" (click)="logout()">Log out</button>
+                        <button class="btn btn-warning btn-sm me-2" (click)="logout()">
+  {{ 'BUTTON.LOGOUT' | translate }}
+</button>
 
                         <!-- Admin Dropdown -->
                         <div class="dropdown" id="adminDropdown">
                             <button class="btn btn-primary btn-sm dropdown-toggle d-flex align-items-center"
                                 type="button" data-bs-toggle="dropdown">
-                                <img [src]="progfileIcon" style="width: 19px; margin-right: 5px;" /> Admin Name
+                                <img [src]="progfileIcon" style="width: 19px; margin-right: 5px;" />   {{ user?.userProfile?.fullName || 'Admin' }}
                             </button>
+
+                            
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">Profile</a></li>
-                                <li><a class="dropdown-item" href="#">Settings</a></li>
-                                <li>
+                                <li><a class="dropdown-item" [routerLink]="['profile']">{{ 'MENU.PROFILE' | translate}}</a></li>
+                                <!-- <li><a class="dropdown-item" href="#">Settings</a></li> -->
+                                <!-- <li>
                                     <hr class="dropdown-divider">
                                 </li>
                                 <li>
                                     <button class="dropdown-item text-danger" (click)="logout()">
                                         Log out
                                     </button>
-                                </li>
+                                </li> -->
                             </ul>
                         </div>
                     </div>
