@@ -1,140 +1,135 @@
-<div class="container mt-5">
-  <h2 class="mb-4 text-center">User Management</h2>
+<div class="container">
+  <h2>User Management</h2>
 
-  <form (ngSubmit)="addUser(userForm)" #userForm="ngForm" novalidate class="border p-4 rounded shadow-sm bg-light">
+  <form #userForm="ngForm" (ngSubmit)="saveUser(userForm)" novalidate class="needs-validation">
 
     <!-- Username & Email -->
-    <div class="row mb-3">
+    <div class="row g-3 mb-3">
       <div class="col-md-6">
         <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
-        <input
-          [(ngModel)]="newUser.username"
-          name="username"
-          id="username"
-          class="form-control"
-          placeholder="Enter Username"
-          required
+        <input type="text" id="username" name="username" class="form-control" [(ngModel)]="newUser.username" required
           #username="ngModel"
-        />
-        <div class="text-danger small mt-1" *ngIf="username.invalid && username.touched">
-          Username is required
-        </div>
+          [ngClass]="{'is-invalid': username.invalid && username.touched, 'is-valid': username.valid && username.touched}" />
+        <div class="invalid-feedback">Username is required</div>
       </div>
 
       <div class="col-md-6">
         <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-        <input
-          [(ngModel)]="newUser.email"
-          name="email"
-          id="email"
-          class="form-control"
-          placeholder="Enter Email"
-          required
-          email
+        <input type="email" id="email" name="email" class="form-control" [(ngModel)]="newUser.email" required email
           #email="ngModel"
-        />
-        <div class="text-danger small mt-1" *ngIf="email.invalid && email.touched">
-          Valid email is required
-        </div>
+          [ngClass]="{'is-invalid': email.invalid && email.touched, 'is-valid': email.valid && email.touched}" />
+        <div class="invalid-feedback">Valid email is required</div>
       </div>
     </div>
 
     <!-- Full Name & Office Name -->
-    <div class="row mb-3">
+    <div class="row g-3 mb-3">
       <div class="col-md-6">
         <label for="fullName" class="form-label">Full Name</label>
-        <input
-          [(ngModel)]="newUser.userProfile!.fullName"
-          name="fullName"
-          id="fullName"
-          class="form-control"
-          placeholder="Enter Full Name"
-        />
+        <input type="text" id="fullName" name="fullName" class="form-control"
+          [(ngModel)]="newUser.userProfile!.fullName" #fullName="ngModel"
+          [ngClass]="{'is-valid': fullName.valid && fullName.touched}" />
       </div>
-
       <div class="col-md-6">
         <label for="officeName" class="form-label">Office Name</label>
-        <input
-          [(ngModel)]="newUser.userProfile!.officeName"
-          name="officeName"
-          id="officeName"
-          class="form-control"
-          placeholder="Enter Office Name"
-        />
+        <input type="text" id="officeName" name="officeName" class="form-control"
+          [(ngModel)]="newUser.userProfile!.officeName" #officeName="ngModel"
+          [ngClass]="{'is-valid': officeName.valid && officeName.touched}" />
       </div>
     </div>
 
     <!-- Office Address & Mobile Number -->
-    <div class="row mb-3">
+    <div class="row g-3 mb-3">
       <div class="col-md-6">
         <label for="officeAddress" class="form-label">Office Address</label>
-        <input
-          [(ngModel)]="newUser.userProfile!.officeAddress"
-          name="officeAddress"
-          id="officeAddress"
-          class="form-control"
-          placeholder="Enter Office Address"
-        />
+        <input type="text" id="officeAddress" name="officeAddress" class="form-control"
+          [(ngModel)]="newUser.userProfile!.officeAddress" #officeAddress="ngModel"
+          [ngClass]="{'is-valid': officeAddress.valid && officeAddress.touched}" />
       </div>
-
       <div class="col-md-6">
         <label for="mobileNumber" class="form-label">Mobile Number</label>
-        <input
-          [(ngModel)]="newUser.userProfile!.mobileNumber"
-          name="mobileNumber"
-          id="mobileNumber"
-          class="form-control"
-          placeholder="Enter Mobile Number"
-          pattern="^[0-9]{10}$"
-          #mobileNumber="ngModel"
-        />
-        <div class="text-danger small mt-1" *ngIf="mobileNumber.invalid && mobileNumber.touched">
-          Mobile number must be 10 digits
-        </div>
+        <input type="text" id="mobileNumber" name="mobileNumber" class="form-control"
+          [(ngModel)]="newUser.userProfile!.mobileNumber" pattern="^[0-9]{10}$" #mobileNumber="ngModel"
+          [ngClass]="{'is-invalid': mobileNumber.invalid && mobileNumber.touched, 'is-valid': mobileNumber.valid && mobileNumber.touched}" />
+        <div class="invalid-feedback">Mobile number must be 10 digits</div>
       </div>
     </div>
 
     <!-- Roles -->
-    <div class="row mb-3">
-  <div class="col-md-6">
-    <label for="roles" class="form-label">Role <span class="text-danger">*</span></label>
-    <select
-      [(ngModel)]="newUser.roles"
-      name="roles"
-      id="roles"
-      class="form-select"
-      required
-      #roles="ngModel"
-      multiple
-    >
-      <option *ngFor="let role of rolesList" [value]="role.name">
-        {{ role.name }}
-      </option>
-    </select>
-    <div class="text-danger small mt-1" *ngIf="roles.invalid && roles.touched">
-      At least one role must be selected
+    <div class="row g-3 mb-3">
+      <div class="col-md-6">
+        <label for="roles" class="form-label">Role <span class="text-danger">*</span></label>
+        <select id="roles" name="roles" class="form-select" [(ngModel)]="newUser.roles" required multiple
+          #roles="ngModel"
+          [ngClass]="{'is-invalid': roles.invalid && roles.touched, 'is-valid': roles.valid && roles.touched}">
+          <option *ngFor="let role of rolesList" [value]="role.name">{{ role.name }}</option>
+        </select>
+        <div class="invalid-feedback">At least one role must be selected</div>
+      </div>
+      <!-- </div> -->
+
+      <!-- Registry (conditional) -->
+      <!-- <div class="row g-3 mb-3"> -->
+      <div class="col-md-6">
+        <label for="registryId" class="form-label">Registry</label>
+        <select id="registryId" name="registryId" class="form-select" [(ngModel)]="newUser.registryId"
+          [required]="canShowRegistry" [disabled]="!canShowRegistry" #registryId="ngModel"
+          [ngClass]="{'is-invalid': registryId.invalid && registryId.touched && canShowRegistry, 'is-valid': registryId.valid && registryId.touched && canShowRegistry}">
+          <option value="" *ngIf="canShowRegistry">-- Select Registry --</option>
+          <ng-container *ngIf="canShowRegistry">
+            <option *ngFor="let r of registries" [value]="r.id">{{ r.registryNameEn }}</option>
+          </ng-container>
+          <option *ngIf="!canShowRegistry" value="">Not Applicable</option>
+        </select>
+        <div class="invalid-feedback" *ngIf="canShowRegistry">Registry selection is required</div>
+      </div>
     </div>
-  </div>
-</div>
+     <!-- Option shown when division is required -->
+    <div class="row g-3 mb-3">
+      <div class="col-md-6">
+        <label for="divisionCode" class="form-label">Division</label>
+        <select id="divisionCode" name="divisionCode" class="form-select" [(ngModel)]="newUser.divisionCode"
+          [required]="canShowDivision" [disabled]="!canShowDivision" #divisionCode="ngModel" [ngClass]="{
+        'is-invalid': divisionCode.invalid && divisionCode.touched && canShowDivision,
+        'is-valid': divisionCode.valid && divisionCode.touched && canShowDivision
+      }">
+          <!-- Option shown when division is required -->
+          <option value="" *ngIf="canShowDivision">-- Select Division --</option>
+
+          <!-- List divisions only if visible -->
+          <ng-container *ngIf="canShowDivision">
+            <option *ngFor="let d of division" [value]="d.divisionCode">
+              {{ d.divisionName }} ({{ d.divisionCode }})
+            </option>
+          </ng-container>
+
+          <!-- Fallback option -->
+          <option *ngIf="!canShowDivision" value="">Not Applicable</option>
+        </select>
+
+        <!-- Error message only when touched and invalid -->
+        <div class="invalid-feedback" *ngIf="divisionCode.invalid && divisionCode.touched && canShowDivision">
+          Division selection is required
+        </div>
+      </div>
+    </div>
 
 
     <!-- Submit Button -->
     <div class="d-flex justify-content-end">
-      <button
-        type="submit"
-        class="btn btn-primary"
-        [disabled]="userForm.invalid"
-      >
-        Create User
+      <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid">
+        {{ newUser.id ? 'Update User' : 'Save User' }}
       </button>
     </div>
 
+
   </form>
 
+
   <!-- User List Table -->
-   <div class="mt-5">
+  <div class=" mt-5">
     <h4>User List</h4>
-    <table class="table table-bordered table-striped mt-3 shadow-sm">
+    <table class="table-scroll table table-bordered table-striped mt-3 shadow-sm">
       <thead class="table-light">
         <tr>
           <th>ID</th>
@@ -148,8 +143,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of users">
-          <td>{{ user.id }}</td>
+        <tr *ngFor="let user of users let i = index">
+          <!-- <td>{{ user.id }}</td> -->
+          <td>{{ i + 1 }}</td>
           <td>{{ user.username }}</td>
           <td>{{ user.email }}</td>
           <td>{{ user.roles?.join(', ') }}</td>
@@ -164,5 +160,5 @@
         </tr>
       </tbody>
     </table>
-  </div> 
+  </div>
 </div>

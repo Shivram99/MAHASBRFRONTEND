@@ -5,6 +5,7 @@ import { PaginatedResponse } from '../../../interface/paginated-response';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DetailsPageDTO } from '../../../interface/details-page-dto'; 
 import { DataService } from '../../../services/dashboard/data-service.service'; 
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-brn-registry-details',
@@ -14,16 +15,22 @@ import { DataService } from '../../../services/dashboard/data-service.service';
 })
 export class BRNregistoryDetailsComponent {
   //filter variable data
-
+allowedRoles: string[] = [
+  'ROLE_DES_STATE',
+  'ROLE_DES_REGION',
+  'ROLE_REG_AUTH_API',
+  'ROLE_REG_AUTH_CSV'
+];
   districts: { id: number; name: string }[] = [];
   talukas: { id: number; name: string }[] = [];
+  userRole:any;
 
   selectedTaluka: { id: number; name: string }[] = [];
   selectedDistrict: { id: number; name: string }[] = [];
 
   selectedTalukaIds: number[]=[];
   selectedDistrictIds: number[]=[];
-
+placeholder:string='';
   tableData1: DetailsPageDTO[] = [];
   BNR: any;
   filters = {
@@ -45,15 +52,18 @@ export class BRNregistoryDetailsComponent {
     private fileUploadService: FileUploadService,
     private router: Router,
     private dataService: DataService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private authService: AuthService
   ) {}
   ngOnInit(): void {
     this.loadRegistryDetails(this.currentPage, this.pageSize, this.sortBy);
     this.fetchDistricts();
+    debugger;
+    this.userRole=this.authService.getUserRoles();
   }
 
   fetchDistricts(): void {
-    this.dataService.getAllDistricts().subscribe((districts1) => {
+    this.dataService.getAllDistrictsForLoginUser().subscribe((districts1) => {
       this.districts = districts1.map((district) => ({
         id: district.censusDistrictCode, // Assuming `censusDistrictCode` is the ID
         name: district.districtName, // Assuming `districtName` is the name
@@ -68,6 +78,29 @@ export class BRNregistoryDetailsComponent {
     this.applyFilters();
   }
   // load the talukas
+
+  isAllowed(): boolean {
+  if (!this.allowedRoles || this.allowedRoles.length === 0) return false;
+
+  // Handle case when userRole is an array (multiple roles)
+  if (Array.isArray(this.userRole)) {
+    return this.userRole.some(
+      (role: any) =>
+        typeof role === 'string' &&
+        this.allowedRoles.map(r => r.toUpperCase()).includes(role.toUpperCase())
+    );
+  }
+
+  // Handle single role (string)
+  if (typeof this.userRole === 'string') {
+    return this.allowedRoles
+      .map(r => r.toUpperCase())
+      .includes(this.userRole.toUpperCase());
+  }
+
+  // Any other type (object, null, etc.)
+  return false;
+}
 
   applyFilters() {
     this.postLoginDashboardData(this.currentPage, this.pageSize, this.sortBy);
@@ -149,6 +182,7 @@ private fetchData(): void {
 
   fetchTalukas(selectedValue: any): void {
     this.dataService.getAllTaluka(selectedValue).subscribe((talukas1) => {
+      debugger;
       this.talukas = talukas1.map((talukas) => ({
         id: talukas.censusTalukaCode,
         name: talukas.talukaName,
@@ -158,7 +192,7 @@ private fetchData(): void {
   }
 
   postLoginDashboardData(page: number, size: number, sortBy: string){
-    
+    debugger
   this.fileUploadService.postLoginDashboardData(page, size, sortBy,this.selectedDistrictIds,this.selectedTalukaIds,this.filters).subscribe(
     (response: PaginatedResponse<MstRegistryDetailsPage>) => {
       // Expecting an array of MstRegistryDetailsPage
@@ -172,26 +206,11 @@ private fetchData(): void {
   );
 }
 
-// searchBRN() {
-//   if (this.BNR) {
-//     this.fileUploadService.getBRNDetails(page: number, size: number,this.BNR).subscribe(
-//       (response: PaginatedResponse<MstRegistryDetailsPage>) => {
-//         this.totalPages = response.totalPages;
-//         this.totalElements = response.totalElements;
-//         this.registryDetails = response.content;
-//         console.log(this.tableData1);
-//       },
-//       (error) => {
-//         this.tableData1 = [];
-//         this.totalElements = 0;
-//       }
-//     );
-//   }
-// }
 
 searchBRN() {
     if (this.BNR) {
-      this.fileUploadService.getBRNDetails(this.BNR).subscribe(
+      const trimmedBRN = this.BNR.trim();
+      this.fileUploadService.getBRNDetails(trimmedBRN).subscribe(
         (response: PaginatedResponse<MstRegistryDetailsPage>) => {
           // Expecting an array of MstRegistryDetailsPage
           this.registryDetails = response.content;
@@ -204,6 +223,55 @@ searchBRN() {
       );
     }
   }
+
+
+goToFirst(): void {
+  this.goToPage(0);
+}
+
+goToLast(): void {
+  this.goToPage(this.totalPages - 1);
+}
+
+getVisiblePages(): number[] {
+  const pages: number[] = [];
+  const total = this.totalPages;
+  const current = this.currentPage;
+
+  if (total <= 6) {
+    // Show all pages when small
+    return Array.from({ length: total }, (_, i) => i);
+  }
+
+  // Always show first page
+  pages.push(0);
+
+  if (current > 2) {
+    pages.push(-1); // Ellipsis
+  }
+
+  // Show current-1, current, current+1
+  for (let i = Math.max(1, current - 1); i <= Math.min(total - 2, current + 1); i++) {
+    pages.push(i);
+  }
+
+  if (current < total - 3) {
+    pages.push(-1); // Ellipsis
+  }
+
+  // Always show last page
+  pages.push(total - 1);
+
+  return pages;
+}
+
+allowOnlyNumbers(event: KeyboardEvent) {
+  const charCode = event.which ? event.which : event.keyCode;
+  // Allow only digits (0-9)
+  if (charCode < 48 || charCode > 57) {
+    event.preventDefault();
+  }
+}
 
 }
 

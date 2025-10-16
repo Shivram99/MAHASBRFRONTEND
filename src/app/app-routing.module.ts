@@ -47,6 +47,8 @@ const routes: Routes = [
   { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
   { path: 'developer', loadChildren: () => import('./developer/developer.module').then(m => m.DeveloperModule) },
   { path: 'common-post-login', loadChildren: () => import('./common-post-login/common-post-login.module').then(m => m.CommonPostLoginModule) },
+  //  { path: 'error', component: ErrorComponent }, // <-- Make sure this exists
+  { path: '**', redirectTo: 'unauthorized' },
 ];
 
 @NgModule({

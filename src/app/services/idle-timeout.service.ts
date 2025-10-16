@@ -10,8 +10,8 @@ import { AuthService } from './auth.service';
 export class IdleTimeoutService {
 
   private isLoggedIn:boolean = false;
-  private readonly idleTime: number = 3 ; // 3 minutes in seconds
-  private readonly timeoutPeriod: number = 25*60; // 5 seconds warning before logout
+  private readonly idleTime: number = 15 * 60 * 60 ; // 3 minutes in seconds
+  private readonly timeoutPeriod: number = 300; 
 
   constructor(private idle: Idle, 
               private keepalive: Keepalive, 

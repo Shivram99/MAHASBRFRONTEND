@@ -47,7 +47,12 @@
     <li *ngFor="let msg of validationMessages">{{ msg }}</li>
   </ul>
 </div>
-
+<div class="text-center mt-3">
+  <button (click)="downloadFile('sample.xlsx')" 
+          class="btn btn-outline-success btn-sm shadow-sm">
+    📄 Download Sample Excel File
+  </button>
+</div>
 <div *ngIf="successMessage" class="success-message mt-3">
     {{ successMessage }}
   </div>

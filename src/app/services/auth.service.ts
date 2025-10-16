@@ -60,21 +60,50 @@ export class AuthService {
     );
   }
 
+  // logout(): void {
+  //   if (!this.isBrowser) return;
+
+  //   // Remove token from storage
+     // fallback if signOut not implemented
+
+
+  //   // Reset state
+  //   this.clearSession();
+  //   this.rolesSubject.next(['ROLE_USER']);
+  //    this.currentUserSubject.next(null);
+  //   // Navigate to login page
+  //   this.router.navigate(['/login']);
+  // }
+
   logout(): void {
-    if (!this.isBrowser) return;
+  this.http.post<{ message?: string }>(`${environment.apiUrl}/api/auth/logout`, {})
+    .subscribe({
+      next: (res) => {
+        console.log(res?.message ?? 'Logged out successfully'); // ✅ safe null check
+         this.clearSession();
+      },
+      error: (err) => {
+        console.error('Backend logout failed:', err);
+      },
+      complete: () => {
+        // Always clear frontend state regardless of backend response
 
-    // Remove token from storage
-    this.tokenStorage.removeToken();  // if you have a signOut() in TokenStorageService
-    this.tokenStorage.saveToken(''); // fallback if signOut not implemented
+        // Clear JWT & session info
+        this.clearSession();
 
+        // Reset BehaviorSubjects
+        this.currentUserSubject.next(null);
+        this.rolesSubject.next(['ROLE_USER']); // ✅ use [] instead of fake ROLE_USER
+          this.tokenStorage.removeToken();
+        // Remove stored user
+        sessionStorage.removeItem('currentUser');
 
-    // Reset state
-    this.clearSession();
-    this.rolesSubject.next(['ROLE_USER']);
-     this.currentUserSubject.next(null);
-    // Navigate to login page
-    this.router.navigate(['/login']);
-  }
+        // Redirect to login
+        this.router.navigate(['/login']);
+      }
+    });
+}
+
 
 
   private setSession(token: string | undefined): void {
@@ -93,7 +122,8 @@ export class AuthService {
 
   private clearSession(): void {
     if (!this.isBrowser) return;
-
+      // if you have a signOut() in TokenStorageService
+   
     this.isLoggedInSubject.next(false);
     this.rolesSubject.next([]); // clear roles
   }

@@ -1,54 +1,126 @@
+<div class="row">
+
+  <div class="col-md-6" [hidden]="!isAllowed()"><app-multi-select-option [items]="districts"
+      (selectionChange)="onSelectionDistrictChange($event)" [placeholder]="'District'" />
+  </div>
+
+
+  <div class="col-md-6" [hidden]="!isAllowed()">
+    <app-multi-select-option [items]="talukas" (selectionChange)="onSelectionTalukaChange($event)"
+      [placeholder]="'Taluka'" />
+  </div>
+
+  <div class="col-md-4">
+    <label>BNR :</label>
+    <input type="text" placeholder="Enter BRN number" class="form-control" id="BNR" name="BNR" [(ngModel)]="BNR"
+      (keypress)="allowOnlyNumbers($event)" />
+    <br />
+  </div>
+  <div class="col-md-4" *ngIf="false">
+
+    <label for="registerDateFrom"> From Date:</label>
+    <input type="date" id="registerDateFrom" name="registerDateFrom" class="form-control"
+      [(ngModel)]="filters.registerDateFrom" (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
+
+  </div>
+  <div class="col-md-4" *ngIf="false">
+
+    <label for="registerDateTo"> To Date:</label>
+    <input type="date" id="registerDateTo" class="form-control" [(ngModel)]="filters.registerDateTo"
+      (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
+
+  </div>
+  <div class="col-12 ">
+    <button type="button" class="btn btn-primary" [disabled]="!BNR" (click)="searchBRN()">
+      Search BRN
+    </button>
+  </div>
+</div>
+
+
 <div *ngIf="registryDetails.length > 0; else noData" class="mt-3">
-    <!-- filter component start -->
-    <table class="table table-bordered table-striped">
-      <thead>
-        <tr>
-          <th class="first">Sr.No</th>
-          <th>BRN </th>
-          <th>Establishment Name</th>
-          <th>City</th>
-          <th>District</th>
-          <th>Institution Type</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let detail of registryDetails; let i = index" (click)="goToDetails(detail.brnNo)">
-          <td>{{ i + 1 }}</td>
-          <td><a class="nav-link">{{detail.brnNo }}</a> </td>
-          <td>{{ detail.nameOfEstablishmentOrOwner }}</td>
-          <td>{{ detail.district }}</td>
-          <td>{{ detail.district }}</td>
-          <td>{{ detail.sector }}</td>
-        </tr>
-      </tbody>
-    </table>
-    <div  *ngIf="totalPages != 1"class="d-flex nav-dflex">
-      <nav aria-label="Page navigation">
-        <ul class="pagination">
-          <li class="page-item" [class.disabled]="currentPage === 0">
-            <a class="page-link" (click)="goToPage(currentPage - 1)" aria-label="Previous">
-              <span aria-hidden="true">&laquo;</span>
-            </a>
-          </li>
-          <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index"
-            [class.active]="i === currentPage">
-            <a class="page-link" (click)="goToPage(i)">{{ i + 1 }}</a>
-          </li>
-          <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
-            <a class="page-link" (click)="goToPage(currentPage + 1)" aria-label="Next">
-              <span aria-hidden="true">&raquo;</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
-      <div class="form-group">
-        <label for="pageSize">Page Size:</label>
-        <select id="pageSize" [(ngModel)]="pageSize" (change)="onPageSizeChange($event)" class="no-form-control">
-          <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
-        </select>
-      </div>
+  <!-- filter component start -->
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th class="first">Sr.No</th>
+        <th>BRN </th>
+        <th>Establishment Name</th>
+        <th>City</th>
+        <th>District</th>
+        <th>Institution Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let detail of registryDetails; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>
+          <a class="nav-link" (click)="goToDetails(detail.brnNo)">
+            {{ detail.brnNo }}
+          </a>
+        </td>
+        <td>{{ detail.nameOfEstablishmentOrOwner }}</td>
+        <td>{{ detail.taluka  }}</td>
+        <td>{{ detail.district  }}</td> <!-- assuming you meant taluka -->
+        <td>{{ detail.sector }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="totalPages != 1" class="d-flex nav-dflex">
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+
+        <!-- First -->
+        <li class="page-item" [class.disabled]="currentPage === 0">
+          <a class="page-link" (click)="goToFirst()" aria-label="First">
+            « First
+          </a>
+        </li>
+
+        <!-- Previous -->
+        <li class="page-item" [class.disabled]="currentPage === 0">
+          <a class="page-link" (click)="goToPage(currentPage - 1)" aria-label="Previous">
+            ‹ Prev
+          </a>
+        </li>
+
+        <!-- Page Numbers -->
+        <li class="page-item" *ngFor="let page of getVisiblePages()" [class.disabled]="page === -1"
+          [class.active]="page === currentPage">
+          <ng-container *ngIf="page === -1">
+            <span class="page-link">…</span>
+          </ng-container>
+          <ng-container *ngIf="page !== -1">
+            <a class="page-link" (click)="goToPage(page)">{{ page + 1 }}</a>
+          </ng-container>
+        </li>
+
+        <!-- Next -->
+        <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+          <a class="page-link" (click)="goToPage(currentPage + 1)" aria-label="Next">
+            Next ›
+          </a>
+        </li>
+
+        <!-- Last -->
+        <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+          <a class="page-link" (click)="goToLast()" aria-label="Last">
+            Last »
+          </a>
+        </li>
+
+      </ul>
+    </nav>
+
+
+    <div class="form-group">
+      <label for="pageSize">Page Size:</label>
+      <select id="pageSize" [(ngModel)]="pageSize" (change)="onPageSizeChange($event)" class="no-form-control">
+        <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+      </select>
     </div>
   </div>
-  <ng-template #noData>
-    <p class="">No data available.</p>
-  </ng-template>
+</div>
+<ng-template #noData>
+  <p class="">No data available.</p>
+</ng-template>

@@ -22,8 +22,12 @@ activeLabel: string = 'Dashboard';
     { label: 'MENU.CONCERN_RECORD', routerLink: 'con-reg-details', icon: 'assets/images/icon/region.png', roles: ['ROLE_REG_AUTH_CSV','ROLE_REG_AUTH_API'] },
     { label: 'MENU.UPLOAD_CSV', routerLink: 'csv-upload', icon: 'assets/images/icon/region.png', roles: ['ROLE_REG_AUTH_CSV'] },
     // { label: 'change-password', routerLink: 'change-password', icon: 'assets/images/icon/region.png', roles: ['ROLE_REG_AUTH_CSV','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API'] },
-    { label: 'MENU.PROFILE', routerLink: 'profile', icon: 'assets/images/icon/region.png', roles: ['ROLE_REG_AUTH_CSV','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API'] },
-    // { label: 'MENU.USER', routerLink: 'user', icon: 'assets/images/icon/region.png', roles: ['ROLE_REG_AUTH_CSV'] },
+    { label: 'MENU.PROFILE', routerLink: 'profile', icon: 'assets/images/icon/region.png', roles: ['ROLE_REG_AUTH_CSV','ROLE_DES_STATE','ROLE_DES_REGION','ROLE_DES_DISTRICT','ROLE_REG_AUTH_API','ROLE_ADMIN'] },
+    { label: 'MENU.USER', routerLink: 'user', icon: 'assets/images/icon/region.png', roles: ['ROLE_ADMIN'] },
+    { label: 'registery', routerLink: 'registery', icon: 'assets/images/icon/region.png', roles: ['ROLE_ADMIN'] },
+    { label: 'Circular', routerLink: 'add-circular', icon: 'assets/images/icon/region.png', roles: ['ROLE_ADMIN'] },
+
+    
     
   ];
   userRoles: string[] = [];

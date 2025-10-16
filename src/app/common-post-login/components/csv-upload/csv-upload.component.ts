@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -15,87 +16,34 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrl: './csv-upload.component.css'
 })
 export class CsvUploadComponent {
-  // selectedFiles: File[] = [];
-  //   uploadProgress: number = 0;
-
-  //   bRNGenerationRecordCount:BRNGenerationRecordCount | undefined;
-
-  //   constructor(private fileUploadService: FileUploadService) {}
-
-  //   onFileChange(event: any): void {
-  //     if (event.target.files.length > 0) {
-  //       this.selectedFiles = Array.from(event.target.files);
-  //     }
-  //   }
-
-  //   removeFile(index: number): void {
-  //     this.selectedFiles.splice(index, 1);
-  //   }
-
-  //   uploadFile(): void {
-  //     if (this.selectedFiles.length === 0) {
-  //       alert('Please select a file to upload.');
-  //       return;
-  //     }
-
-  //     const formData = new FormData();
-  //     this.selectedFiles.forEach(file => {
-  //       formData.append('file', file);
-  //     });
-
-  //     this.fileUploadService.uploadFile(formData).subscribe({
-  //       next: (event) => {
-  //         if (event.type === HttpEventType.UploadProgress && event.total) {
-  //           this.uploadProgress = Math.round((100 * event.loaded) / event.total);
-  //         } else if (event instanceof HttpResponse) {
-  //           if (event.body !== null) {  // Check if event.body is not null
-  //             this.bRNGenerationRecordCount = event.body;  // Assign only if it's not null
-  //             console.log('Upload successful:', this.bRNGenerationRecordCount);
-  //             Swal.fire({
-  //               title: "File Upload successful",
-  //               text: "File Upload successful",
-  //               icon: "success"
-  //             });
-  //             this.uploadProgress = 0;  // Reset progress after upload
-  //             this.selectedFiles = [];  // Clear file list after upload
-  //           } else {
-  //             console.error('Upload failed: Response body is null');
-  //             alert('Upload failed: Response body is null');
-  //             Swal.fire({
-  //               title: "File Upload failed",
-  //               text: "File Upload failed",
-  //               icon: "error"
-  //             });
-  //             this.uploadProgress = 0;
-  //           }
-  //         }
-  //       },
-  //       error: (error) => {
-  //         console.error('Upload failed:', error);
-  //         alert('Upload failed.');
-  //         this.uploadProgress = 0;  // Reset progress if upload fails
-  //       }
-  //     });
-  //   }
-
-  //   downloadFile(fileName: string): void {
-  //     this.fileUploadService.downloadFile(fileName).subscribe(blob => {
-  //       const a = document.createElement('a');
-  //       const objectUrl = URL.createObjectURL(blob);
-  //       a.href = objectUrl;
-  //       a.download = fileName;
-  //       a.click();
-  //       URL.revokeObjectURL(objectUrl);
-  //     });
-  //   }
-
-
   uploadForm: FormGroup;
   selectedFiles: File[] = [];
   uploadProgress = 0;
 
   validationMessages: string[] = [];
   successMessage: string = '';
+
+  // ✅ Required Excel headers
+  private readonly REQUIRED_HEADERS = [
+    'NAME_OF_ESTABLISHMENT/OWNER',
+    'HOUSE_NO',
+    'STREET_NAME',
+    'LOCALITY',
+    'TOWN_VILLAGE',
+    'TALUKA',
+    'DISTRICT',
+    'PIN_CODE',
+    'SECTOR(RURAL/URBAN)',
+    'ACT/AUTHORITY_REGISTRATION_NO',
+    'NAME_OF_ACT',
+    'TEL/MOB_NO',
+    'EMAIL',
+    'PAN',
+    'TAN',
+    'WARD_NUMBER',
+    'GST_NUMBER',
+    'NIC_2008_ACTIVITY_CODE'
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -165,6 +113,7 @@ export class CsvUploadComponent {
 
       this.selectedFiles.push(file);
     }
+    
 
     // Auto-clear messages after 1 minute if any
     if (this.validationMessages.length > 0) {
@@ -179,43 +128,7 @@ export class CsvUploadComponent {
     this.selectedFiles.splice(index, 1);
   }
 
-  /** Upload to Backend */
-  // uploadFiles() {
-  //   this.validationMessages = []; // clear old errors
-  //   this.successMessage = '';     // clear old success
-
-  //   if (this.selectedFiles.length === 0) {
-  //     this.validationMessages = ["⚠ Please select at least one valid file."];
-  //     setTimeout(() => this.validationMessages = [], 60000);
-  //     return;
-  //   }
-
-  //   const formData = new FormData();
-  //   this.selectedFiles.forEach(file => formData.append('files', file));
-
-     
-  //   this.http.post('http://localhost:8080/api/files/upload', formData, {
-  //     reportProgress: true,
-  //     observe: 'events'
-  //   }).subscribe({
-  //     next: (event: HttpEvent<any>) => {
-  //       if (event.type === HttpEventType.UploadProgress && event.total) {
-  //         this.uploadProgress = Math.round((100 * event.loaded) / event.total);
-  //       } else if (event.type === HttpEventType.Response) {
-  //         this.successMessage = '✅ Files uploaded successfully!';
-  //         this.selectedFiles = [];
-  //         this.uploadProgress = 0;
-
-  //         // Auto-clear success message after 1 min
-  //         setTimeout(() => this.successMessage = '', 60000);
-  //       }
-  //     },
-  //     error: () => {
-  //       this.validationMessages = ['❌ File upload failed!'];
-  //       setTimeout(() => this.validationMessages = [], 60000);
-  //     }
-  //   });
-  // }
+  
 
   uploadFiles() {
     this.validationMessages = [];
@@ -242,6 +155,17 @@ export class CsvUploadComponent {
         this.validationMessages = ['❌ File upload failed!'];
         setTimeout(() => this.validationMessages = [], 60000);
       }
+    });
+  }
+
+ downloadFile(fileName: string): void {
+    this.fileUploadService.downloadFile(fileName).subscribe(blob => {
+      const a = document.createElement('a');
+      const objectUrl = URL.createObjectURL(blob);
+      a.href = objectUrl;
+      a.download = fileName;
+      a.click();
+      URL.revokeObjectURL(objectUrl);
     });
   }
 }

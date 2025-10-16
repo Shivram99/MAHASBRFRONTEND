@@ -1,44 +1,49 @@
+<div class="d-flex justify-content-between" *ngIf="mstRegistryDetailsPage; else loading">
+  <ul class="details w-100">
+    <li><strong>SI.No</strong> <span>{{ mstRegistryDetailsPage.siNo }}</span></li>
+    <li><strong>Name of Establishment / Owner</strong> <span>{{ mstRegistryDetailsPage.nameOfEstablishmentOrOwner }}</span></li>
+    <li><strong>House No</strong> <span>{{ mstRegistryDetailsPage.houseNo }}</span></li>
+    <li><strong>Street Name</strong> <span>{{ mstRegistryDetailsPage.streetName }}</span></li>
+    <li><strong>Locality</strong> <span>{{ mstRegistryDetailsPage.locality }}</span></li>
+    <li><strong>Pin code</strong> <span>{{ mstRegistryDetailsPage.pinCode }}</span></li>
+    <li><strong>Telephone / Mob Number</strong> <span>{{ mstRegistryDetailsPage.telephoneMobNumber }}</span></li>
+    <li><strong>Email Address</strong> <span>{{ mstRegistryDetailsPage.emailAddress }}</span></li>
+    <li><strong>PAN</strong> <span>{{ mstRegistryDetailsPage.panNumber }}</span></li>
+    <li><strong>TAN</strong> <span>{{ mstRegistryDetailsPage.tanNumber }}</span></li>
+    <li><strong>Head Office: House No</strong> <span>{{ mstRegistryDetailsPage.headOfficeHouseNo }}</span></li>
+    <li><strong>Head Office: Street Name</strong> <span>{{ mstRegistryDetailsPage.headOfficeStreetName }}</span></li>
+    <li><strong>Head Office: Locality</strong> <span>{{ mstRegistryDetailsPage.headOfficeLocality }}</span></li>
+    <li><strong>Head Office: Pin Code</strong> <span>{{ mstRegistryDetailsPage.headOfficePinCode }}</span></li>
+    <li><strong>Head Office: Telephone/Mob Number</strong> <span>{{ mstRegistryDetailsPage.headOfficeTelephoneMobNumber }}</span></li>
+    <li><strong>Email Address</strong> <span>{{ mstRegistryDetailsPage.headOfficeEmailAddress }}</span></li>
+    <li><strong>Description of major activity of Establishment/Enterprise</strong> <span>{{ mstRegistryDetailsPage.descriptionOfMajorActivity }}</span></li>
+    <li><strong>NIC 2008 activity code</strong> <span>{{ mstRegistryDetailsPage.nic2008ActivityCode }}</span></li>
+  </ul>
 
-<div class="d-flex justify-content-between">
-<ul class="details w-100">
-    <li><strong>SI.No</strong> <span>{{mstRegistryDetailsPage.siNo }}</span></li>
-    <li><strong>Name of Establishment / Owner</strong> <span>{{mstRegistryDetailsPage.nameOfEstablishmentOrOwner }}</span></li>
-    <li><strong>House No</strong> <span>{{mstRegistryDetailsPage.houseNo}}</span></li>
-    <li><strong>Street Name</strong> <span>{{mstRegistryDetailsPage.streetName}}</span></li>
-    <li><strong>Locality</strong> <span>{{mstRegistryDetailsPage.locality}}</span></li>
-    <li><strong>Pin code</strong> <span>{{mstRegistryDetailsPage.pinCode}}</span></li>
-    <li><strong>Telephone / Mob Number</strong> <span>{{mstRegistryDetailsPage.telephoneMobNumber}}</span></li>
-    <li><strong>Email Address</strong> <span>{{mstRegistryDetailsPage.emailAddress}}</span></li>
-    <li><strong>PAN</strong> <span>{{mstRegistryDetailsPage.panNumber}}</span></li>
-    <li><strong>TAN</strong> <span>{{mstRegistryDetailsPage.tanNumber}}</span></li>
-    <li><strong>Head Office: House No</strong> <span>{{mstRegistryDetailsPage.headOfficeHouseNo}}</span></li>
-    <li><strong>Head Office: Street Name</strong> <span>{{mstRegistryDetailsPage.headOfficeStreetName}}</span></li>
-    <li><strong>Head Office: Locality</strong> <span>{{mstRegistryDetailsPage.headOfficeLocality}}</span></li>
-    <li><strong>Head Office: Pin Code</strong> <span>{{mstRegistryDetailsPage.headOfficePinCode}}</span></li>
-    <li><strong>Head Office: Telephone/Mob Number</strong> <span>{{mstRegistryDetailsPage.headOfficeTelephoneMobNumber}}</span></li>
-    <li><strong>Email Address</strong> <span>{{mstRegistryDetailsPage.headOfficeEmailAddress}}</span></li>
-    <li><strong>Description of major activity of Establishment/Enterprise</strong> <span>{{mstRegistryDetailsPage.descriptionOfMajorActivity}}</span></li>
-    <li><strong>NIC 2008 activity code</strong> <span>{{mstRegistryDetailsPage.nic2008ActivityCode}}</span></li>
-</ul>
-
-<ul class="details w-100">
-    <li><strong>Year of start of operation under current ownership</strong> <span>{{mstRegistryDetailsPage.yearOfStartOfOperation}}</span></li>
-    <li><strong>Ownership Code</strong> <span>{{mstRegistryDetailsPage.ownershipCode}}</span></li>
-    <li><strong>Total Number of Person Working</strong> <span>{{mstRegistryDetailsPage.totalNumberOfPersonsWorking}}</span></li>
-    <li><strong>ACT/Authority registration numbers</strong> <span>{{mstRegistryDetailsPage.actAuthorityRegistrationNumbers}}</span></li>
-    <li><strong>Remarks</strong> <span>{{mstRegistryDetailsPage.remarks}}</span></li>
-    <li><strong>Location Code</strong> <span>{{mstRegistryDetailsPage.locationCode}}</span></li>
-    <li><strong>Business Registration Number (For unregistered units, putting 'U' at the end of 16 digits long BRN)</strong> <span>{{mstRegistryDetailsPage.brnNo}}</span></li>
-    <li><strong>Registration Status</strong> <span>{{mstRegistryDetailsPage.registrationStatus}}</span></li>
-    <li><strong>Town/Village</strong> <span>{{mstRegistryDetailsPage.townVillage}}</span></li>
-    <li><strong>Taluka</strong> <span>{{mstRegistryDetailsPage.taluka}}</span></li>
-    <li><strong>District</strong> <span>{{mstRegistryDetailsPage.district}}</span></li>
-    <li><strong>Sector (Rural/Urban)</strong> <span>{{mstRegistryDetailsPage.sector}}</span></li>
-    <li><strong>Name of Act</strong> <span>{{mstRegistryDetailsPage.nameOfAct}}</span></li>
-    <li><strong>Date of Registration</strong> <span>{{mstRegistryDetailsPage.dateOfRegistration}}</span></li>
-    <li><strong>Date if deregistration/expiry</strong> <span>{{mstRegistryDetailsPage.dateOfDeregistrationExpiry}}</span></li>
-    <li><strong>GST Number</strong> <span>{{mstRegistryDetailsPage.gstNumber}}</span></li>
-    <li><strong>HSN Code</strong> <span>{{mstRegistryDetailsPage.hsnCode}}</span></li>
-</ul>
-
+  <ul class="details w-100">
+    <li><strong>Year of start of operation under current ownership</strong> <span>{{ mstRegistryDetailsPage.yearOfStartOfOperation }}</span></li>
+    <li><strong>Ownership Code</strong> <span>{{ mstRegistryDetailsPage.ownershipCode }}</span></li>
+    <li><strong>Total Number of Person Working</strong> <span>{{ mstRegistryDetailsPage.totalNumberOfPersonsWorking }}</span></li>
+    <li><strong>ACT/Authority registration numbers</strong> <span>{{ mstRegistryDetailsPage.actAuthorityRegistrationNumbers }}</span></li>
+    <li><strong>Remarks</strong> <span>{{ mstRegistryDetailsPage.remarks }}</span></li>
+    <li><strong>Location Code</strong> <span>{{ mstRegistryDetailsPage.locationCode }}</span></li>
+    <li><strong>Business Registration Number</strong> <span>{{ mstRegistryDetailsPage.brnNo }}</span></li>
+    <li><strong>Registration Status</strong> <span>{{ mstRegistryDetailsPage.registrationStatus }}</span></li>
+    <li><strong>Town/Village</strong> <span>{{ mstRegistryDetailsPage.townVillage }}</span></li>
+    <li><strong>Taluka</strong> <span>{{ mstRegistryDetailsPage.taluka }}</span></li>
+    <li><strong>District</strong> <span>{{ mstRegistryDetailsPage.district }}</span></li>
+    <li><strong>Sector (Rural/Urban)</strong> <span>{{ mstRegistryDetailsPage.sector }}</span></li>
+    <li><strong>Name of Act</strong> <span>{{ mstRegistryDetailsPage.nameOfAct }}</span></li>
+    <li><strong>Date of Registration</strong> <span>{{ mstRegistryDetailsPage.dateOfRegistration  | date:'dd-MMM-yyyy' }}</span></li>
+    <li><strong>Date of deregistration/expiry</strong> <span>{{ mstRegistryDetailsPage.dateOfDeregistrationExpiry  | date:'dd-MMM-yyyy' }}</span></li>
+    <li><strong>GST Number</strong> <span>{{ mstRegistryDetailsPage.gstNumber }}</span></li>
+    <li><strong>HSN Code</strong> <span>{{ mstRegistryDetailsPage.hsnCode }}</span></li>
+  </ul>
 </div>
+
+<!-- Template for loading state -->
+<ng-template #loading>
+  <div class="text-center p-3">
+    <em>Loading BRN details...</em>
+  </div>
+</ng-template>

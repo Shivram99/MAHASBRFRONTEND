@@ -92,11 +92,11 @@
                 <tr *ngFor="let detail of registryDetails; let i = index">
                   <td>{{ i + 1 }}</td>
                   <td>{{ detail.brnNo }}</td>
-                  <td>{{ detail.nameOfEstablishmentOrOwner }}</td>
+                  <td>{{ detail.nameOfEstablishmentOrOwner | capitalize }}</td>
 
-                  <td>{{ detail.district }}</td>
-                  <td>{{ detail.district }}</td>
-                  <td>{{ detail.sector }}</td>
+                  <td>{{ detail.taluka | capitalize }}</td>
+                  <td>{{ detail.district | capitalize }}</td>
+                  <td>{{ detail.sector | capitalize }}</td>
                 </tr>
               </tbody>
             </table>

@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -47,6 +47,7 @@ import { RegionBRNDetailsComponent } from './component/region-brndetails/region-
 import { DistrictBRNDetailsComponent } from './component/district-brndetails/district-brndetails.component';
 import { CapitalizePipe } from './pipes/capitalize.pipe';
 import { LanguageSwitcherComponent } from './shared/components/language-switcher/language-switcher.component';
+import { GlobalErrorHandler } from './core/handlers/global-error.handler';
 
 // import { LanguageSwitcherComponent } from './shared/components/language-switcher/language-switcher.component';
 
@@ -85,7 +86,6 @@ import { LanguageSwitcherComponent } from './shared/components/language-switcher
         CircularComponent,
         DashboardDetailsComponent,
         DuplicatedeatilsComponent,
-        MultiSelectOptionComponent,
         PostLoginDashboardComponent,
         RegionBRNDetailsComponent,
         DistrictBRNDetailsComponent,
@@ -110,6 +110,7 @@ import { LanguageSwitcherComponent } from './shared/components/language-switcher
             provideClientHydration(), provideHttpClient(withFetch()),
             authGuard,
             { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+             { provide: ErrorHandler, useClass: GlobalErrorHandler },
             provideAnimationsAsync(),
             provideHttpClient(withInterceptorsFromDi()),
         ]

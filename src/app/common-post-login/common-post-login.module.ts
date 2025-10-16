@@ -6,7 +6,7 @@ import { CommonPostLoginComponent } from './common-post-login.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
 import { BRNregistoryDetailsComponent } from './components/brn-registry-details/brn-registry-details.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { DashboardBrnDetailsComponent } from './components/dashboard-brn-details/dashboard-brn-details.component';
 import { CsvUploadComponent } from './components/csv-upload/csv-upload.component';
@@ -14,6 +14,10 @@ import { DuplicateBrnDetailsComponent } from './components/duplicate-brn-details
 import { ConcernRegDetailsComponent } from './components/concern-reg-details/concern-reg-details.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { UserListComponent } from './components/user-list/user-list.component';
+import { RegistryMasterComponent } from './components/registry-master/registry-master.component';
+import { AddCircularComponent } from './components/add-circular/add-circular.component';
+import { MultiSelectOptionComponent } from '../component/util/multi-select-option/multi-select-option.component';
+
 
 @NgModule({
   declarations: [
@@ -25,11 +29,15 @@ import { UserListComponent } from './components/user-list/user-list.component';
     CsvUploadComponent,
     DuplicateBrnDetailsComponent,
     ConcernRegDetailsComponent,
-    UserListComponent
+    UserListComponent,
+    RegistryMasterComponent,
+    AddCircularComponent,
+    MultiSelectOptionComponent, 
+  
   ],
   imports: [
     CommonModule,TranslateModule,
-    CommonPostLoginRoutingModule,FormsModule,SharedModule,
+    CommonPostLoginRoutingModule,FormsModule,SharedModule,ReactiveFormsModule
   ]
 })
 export class CommonPostLoginModule { }

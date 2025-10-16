@@ -54,16 +54,28 @@ export class SearchBrnComponent implements OnInit{
     }
   }
   fetchDistricts(): void {
-    this.dataService.getAllDistricts()
-      .subscribe(districts1 => {
+  this.dataService.getAllDistricts().subscribe({
+    next: (districts1) => {
+      if (districts1 && Array.isArray(districts1)) {
+        // Safely map the response if it’s a valid array
         this.districts = districts1.map(district => ({
           censusDistrictCode: district.censusDistrictCode,
           districtName: district.districtName,
           censusStateCode: district.censusStateCode
         }));
+      } else {
+        // If API gives null, undefined, or invalid data
+        console.warn('No districts data received from API.');
+        this.districts = [];
+      }
+    },
+    error: (err) => {
+      console.error('Error fetching districts:', err);
+      this.districts = []; // Fallback to empty array
+    }
+  });
+}
 
-      });
-  }
 
   atLeastOneRequiredValidator(group: FormGroup): any {
     const nameOfEstablishmentOrOwner = group.get('nameOfEstablishmentOrOwner')?.value;

@@ -68,5 +68,7 @@ export class DataService {
     return this.http.get<Page<DetailsPageDTO>>(`${this.apiUrl}/admin/getFilterData`, { params });
   }
     
-   
+   getAllDistrictsForLoginUser(): Observable<District[]> {
+    return this.http.get<District[]>(`${this.apiUrl}/api/auth/districts`);
+  }
 }

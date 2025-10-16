@@ -9,6 +9,9 @@ import { CsvUploadComponent } from './components/csv-upload/csv-upload.component
 import { DuplicateBrnDetailsComponent } from './components/duplicate-brn-details/duplicate-brn-details.component';
 import { ConcernRegDetailsComponent } from './components/concern-reg-details/concern-reg-details.component';
 import { UserListComponent } from './components/user-list/user-list.component';
+import { RegistryMasterComponent } from './components/registry-master/registry-master.component';
+import { CircularComponent } from '../component/circular/circular.component';
+import { AddCircularComponent } from './components/add-circular/add-circular.component';
 
 const routes: Routes = [{
   path: '', component: LayoutComponent, children: [
@@ -27,6 +30,8 @@ const routes: Routes = [{
   { path: 'dup-brn-details', component: DuplicateBrnDetailsComponent },
   { path: 'con-reg-details', component: ConcernRegDetailsComponent },
   { path: 'user', component: UserListComponent },
+  { path: 'registery', component: RegistryMasterComponent },
+  { path: 'add-circular', component: AddCircularComponent },
 
   ]
 }];

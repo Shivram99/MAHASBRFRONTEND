@@ -1,0 +1,66 @@
+<div class="container">
+  <h2>Registry Master</h2>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="mb-4 needs-validation" novalidate>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label>Registry Name (EN)</label>
+        <input type="text" formControlName="registryNameEn" class="form-control" />
+        <div class="text-danger" *ngIf="form.get('registryNameEn')?.touched && form.get('registryNameEn')?.invalid">
+          English name is required (max 200 chars)
+        </div>
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label>Registry Name (MR)</label>
+        <input type="text" formControlName="registryNameMr" class="form-control" appTransliterate="mr" />
+        <div class="text-danger" *ngIf="form.get('registryNameMr')?.touched && form.get('registryNameMr')?.invalid">
+          Marathi name is required (max 200 chars)
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label>Status</label>
+        <select formControlName="status" class="form-control">
+          <option [ngValue]="true">Active</option>
+          <option [ngValue]="false">Inactive</option>
+        </select>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">
+      {{ isEdit ? 'Update' : 'Create' }}
+    </button>
+    <button type="button" class="btn btn-secondary ml-2" (click)="cancelEdit()" *ngIf="isEdit">
+      Cancel
+    </button>
+  </form>
+<div style="max-height: 400px; overflow-y: auto; overflow-x: auto;">
+  <table class="table table-bordered" *ngIf="registries.length > 0">
+    <thead>
+      <tr>
+        <th style="position: sticky; top: 0; background: #f8f9fa; z-index: 2;">Sr. No</th>
+        <th style="position: sticky; top: 0; background: #f8f9fa; z-index: 2;">Name (EN)</th>
+        <th style="position: sticky; top: 0; background: #f8f9fa; z-index: 2;">Name (MR)</th>
+        <th style="position: sticky; top: 0; background: #f8f9fa; z-index: 2;">Status</th>
+        <th style="position: sticky; top: 0; background: #f8f9fa; z-index: 2;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let r of registries; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ r.registryNameEn }}</td>
+        <td>{{ r.registryNameMr }}</td>
+        <td>{{ r.status ? 'Active' : 'Inactive' }}</td>
+        <td>
+          <button class="btn btn-info btn-sm me-2" (click)="editRegistry(r)">Edit</button>
+          <button class="btn btn-danger btn-sm" (click)="deleteRegistry(r.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+  <p *ngIf="registries.length === 0">No registries found.</p>
+</div>

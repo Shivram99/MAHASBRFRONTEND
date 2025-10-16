@@ -1,0 +1,38 @@
+
+
+<div class="row">
+
+  <div class="col-md-6"><app-multi-select-option  [items]="districts"
+    (selectionChange)="onSelectionDistrictChange($event)" [placeholder]="'District'" />
+  </div>
+  
+    <div class="col-md-6"><app-multi-select-option  [items]="talukas" (selectionChange)="onSelectionTalukaChange($event)" [placeholder]="'Taluka'" />
+    </div>
+
+  <div class="col-md-4">
+    <label>BNR :</label>
+    <input type="text" placeholder="Enter BRN number" class="form-control" id="BNR" name="BNR" [(ngModel)]="BNR" /><br />
+    
+  </div>
+
+  <div class="col-md-4">
+   
+      <label for="registerDateFrom"> From Date:</label>
+      <input type="date" id="registerDateFrom" name="registerDateFrom" class="form-control"
+        [(ngModel)]="filters.registerDateFrom" (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
+  
+  </div>
+  <div class="col-md-4">
+
+      <label for="registerDateTo"> To Date:</label>
+      <input type="date" id="registerDateTo" class="form-control" [(ngModel)]="filters.registerDateTo"
+        (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
+    
+  </div>
+  <div class="col-12 ">
+    <button type="button" class="btn btn-primary" [disabled]="!BNR" (click)="searchBRN()">
+      Search BRN
+    </button>
+  </div>
+</div>
+

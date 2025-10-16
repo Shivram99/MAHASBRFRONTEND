@@ -2,8 +2,11 @@ export interface User {
   id?: number;
   username: string;
   email: string;
-  isFirstTimeLogin?: boolean;
+  isFirstTimeLogin?: boolean; 
   roles?: string[];
+  registryId?: number;
+  districtId?: number;
+  divisionCode?: number;
   userProfile?: UserProfile;
 }
 
