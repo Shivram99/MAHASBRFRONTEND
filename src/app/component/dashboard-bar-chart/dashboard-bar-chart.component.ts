@@ -18,63 +18,63 @@ interface ChartData {
 export class DashboardBarChartComponent implements AfterViewInit {
 
 
-  @Input() dashboarddata: any;
-  @Input() chartType: string='';
+  // @Input() dashboarddata: any;
+  // @Input() chartType: string='';
   
-  @Input() userType:string='';
+  // @Input() userType:string='';
 
-  @ViewChild('multiBarCanvas') private multiBarCanvas!: ElementRef;
-  private chart!: Chart;
+  // @ViewChild('multiBarCanvas') private multiBarCanvas!: ElementRef;
+  // private chart!: Chart;
 
   constructor() {
    }
 
   
    ngAfterViewInit(): void {
-    this.initializeMultiBarChart();
+    // this.initializeMultiBarChart();
   }
 
   initializeMultiBarChart(): void {
-    const multiBarCanvas = this.multiBarCanvas.nativeElement;
-    const ctx = multiBarCanvas.getContext('2d');
+    // const multiBarCanvas = this.multiBarCanvas.nativeElement;
+    // const ctx = multiBarCanvas.getContext('2d');
 
-    let scalesOptions = {
-      x: {
-          stacked: false
-      },
-      y: {
-          stacked: false
-      }
-    };
+    // let scalesOptions = {
+    //   x: {
+    //       stacked: false
+    //   },
+    //   y: {
+    //       stacked: false
+    //   }
+    // };
 
-    if (this.chartType === 'stack') {
-      scalesOptions = {
-        x: {
-          stacked: true
-        },
-        y: {
-          stacked: true
-        }
-      };
-    }
+    // if (this.chartType === 'stack') {
+    //   scalesOptions = {
+    //     x: {
+    //       stacked: true
+    //     },
+    //     y: {
+    //       stacked: true
+    //     }
+    //   };
+    // }
 
-    this.chart = new Chart(ctx, {
-      type: 'bar',  
-      data: this.dashboarddata,
-      options: {
-          responsive: true,
-          plugins: {
-              legend: {
-                  position: 'bottom',
-              },
-              title: {
-                  display: true,
-                  text: 'Stacked Bar Chart'
-              }
-          },
-          scales: scalesOptions
-      }
-    });
+    // this.chart = new Chart(ctx, {
+    //   type: 'bar',  
+    //   data: this.dashboarddata,
+    //   options: {
+    //       responsive: true,
+    //       plugins: {
+    //           legend: {
+    //               position: 'bottom',
+    //           },
+    //           title: {
+    //               display: true,
+    //               text: 'Stacked Bar Chart'
+    //           }
+    //       },
+    //       scales: scalesOptions
+    //   }
+    // });
   }
  
 }

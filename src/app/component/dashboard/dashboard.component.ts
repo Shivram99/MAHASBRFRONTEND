@@ -21,14 +21,14 @@ export class DashboardComponent  implements OnInit{
   }
   ngOnInit(): void {
      if (this.isBrowser) {
-      this.initializeCharts();
+      // this.initializeCharts();
     }
   }
 
   ngAfterViewInit() {
     // Initialize charts only on browser side
     if (this.isBrowser) {
-      this.initializeCharts();
+      // this.initializeCharts();
     }
   }
 

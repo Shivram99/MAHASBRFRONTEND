@@ -13,3 +13,11 @@ ul.accessibility-menu li a.text-black { color: #000 !important;}
 }
 .search input { padding-left: 10px; border: 0px solid;}
 
+body {
+      font-size: 14px;
+      transition: font-size 0.1s ease;
+    }
+ .colorless-bg{
+    background: #000;
+    color: #fff;
+}

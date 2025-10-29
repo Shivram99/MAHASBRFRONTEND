@@ -13,11 +13,19 @@
     <a routerLink="https://www.india.gov.in/" target="_blank" class="emb">
       <img [src]="emblemImg" alt="Example Image">
   </a>
+  
  
   </div>
   <div class="rightPannel">
 
     <ul class="accessibility-menu posHome m-0">
+      <li><div class="font-size-controls">
+  <button (click)="changeFontSize('small')" class="font-size-btn">A-</button>
+  <button (click)="changeFontSize('medium')" class="font-size-btn">A</button>
+  <button (click)="changeFontSize('large')" class="font-size-btn">A+</button>
+  <button (click)="changeFontSize('large')" class="font-size-btn defaul-bg extra-btn">A</button>
+  <button (click)="changeFontSize('large')" class="font-size-btn colorless-bg extra-btn">A</button>
+</div></li>
       <li><app-language-switcher></app-language-switcher></li>
       <li class="text-light">|</li>
       <li>
