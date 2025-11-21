@@ -241,43 +241,5 @@
     "view": "View",
     "download": "Download",
     "close": "Close"
-  },
-  "dashboard": {
-    "Dashboard": "Dashboard",
-    "Home": "Home",
-    "Filters": "Filters",
-    "Close": "Close",
-
-    "SelectCountType": "Select Count Type",
-    "NR": "New Registration",
-    "TR": "Total Registration",
-    "DR": "Deregistration",
-
-    "Acts": "Acts / Registering Authorities",
-    "SelectActs": "-- Select Acts / Registering Authorities --",
-
-    "Region": "Region",
-    "SelectRegion": "-- Select Region --",
-
-    "District": "District",
-    "SelectDistrict": "-- Select District --",
-
-    "Year": "Year",
-    "SelectYear": "-- Select Year --",
-
-    "Quarter": "Quarter",
-    "SelectQuarter": "-- Select Quarter --",
-
-    "NIC": "Industry / NIC Classification",
-    "SelectNIC": "-- Select Industry / NIC Classification --",
-
-    "Submit": "Submit",
-    "Clear": "Clear",
-
-    "DashboardOverview": "NR / TR / DR - Dashboard Overview",
-
-    "DistrictIndustryWise": "District & Industry Wise",
-    "RegionWise": "Region Wise",
-    "IndustryWise": "Industry / NIC Wise"
   }
 }

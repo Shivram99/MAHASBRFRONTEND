@@ -245,44 +245,6 @@
     "view": "पहा",
     "download": "डाउनलोड",
     "close": "बंद करा"
-  },
-  "dashboard": {
-    "Dashboard": "डॅशबोर्ड",
-    "Home": "मुख्यपृष्ठ",
-    "Filters": "फिल्टर्स",
-    "Close": "बंद करा",
-
-    "SelectCountType": "काउंट प्रकार निवडा",
-    "NR": "नवीन नोंदणी",
-    "TR": "एकूण नोंदणी",
-    "DR": "अर्ज रद्द",
-
-    "Acts": "अधिनियम / नोंदणी प्राधिकरणे",
-    "SelectActs": "-- अधिनियम / नोंदणी प्राधिकरण निवडा --",
-
-    "Region": "विभाग",
-    "SelectRegion": "-- विभाग निवडा --",
-
-    "District": "जिल्हा",
-    "SelectDistrict": "-- जिल्हा निवडा --",
-
-    "Year": "वर्ष",
-    "SelectYear": "-- वर्ष निवडा --",
-
-    "Quarter": "त्रैमासिक",
-    "SelectQuarter": "-- त्रैमासिक निवडा --",
-
-    "NIC": "उद्योग / NIC वर्गीकरण",
-    "SelectNIC": "-- उद्योग / NIC वर्गीकरण निवडा --",
-
-    "Submit": "सबमिट करा",
-    "Clear": "क्लिअर करा",
-
-    "DashboardOverview": "NR / TR / DR - डॅशबोर्ड आढावा",
-
-    "DistrictIndustryWise": "जिल्हा व उद्योगनिहाय",
-    "RegionWise": "विभागनिहाय",
-    "IndustryWise": "उद्योग / NIC निहाय"
   }
 }
 
