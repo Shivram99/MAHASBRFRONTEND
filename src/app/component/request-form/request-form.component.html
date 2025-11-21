@@ -1,29 +1,31 @@
-
 <div class="bglightblue py-3">
     <div class="container bg-white shadow rounded p-3">
 
         <div class="d-md-flex justify-content-between border-b-org p-3">
-            <h1>Request Submission Form</h1>
-            <nav aria-label="breadcrumb">
+            <h1>{{ 'ReqForm.title' | translate }}</h1>
 
+            <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Request Submission Form</li>
+                    <li class="breadcrumb-item">
+                        <a routerLink="/">{{ 'ReqForm.breadcrumb_home' | translate }}</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        {{ 'ReqForm.breadcrumb_form' | translate }}
+                    </li>
                 </ol>
             </nav>
         </div>
+
         <div class="row justify-content-center">
             <div class="col-lg-7 col-md-9 mt-2">
 
                 <!-- Success Message -->
                 <div *ngIf="requestId" class="alert alert-success text-center mt-4">
-                    Request submitted successfully!<br>
-                    <strong>Request ID: {{ requestId }}</strong>
+                    {{ 'ReqForm.success_msg' | translate }}<br>
+                    <strong>{{ 'ReqForm.success_id' | translate }}: {{ requestId }}</strong>
                 </div>
 
-                <!-- =============================== -->
-                <!-- FORM SECTION (hidden on preview) -->
-                <!-- =============================== -->
+                <!-- FORM SECTION -->
                 <div class="card shadow border-0 rounded-3" *ngIf="!showPreview">
                     <div class="card-body p-4">
 
@@ -31,63 +33,82 @@
 
                             <!-- Name -->
                             <div class="mb-3">
-                                <label class="form-label bold">Name *</label>
+                                <label class="form-label bold">{{ 'ReqForm.name' | translate }} *</label>
                                 <input type="text" class="form-control" formControlName="name">
+
                                 <div *ngIf="f['name'].touched && f['name'].invalid" class="text-danger small mt-1">
-                                    <div *ngIf="f['name'].errors?.['required']">Please enter name</div>
-                                    <div *ngIf="f['name'].errors?.['maxlength']">Maximum 100 characters allowed</div>
+                                    <div *ngIf="f['name'].errors?.['required']">
+                                        {{ 'ReqForm.name_req' | translate }}
+                                    </div>
+                                    <div *ngIf="f['name'].errors?.['maxlength']">
+                                        {{ 'ReqForm.name_max' | translate }}
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- District -->
                             <div class="mb-3">
-                                <label class="form-label bold">District *</label>
+                                <label class="form-label bold">{{ 'ReqForm.district' | translate }} *</label>
                                 <select class="form-select" formControlName="district">
-                                    <option value="-1">-- Select District --</option>
-                                    <option *ngFor="let district of districts" [value]="district.censusDistrictCode">
+                                    <option value="-1">{{ 'ReqForm.district_select' | translate }}</option>
+
+                                    <option *ngFor="let district of districts" 
+                                            [value]="district.censusDistrictCode">
                                         {{ district.districtName | capitalize }}
                                     </option>
                                 </select>
-                                <div *ngIf="f['district'].touched && f['district'].invalid"
-                                    class="text-danger small mt-1">
-                                    <div *ngIf="f['district'].errors?.['required']">Please select district</div>
+
+                                <div *ngIf="f['district'].touched && f['district'].invalid" class="text-danger small mt-1">
+                                    <div *ngIf="f['district'].errors?.['required']">
+                                        {{ 'ReqForm.district_req' | translate }}
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- Email -->
                             <div class="mb-3">
-                                <label class="form-label bold">Email ID *</label>
+                                <label class="form-label bold">{{ 'ReqForm.email' | translate }} *</label>
                                 <input type="email" class="form-control" formControlName="email">
-                                <!-- <small class="text-muted">Your email will be your User ID.</small> -->
 
                                 <div *ngIf="f['email'].touched && f['email'].invalid" class="text-danger small mt-1">
-                                    <div *ngIf="f['email'].errors?.['required']">Please enter email id</div>
-                                    <div *ngIf="f['email'].errors?.['email']">Please enter valid email id</div>
-                                    <div *ngIf="f['email'].errors?.['maxlength']">Email too long</div>
+                                    <div *ngIf="f['email'].errors?.['required']">
+                                        {{ 'ReqForm.email_req' | translate }}
+                                    </div>
+                                    <div *ngIf="f['email'].errors?.['email']">
+                                        {{ 'ReqForm.email_valid' | translate }}
+                                    </div>
+                                    <div *ngIf="f['email'].errors?.['maxlength']">
+                                        {{ 'ReqForm.email_max' | translate }}
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- Mobile -->
                             <div class="mb-3">
-                                <label class="form-label bold">Mobile Number *</label>
+                                <label class="form-label bold">{{ 'ReqForm.mobile' | translate }} *</label>
                                 <input type="text" maxlength="10" class="form-control" formControlName="mobile">
 
                                 <div *ngIf="f['mobile'].touched && f['mobile'].invalid" class="text-danger small mt-1">
-                                    <div *ngIf="f['mobile'].errors?.['required']">Please enter mobile number</div>
-                                    <div *ngIf="f['mobile'].errors?.['pattern']">Please enter valid 10 digit mobile
-                                        number</div>
+                                    <div *ngIf="f['mobile'].errors?.['required']">
+                                        {{ 'ReqForm.mobile_req' | translate }}
+                                    </div>
+                                    <div *ngIf="f['mobile'].errors?.['pattern']">
+                                        {{ 'ReqForm.mobile_valid' | translate }}
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- Message -->
                             <div class="mb-3">
-                                <label class="form-label bold">Message *</label>
+                                <label class="form-label bold">{{ 'ReqForm.message' | translate }} *</label>
                                 <textarea rows="4" class="form-control" formControlName="message"></textarea>
 
-                                <div *ngIf="f['message'].touched && f['message'].invalid"
-                                    class="text-danger small mt-1">
-                                    <div *ngIf="f['message'].errors?.['required']">Please enter message</div>
-                                    <div *ngIf="f['message'].errors?.['maxlength']">Maximum 5000 characters allowed
+                                <div *ngIf="f['message'].touched && f['message'].invalid" class="text-danger small mt-1">
+                                    <div *ngIf="f['message'].errors?.['required']">
+                                        {{ 'ReqForm.message_req' | translate }}
+                                    </div>
+                                    <div *ngIf="f['message'].errors?.['maxlength']">
+                                        {{ 'ReqForm.message_max' | translate }}
                                     </div>
                                 </div>
                             </div>
@@ -95,7 +116,7 @@
                             <!-- Submit -->
                             <button type="submit" class="btn btn-primary w-100 py-2"
                                 [disabled]="submitting || requestForm.invalid">
-                                {{ submitting ? 'Submitting...' : 'Submit Request' }}
+                                {{ submitting ? ('ReqForm.submitting' | translate) : ('ReqForm.submit' | translate) }}
                             </button>
 
                         </form>
@@ -103,43 +124,39 @@
                     </div>
                 </div>
 
-
-                <!-- ================================== -->
-                <!-- PREVIEW SECTION                     -->
-                <!-- ================================== -->
+                <!-- PREVIEW SECTION -->
                 <div *ngIf="showPreview" class="card shadow border-0 rounded-3 mt-3">
                     <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">Preview Your Details</h5>
+                        <h5 class="mb-0">{{ 'ReqForm.preview_title' | translate }}</h5>
                     </div>
 
                     <div class="card-body p-4">
 
-                        <p><strong>Name:</strong> {{ requestForm.value.name }}</p>
-                        <p><strong>District:</strong> {{ requestForm.value.district }}</p>
-                        <p><strong>Email:</strong> {{ requestForm.value.email }}</p>
-                        <p><strong>Mobile:</strong> {{ requestForm.value.mobile }}</p>
+                        <p><strong>{{ 'ReqForm.name' | translate }}:</strong> {{ requestForm.value.name }}</p>
+                        <p><strong>{{ 'ReqForm.district' | translate }}:</strong> {{ requestForm.value.district }}</p>
+                        <p><strong>{{ 'ReqForm.email' | translate }}:</strong> {{ requestForm.value.email }}</p>
+                        <p><strong>{{ 'ReqForm.mobile' | translate }}:</strong> {{ requestForm.value.mobile }}</p>
 
-                        <p><strong>Message:</strong></p>
+                        <p><strong>{{ 'ReqForm.message' | translate }}:</strong></p>
                         <div class="border rounded p-2 bg-light">
                             {{ requestForm.value.message }}
                         </div>
 
                         <div class="text-center mt-4">
                             <button class="btn btn-secondary me-2 px-4" (click)="editDetails()">
-                                Edit
+                                {{ 'ReqForm.edit' | translate }}
                             </button>
 
                             <button class="btn btn-success px-4" (click)="confirmSubmit()" [disabled]="submitting">
-                                {{ submitting ? 'Submitting...' : 'Confirm Submit' }}
+                                {{ submitting ? ('ReqForm.submitting' | translate) : ('ReqForm.confirm_submit' | translate) }}
                             </button>
                         </div>
+
                     </div>
                 </div>
 
-
-
-
             </div>
         </div>
+
     </div>
 </div>
