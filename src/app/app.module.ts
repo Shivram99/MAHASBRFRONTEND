@@ -92,7 +92,7 @@ import { RequestFormComponent } from './component/request-form/request-form.comp
         DistrictBRNDetailsComponent,
         CapitalizePipe,
         LanguageSwitcherComponent,
-        RequestFormComponent,    
+        RequestFormComponent,
         // ChartfilterComponent,
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,
