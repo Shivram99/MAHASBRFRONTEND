@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SerachBrnService } from '../../services/serach-brn.service';
@@ -67,7 +68,6 @@ export class RequestFormComponent implements OnInit {
   get f() {
     return this.requestForm.controls;
   }
-
   fetchDistricts(): void {
   this.dataService.getAllDistricts().subscribe({
     next: (districts1) => {
@@ -139,5 +139,5 @@ export class RequestFormComponent implements OnInit {
   });
 }
 
-
 }
+

@@ -50,7 +50,6 @@ import { LanguageSwitcherComponent } from './shared/components/language-switcher
 import { GlobalErrorHandler } from './core/handlers/global-error.handler';
 import { RequestFormComponent } from './component/request-form/request-form.component';
 
-
 // import { LanguageSwitcherComponent } from './shared/components/language-switcher/language-switcher.component';
 
 
@@ -93,8 +92,7 @@ import { RequestFormComponent } from './component/request-form/request-form.comp
         DistrictBRNDetailsComponent,
         CapitalizePipe,
         LanguageSwitcherComponent,
-        RequestFormComponent,
-        
+        RequestFormComponent,    
         // ChartfilterComponent,
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,
