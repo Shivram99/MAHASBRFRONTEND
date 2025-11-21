@@ -30,3 +30,20 @@ form {
 .nyEye {
     margin-top: 11px !important;
 }
+@media screen and (max-width:767px){
+  .loginform {
+    width: 100%;
+}
+ .d-flex {
+    display: block ! IMPORTANT;
+}
+  .p-5 {
+    padding: 1rem !important;
+}
+.bglightblue {
+    padding: 0px;
+}
+.loginform img {
+    width: 100%;
+}
+}

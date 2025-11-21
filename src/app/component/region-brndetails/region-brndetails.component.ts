@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { DataService } from '../../services/dashboard/data-service.service';
 import { DetailsPageDTO } from '../../interface/details-page-dto';
 import { RegionBrnDetailsService } from '../../services/region-brn-details.service';
+import { catchError, throwError } from 'rxjs';
 
 @Component({
     selector: 'app-region-brndetails',
@@ -78,18 +79,39 @@ export class RegionBRNDetailsComponent {
   }
 
   loadRegistryDetails(page: number, size: number, sortBy: string): void {
-    this.regionBrnDetailsService.getRegistryDetailsPage(page, size, sortBy).subscribe(
-      (response: PaginatedResponse<MstRegistryDetailsPage>) => {
-        // Expecting an array of MstRegistryDetailsPage
-        console.log(response.content)
-        this.registryDetails = response.content;
-        this.totalPages = response.totalPages;
-        this.totalElements = response.totalElements;
-      },
-      (error) => {
-        console.error('Error submitting form', error);
+    this.regionBrnDetailsService.getRegistryDetailsPage(page, size, sortBy)
+  .pipe(
+    catchError((error) => {
+      let errorMsg = 'Something went wrong. Please try again later.';
+
+      if (error.status === 0) {
+        errorMsg = 'Server not reachable. Please check your connection.';
+      } else if (error.status === 404) {
+        errorMsg = 'Requested resource not found.';
+      } else if (error.status === 401) {
+        errorMsg = 'Unauthorized access. Please log in again.';
+      } else if (error.status === 500) {
+        errorMsg = 'Internal server error occurred.';
       }
-    );
+
+      // Optionally show a toast/snackbar alert
+      console.error('Global Error:', error);
+      alert(errorMsg);
+
+      return throwError(() => new Error(errorMsg));
+    })
+  )
+  .subscribe({
+    next: (response: PaginatedResponse<MstRegistryDetailsPage>) => {
+      console.log(response.content);
+      this.registryDetails = response.content;
+      this.totalPages = response.totalPages;
+      this.totalElements = response.totalElements;
+    },
+    error: (error) => {
+      console.error('Error handled:', error.message);
+    }
+  });
   }
 
   goToPage(page: number): void {

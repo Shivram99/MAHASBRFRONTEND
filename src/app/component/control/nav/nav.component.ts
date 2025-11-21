@@ -28,6 +28,7 @@ export class NavComponent {
   { label: "FAQ", url: null, routerLink: "/faq", class: "", roles: ['ROLE_USER'] },
   { label: "CIRCULAR", url: null, routerLink: "/circular", class: "", roles: ['ROLE_USER'] },
   { label: "Contact_Us", url: null, routerLink: "/contactus", class: "", roles: ['ROLE_USER'] },
+  { label: "RequestForm", url: null, routerLink: "/requestForm", class: "", roles: ['ROLE_USER'] },
   { label: "MENU.DASHBOARD", url: null, routerLink: "/common-post-login/detailsPage", class: "", roles: ['ROLE_ADMIN','ROLE_DES_STATE','ROLE_REG_AUTH_API','ROLE_REG_AUTH_CSV','ROLE_DES_REGION','ROLE_DES_DISTRICT'] },
   // { label: "Dashboard", url: null, routerLink: "/common-post-login/detailsPage", class: "", roles: ['ROLE_DES_REGION'] },
   // { label: "Dashboard", url: null, routerLink: "/common-post-login/detailsPage", class: "", roles: ['ROLE_DES_DISTRICT'] },

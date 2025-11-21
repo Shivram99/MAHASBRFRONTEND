@@ -12,6 +12,9 @@ import { UserListComponent } from './components/user-list/user-list.component';
 import { RegistryMasterComponent } from './components/registry-master/registry-master.component';
 import { CircularComponent } from '../component/circular/circular.component';
 import { AddCircularComponent } from './components/add-circular/add-circular.component';
+import { AddMenusComponent } from './components/add-menus/add-menus.component';
+import { MenusListComponent } from './components/menus-list/menus-list.component';
+import { MenuRoleAssignComponent } from './components/menu-role-assign/menu-role-assign.component';
 
 const routes: Routes = [{
   path: '', component: LayoutComponent, children: [
@@ -32,6 +35,10 @@ const routes: Routes = [{
   { path: 'user', component: UserListComponent },
   { path: 'registery', component: RegistryMasterComponent },
   { path: 'add-circular', component: AddCircularComponent },
+  { path: 'add-menu', component: AddMenusComponent },
+  { path: 'add-menu/:id', component: AddMenusComponent },
+  { path: 'menu-list', component: MenusListComponent },
+  { path: 'add-menu-role', component: MenuRoleAssignComponent },
 
   ]
 }];

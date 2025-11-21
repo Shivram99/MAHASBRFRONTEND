@@ -43,7 +43,7 @@ export class IdleTimeoutService {
 
     // Start watching for idle state
     if (this.isLoggedIn) {
-    this.reset();
+    this.idle.watch();
     }
     this.authService.getIsLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;

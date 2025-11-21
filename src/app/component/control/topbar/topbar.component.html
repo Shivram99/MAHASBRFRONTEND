@@ -23,8 +23,12 @@
   <button (click)="changeFontSize('small')" class="font-size-btn">A-</button>
   <button (click)="changeFontSize('medium')" class="font-size-btn">A</button>
   <button (click)="changeFontSize('large')" class="font-size-btn">A+</button>
-  <button (click)="changeFontSize('large')" class="font-size-btn defaul-bg extra-btn">A</button>
-  <button (click)="changeFontSize('large')" class="font-size-btn colorless-bg extra-btn">A</button>
+  <!-- <button (click)="toggleColorBlindMode()" aria-label="Toggle Color Blind Mode">
+    <i class="fa fa-eye" *ngIf="!isColorBlindMode"></i>
+    <i class="fa fa-eye-slash" *ngIf="isColorBlindMode"></i>
+    Color Blind Mode
+  </button> -->
+ 
 </div></li>
       <li><app-language-switcher></app-language-switcher></li>
       <li class="text-light">|</li>

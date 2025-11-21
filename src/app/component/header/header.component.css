@@ -29,5 +29,9 @@ h1 {
 .logo img {
     height: 50px;
 }
- 
+ @media screen and (max-width:767px){
+    .logo h1{
+        width: auto;
+}
+}
 

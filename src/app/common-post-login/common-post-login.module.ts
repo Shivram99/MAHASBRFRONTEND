@@ -17,6 +17,10 @@ import { UserListComponent } from './components/user-list/user-list.component';
 import { RegistryMasterComponent } from './components/registry-master/registry-master.component';
 import { AddCircularComponent } from './components/add-circular/add-circular.component';
 import { MultiSelectOptionComponent } from '../component/util/multi-select-option/multi-select-option.component';
+import { FilterUsersPipe } from '../pipes/filter-users.pipe';
+import { AddMenusComponent } from './components/add-menus/add-menus.component';
+import { MenusListComponent } from './components/menus-list/menus-list.component';
+import { MenuRoleAssignComponent } from './components/menu-role-assign/menu-role-assign.component'; 
 
 
 @NgModule({
@@ -32,7 +36,12 @@ import { MultiSelectOptionComponent } from '../component/util/multi-select-optio
     UserListComponent,
     RegistryMasterComponent,
     AddCircularComponent,
-    MultiSelectOptionComponent, 
+    MultiSelectOptionComponent,
+    FilterUsersPipe,
+    AddMenusComponent,
+    MenusListComponent,
+    MenuRoleAssignComponent,
+
   
   ],
   imports: [

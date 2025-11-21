@@ -4,7 +4,7 @@
     padding: 10px;
 }
 
-.visitor a {
+.visitor span {
     border: 1px solid #168ec9;
     display: inline-block;
     color: #fff;
@@ -43,3 +43,4 @@
 .darkbg  span a:hover {
     background: #fff;
 }
+

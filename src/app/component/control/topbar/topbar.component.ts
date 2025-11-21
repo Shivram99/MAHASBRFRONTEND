@@ -55,4 +55,10 @@ private currentSize = 14;
     const savedTheme = localStorage.getItem('colorTheme') || 'normal';
     this.setTheme(savedTheme);
   }
+  isColorBlindMode = false;
+
+toggleColorBlindMode(): void {
+  this.isColorBlindMode = !this.isColorBlindMode;
+  document.body.classList.toggle('color-blind-mode', this.isColorBlindMode);
+}
 }

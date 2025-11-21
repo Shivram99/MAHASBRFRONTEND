@@ -53,3 +53,9 @@ text-align: left;
 .content {
     position: relative;
 }
+
+@media screen and (max-width:767px){
+    .bglightblue {
+    padding: 0;
+}
+}

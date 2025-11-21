@@ -15,6 +15,7 @@ import { CircularComponent } from './component/circular/circular.component';
 import { CitizenDashboardComponent } from './component/citizen-dashboard/citizen-dashboard.component';
 import { DashboardDetailsComponent } from './component/dashboard-details/dashboard-details.component';
 import { DuplicatedeatilsComponent } from './component/duplicatedeatils/duplicatedeatils.component';
+import { RequestFormComponent } from './component/request-form/request-form.component';
 
 
 
@@ -29,6 +30,7 @@ const routes: Routes = [
   {path:"important-document",component:ImportantDocumentComponent},
   {path:"circular",component:CircularComponent},
   {path:"dashboard",component:DashboardComponent},
+  {path:"requestForm",component:RequestFormComponent},
   {path:"citizen-dashboard",component:CitizenDashboardComponent,children: [
     
     {

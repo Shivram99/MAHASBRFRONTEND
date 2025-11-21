@@ -1,94 +1,151 @@
+<div class="bglightblue py-3">
+  <div class="container bg-white shadow rounded p-3">
 
-<div class="bglightblue">
-  <div class="container">
-    <div class="content">
-      <div class="d-md-flex justify-content-between border-b-org p-3">
-    <h1>Dashboard</h1>
-    <nav aria-label="breadcrumb">
-     
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-      </ol>
-    </nav>
-  </div>
-<div class="p-3">
+    <!-- Header Section -->
+    <div class="d-md-flex justify-content-between border-b-org p-3">
+      <h1>Dashboard</h1>
 
-  <div class="d-flex align-items-start dashboardTabs">
-    <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-      <app-dashboard-tab></app-dashboard-tab>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
+          <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+      </nav>
+    </div>
+
+
+    <!-- Toggle Button -->
+    <button class="btn mt-3 toggleBtn" (click)="toggleMenu()" style="background-color: #2676C3;color:#fff;">
+      {{ menuVisible ? '✖ Close' : '☰ Filters' }}
+    </button>
+    <!-- Content Section -->
+    <div class="row mt-3">
+
+      <!-- Left Filter Panel (Hidden Initially) -->
+      <div class="col-md-4" *ngIf="menuVisible">
+        <div class="p-4" style="background-color: #2676C3; border-radius: 2px;">
+
+          <form>
+
+            <!-- Count Type -->
+            <div class="mb-3">
+              <label class="form-label text-white fw-bold">Select Count Type:</label><br>
+
+              <div class="form-check text-white" *ngFor="let type of ['NR','TR','DR']">
+                <input class="form-check-input" type="radio"
+                       [id]="type"
+                       name="countType"
+                       [(ngModel)]="selectedCountType"
+                       (ngModelChange)="onCountTypeChange($event)"
+                       [value]="type">
+
+                <label class="form-check-label" [for]="type">
+                  {{ type }} :
+                  {{ type === 'NR' ? 'New Registration' : type === 'TR' ? 'Total Registration' : 'Deregistration' }}
+                </label>
+              </div>
+            </div>
+
+            <!-- Acts -->
+            <div class="mb-3">
+              <label class="form-label text-white fw-bold">Acts/Registering Authorities:</label>
+              <select class="form-select" [(ngModel)]="selectedAct" name="act">
+                <option value="">-- Select Acts/Registering Authorities --</option>
+                <option *ngFor="let act of registries" [value]="act.registryNameEn">
+                  {{ act.registryNameEn }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Region -->
+            <div class="mb-3">
+              <label class="form-label text-white fw-bold">Region:</label>
+              <select class="form-select" [(ngModel)]="selectedRegion" name="region">
+                <option value="">-- Select Region --</option>
+                <option *ngFor="let divis of division" [value]="divis.divisionCode">
+                  {{ divis.divisionName }}
+                </option>
+              </select>
+            </div>
+
+            <!-- District -->
+            <div class="mb-3">
+              <label class="form-label text-white fw-bold">District:</label>
+              <select class="form-select" [(ngModel)]="selectedDistrict" name="district">
+                <option value="">-- Select District --</option>
+                <option *ngFor="let district of districts" [value]="district.districtName">
+                  {{ district.districtName }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Year -->
+            <div class="mb-3">
+              <label class="form-label text-white fw-bold">Year:</label>
+              <select class="form-select" [(ngModel)]="selectedYear" name="year">
+                <option value="">-- Select Year --</option>
+                <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+              </select>
+            </div>
+
+            <!-- Quarter -->
+            <div class="mb-3">
+              <label class="form-label text-white fw-bold">Quarter:</label>
+              <select class="form-select" [(ngModel)]="selectedQuarter" name="quarter">
+                <option value="">-- Select Quarter --</option>
+                <option *ngFor="let q of quarters" [value]="q">{{ q }}</option>
+              </select>
+            </div>
+
+            <!-- NIC -->
+            <div class="mb-4">
+              <label class="form-label text-white fw-bold">Industry/NIC Classification:</label>
+              <select class="form-select" [(ngModel)]="selectedNic" name="nic">
+                <option value="">-- Select Industry/NIC Classification --</option>
+                <option *ngFor="let nic of nicList" [value]="nic">{{ nic }}</option>
+              </select>
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-between">
+              <button type="button" class="btn w-50 me-2 fw-bold" style="background-color: #ffcc00;"
+                      (click)="onSubmit()">Submit</button>
+              <button type="button" class="btn w-50 fw-bold btn-dark" (click)="onClear()">Clear</button>
+            </div>
+
+          </form>
 
         </div>
-    <div class="tab-content" id="v-pills-tabContent">
-      <div class="tab-pane fade show active" id="v-Pills-dashboard" role="tabpanel" aria-labelledby="v-Pills-dashboard-tab" tabindex="0">
-
-        <!-- <app-chartfilter (childEvent)="handleChildEvent($event)"></app-chartfilter> -->
-        <!-- <app-dashboard-bar-chart [userType]="user" [dashboarddata]="data"></app-dashboard-bar-chart>
-        <app-dashboard-bar-chart [userType]="user" [dashboarddata]="dashboardData"></app-dashboard-bar-chart> -->
-        <!-- <div class="row">
-            <div class="col-md-6 ">
-              <div class="blk" style="display: block">
-                <app-dashboard-bar-chart [dashboarddata]="data" [chartType]="chartname"></app-dashboard-bar-chart>
-             
-              <div class="lable-main">
-                <label class="text-center"
-                  >Graphical representation of the dashboard-district and time wise</label
-                >
-              </div>
-            </div>
-            </div>
-            <div class="col-md-6 ">
-                <div class="blk" style="display: block">
-                <app-dashboard-bar-chart [userType]="user" [dashboarddata]="dashboardData2"></app-dashboard-bar-chart>
-             
-              <div class="lable-main">
-                <label class="text-center"
-                  >Graphical representation of the dashboard-district and time wise</label
-                >
-              </div>
-            </div>
-            </div>
-            <div class="col-md-6 ">
-                <div class="blk" style="display: block">
-                    <app-dashboard-bar-chart [userType]="user" [dashboarddata]="dashboardData"></app-dashboard-bar-chart>
-            
-                  <div class="lable-main">
-                    <label class="text-center"
-                      >Graphical representation of the dashboard-district and time wise</label
-                    >
-                  </div>
-                </div>
-            </div>
-            <div class="col-md-6 ">
-              <div class="blk">
-              4
-            </div></div>
-          </div> -->
-
       </div>
-      <div class="tab-pane fade" id="v-pills-acts" role="tabpanel" aria-labelledby="v-pills-acts-tab" tabindex="0">...</div>
-      <div class="tab-pane fade" id="v-pills-regions" role="tabpanel" aria-labelledby="v-pills-regions-tab" tabindex="0">...</div>
-      <div class="tab-pane fade" id="v-pills-districts" role="tabpanel" aria-labelledby="v-pills-districts-tab" tabindex="0">...</div>
-      <div class="tab-pane fade" id="v-pills-timey" role="tabpanel" aria-labelledby="v-pills-timey-tab" tabindex="0">timey...</div>
-      <div class="tab-pane fade" id="v-pills-timeq" role="tabpanel" aria-labelledby="v-pills-timeq-tab" tabindex="0">timeq...</div>
-      <div class="tab-pane fade" id="v-pills-industry" role="tabpanel" aria-labelledby="v-pills-industry-tab" tabindex="0">industry...</div>
+
+      <!-- Right Dashboard Area -->
+      <div [ngClass]="menuVisible ? 'col-md-8' : 'col-md-12'">
+
+        <div class="p-4 text-center" style="min-height: 400px;">
+          <h2 class="mb-4 fw-bold">NR/TR/DR - Dashboard Overview</h2>
+
+          <div class="row">
+
+            <div class="col-md-12 mb-4">
+              <h6 class="text-secondary fw-bold mb-2">District & Industry Wise</h6>
+              <canvas id="chart1"></canvas>
+            </div>
+
+            <div class="col-md-12 mb-4">
+              <h6 class="text-secondary fw-bold mb-2">Region Wise</h6>
+              <canvas id="chart2"></canvas>
+            </div>
+
+            <div class="col-md-12 mb-4">
+              <h6 class="text-secondary fw-bold mb-2">Industry/NIC Wise</h6>
+              <canvas id="chart3"></canvas>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
     </div>
+
   </div>
-
- 
-
- 
-  </div>
-  </div>
-  </div>
-
-
-<!-- <button (click)="fetchUnsecure()" mat-raised-button>Fetch unsecure</button>
-<div>{{unsecure}}</div>
-<button (click)="fetchSecure()" mat-raised-button>Fetch secure</button>
-<div>{{secure}}</div>
-<button (click)="fetchSecureAdmin()" mat-raised-button>Fetch data for admin</button>
-<div>{{secureAdmin}}</div> -->
-
-
 </div>

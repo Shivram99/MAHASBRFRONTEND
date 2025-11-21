@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DistrictServiceService } from '../../services/district-service.service';
 import { DataService } from '../../services/dashboard/data-service.service';
-import * as XLSX from 'xlsx';
+import * as XLSX from 'xlsx-js-style';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { DialogService } from '../../services/dashboard/dialog.service';

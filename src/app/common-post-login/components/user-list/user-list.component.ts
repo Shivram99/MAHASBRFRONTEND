@@ -25,7 +25,8 @@ export class UserListComponent implements OnInit {
   loading = false;
   division:Division[]=[];
   district:District[]=[];
-
+searchText: string = '';
+  isDistrictRequired: boolean = false;
   newUser: User = this.getEmptyUser();
 
   constructor(
@@ -227,6 +228,20 @@ loadDistricts(): void {
 get canShowDistrict(): boolean {
     return this.newUser.roles?.includes('ROLE_DES_DISTRICT') || false;
   }
+
+  cancelEdit(): void {
+  this.newUser = {
+    username: '',
+    email: '',
+    roles: [],
+    userProfile: {
+      fullName: '',
+      officeName: '',
+      officeAddress: '',
+      mobileNumber: ''
+    }
+  };
+}
 
 }
 

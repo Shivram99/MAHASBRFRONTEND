@@ -1,7 +1,7 @@
 <div class="container">
   <h2>Registry Master</h2>
 
-  <form [formGroup]="form" (ngSubmit)="submit()" class="mb-4 needs-validation" novalidate>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="needs-validation p-4 border rounded shadow-sm bg-white" novalidate>
     <div class="row">
       <div class="col-md-6 mb-3">
         <label>Registry Name (EN)</label>
@@ -37,6 +37,7 @@
       Cancel
     </button>
   </form>
+<br/>
 <div style="max-height: 400px; overflow-y: auto; overflow-x: auto;">
   <table class="table table-bordered" *ngIf="registries.length > 0">
     <thead>

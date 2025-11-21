@@ -29,7 +29,6 @@ export class LoginComponent implements OnInit, AfterViewInit {
   readonly ALLOWED_ROLES = [
     "ROLE_USER",
     "ROLE_MODERATOR",
-    "ROLE_ADMIN",
     "ROLE_DEVELOPER",
     "ROLE_DES_STATE",
     "ROLE_DES_REGION",
@@ -118,7 +117,9 @@ export class LoginComponent implements OnInit, AfterViewInit {
         debugger
         if (roles.some(role => this.ALLOWED_ROLES.includes(role))) {
           this.router.navigate(['/common-post-login']);
-        } else {
+        } else if (roles.some(role => role === 'ROLE_ADMIN')) {
+          this.router.navigate(['/common-post-login/profile']);
+        }else {
           this.router.navigate(['/unauthorized']);
         }
         this.idleTimeoutService.reset();
@@ -162,11 +163,12 @@ export class LoginComponent implements OnInit, AfterViewInit {
     script.defer = true;
     document.body.appendChild(script);
   }
+  // 'sitekey': '6Le8N_QpAAAAAJBErDqsniTRWKzU9m45WOcnoi7x',
 
   initializeReCaptcha() {
     if (isPlatformBrowser(this.platformId)) {
       grecaptcha.render('recaptchaElement', {
-        'sitekey': '6Le8N_QpAAAAAJBErDqsniTRWKzU9m45WOcnoi7x',
+        'sitekey': '6LdB6vsrAAAAAJ-IRvpch6flEj7I5JJ4i8drmCpt',
         'callback': this.handleCaptchaResponse.bind(this)
       });
     }

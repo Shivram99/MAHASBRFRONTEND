@@ -20,7 +20,7 @@ export class RoleService {
   }
 
   getAllRoles(): Observable<Role[]> {
-    return this.http.get<Role[]>(this.baseUrl+"/common/api");
+    return this.http.get<Role[]>(this.baseUrl+"/admin/getAllRoles");
   }
 
   createRole(role: Role): Observable<Role> {

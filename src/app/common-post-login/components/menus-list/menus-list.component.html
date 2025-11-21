@@ -1,0 +1,84 @@
+<div class="container mt-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Menu Management</h2>
+    <!-- <button class="btn btn-primary" [routerLink]="['/common-post-login/add-menu']">+ Add Menu</button> -->
+   <div class="ms-auto">
+    <button class="btn btn-primary me-2" [routerLink]="['/common-post-login/add-menu']">
+      + Add Menu
+    </button>
+    <button class="btn btn-primary" [routerLink]="['/common-post-login/add-menu-role']">
+      + Add Role Menu
+    </button>
+  </div>
+    
+  </div>
+
+  <!-- Search -->
+  <div class="input-group mb-3">
+    <input type="text" class="form-control" placeholder="Search menu..." [(ngModel)]="searchText" (input)="search()">
+    <button class="btn btn-outline-secondary" (click)="search()">Search</button>
+  </div>
+
+  <div class="card shadow">
+    <div class="card-body table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Name</th>
+            <th>Route</th>
+            <th>Sequence</th>
+            <th>Status</th>
+            <th style="width: 220px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <ng-container *ngFor="let m of filteredMenus">
+            <!-- Parent Menu -->
+            <tr>
+              <td><strong>{{ m.nameEn }}</strong> / {{ m.nameMr }}</td>
+              <td>{{ m.route || '-' }}</td>
+              <td>{{ m.sequence }}</td>
+              <td>
+                <span class="badge" [ngClass]="m.active ? 'bg-success' : 'bg-danger'">
+                  {{ m.active ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+              <td>
+                <button class="btn btn-sm btn-warning me-1" (click)="edit(m.id)">Edit</button>
+                <button class="btn btn-sm btn-danger me-1" (click)="delete(m.id)">Delete</button>
+                <button *ngIf="!m.active" class="btn btn-sm btn-success" (click)="activate(m.id)">Activate</button>
+                <button *ngIf="m.active" class="btn btn-sm btn-secondary" (click)="deactivate(m.id)">Deactivate</button>
+              </td>
+            </tr>
+
+            <!-- Child Menus -->
+            <ng-container *ngIf="m.children && m.children.length > 0">
+              <ng-container *ngFor="let c of m.children">
+                <tr class="table-secondary">
+                  <td class="ps-5">↳ {{ c.nameEn }} / {{ c.nameMr }}</td>
+                  <td>{{ c.route || '-' }}</td>
+                  <td>{{ c.sequence }}</td>
+                  <td>
+                    <span class="badge" [ngClass]="c.active ? 'bg-success' : 'bg-danger'">
+                      {{ c.active ? 'Active' : 'Inactive' }}
+                    </span>
+                  </td>
+                  <td>
+                    <button class="btn btn-sm btn-warning me-1" (click)="edit(c.id)">Edit</button>
+                    <button class="btn btn-sm btn-danger me-1" (click)="delete(c.id)">Delete</button>
+                    <button *ngIf="!c.active" class="btn btn-sm btn-success" (click)="activate(c.id)">Activate</button>
+                    <button *ngIf="c.active" class="btn btn-sm btn-secondary" (click)="deactivate(c.id)">Deactivate</button>
+                  </td>
+                </tr>
+              </ng-container>
+            </ng-container>
+
+          </ng-container>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

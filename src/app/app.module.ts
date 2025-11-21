@@ -48,6 +48,8 @@ import { DistrictBRNDetailsComponent } from './component/district-brndetails/dis
 import { CapitalizePipe } from './pipes/capitalize.pipe';
 import { LanguageSwitcherComponent } from './shared/components/language-switcher/language-switcher.component';
 import { GlobalErrorHandler } from './core/handlers/global-error.handler';
+import { RequestFormComponent } from './component/request-form/request-form.component';
+
 
 // import { LanguageSwitcherComponent } from './shared/components/language-switcher/language-switcher.component';
 
@@ -91,6 +93,8 @@ import { GlobalErrorHandler } from './core/handlers/global-error.handler';
         DistrictBRNDetailsComponent,
         CapitalizePipe,
         LanguageSwitcherComponent,
+        RequestFormComponent,
+        
         // ChartfilterComponent,
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,

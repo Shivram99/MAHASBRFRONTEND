@@ -1,39 +1,101 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { MstMenu } from '../model/mst-menu';
 import { environment } from '../../environments/environment.development';
+import { Menu } from '../interface/menu';
+import { ApiResponse } from '../interface/api-response';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MenuService {
   
+   apiUrl: String = "";
+    constructor(private http: HttpClient) {
+      this.apiUrl = environment.apiUrl;
+    }
   
-  private apiUrl:String="";
   //private apiUrl = 'http://localhost:8085/MAHASBR/developer';
+/** ============================
+   *  GET ALL MENUS
+   *  ============================ */
+  getAllMenus(): Observable<Menu[]> {
+    return this.http.get<ApiResponse<Menu[]>>(`${this.apiUrl}/citizenSearch/menus`).pipe(
+      map(res => res.data),
+      catchError(err => {
+        console.error('Failed to fetch menus', err);
+        return throwError(() => err);
+      })
+    );
+  }
 
-constructor(private http: HttpClient) { 
-  this.apiUrl=environment.apiUrl+"/developer";
+  /** ============================
+   *  GET MENU BY ID
+   *  ============================ */
+  getMenuById(id: number): Observable<Menu> {
+    return this.http.get<ApiResponse<Menu>>(`${this.apiUrl}/citizenSearch/menus/${id}`).pipe(
+      map(res => res.data),
+      catchError(err => throwError(() => err))
+    );
+  }
+
+  /** ============================
+   *  CREATE MENU
+   *  ============================ */
+  // createMenu(payload: Menu): Observable<Menu> {
+  //   return this.http.post<ApiResponse<Menu>>(`${this.apiUrl}/citizenSearch/menus`, payload).pipe(
+  //     map(res => res.data),
+  //     catchError(err => throwError(() => err))
+  //   );
+  // }
+
+  createMenu(payload: Partial<Menu>): Observable<Menu> {
+  return this.http.post<ApiResponse<Menu>>(`${this.apiUrl}/citizenSearch/menus`, payload).pipe(
+    map(res => res.data)
+  );
 }
 
-getAllMenus(): Observable<MstMenu[]> {
-  return this.http.get<MstMenu[]>(`${this.apiUrl}/getAllMenus`);
+
+  /** ============================
+   *  UPDATE MENU
+   *  ============================ */
+  // updateMenu(id: number, payload: Menu): Observable<Menu> {
+  //   return this.http.put<ApiResponse<Menu>>(`${this.apiUrl}/citizenSearch/menus/${id}`, payload).pipe(
+  //     map(res => res.data),
+  //     catchError(err => throwError(() => err))
+  //   );
+  // }
+  updateMenu(id: number, payload: Partial<Menu>): Observable<Menu> {
+  return this.http.put<ApiResponse<Menu>>(`${this.apiUrl}/citizenSearch/menus/${id}`, payload).pipe(
+    map(res => res.data)
+  );
 }
 
-getMenuById(id: number): Observable<MstMenu> {
-  return this.http.get<MstMenu>(`${this.apiUrl}/getMenuById/${id}`);
-}
+  /** ============================
+   *  DELETE MENU
+   *  ============================ */
+  deleteMenu(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/citizenSearch/menus/${id}`).pipe(
+      catchError(err => throwError(() => err))
+    );
+  }
 
-createMenu(menu: MstMenu): Observable<MstMenu> {
-  return this.http.post<MstMenu>(`${this.apiUrl}/createMenu`, menu);
-}
+  /** ============================
+   *  ACTIVATE MENU
+   *  ============================ */
+  activate(id: number): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/citizenSearch/menus/${id}/activate`, {}).pipe(
+      catchError(err => throwError(() => err))
+    );
+  }
 
-updateMenu(id: number, menu: MstMenu): Observable<MstMenu> {
-  return this.http.put<MstMenu>(`${this.apiUrl}/updateMenu/${id}`, menu);
-}
-
-deleteMenu(id: number): Observable<void> {
-  return this.http.delete<void>(`${this.apiUrl}/deleteMenu/${id}`);
-}
+  /** ============================
+   *  DEACTIVATE MENU
+   *  ============================ */
+  deactivate(id: number): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/citizenSearch/menus/${id}/deactivate`, {}).pipe(
+      catchError(err => throwError(() => err))
+    );
+  }
 }

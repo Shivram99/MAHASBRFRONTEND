@@ -109,3 +109,35 @@ body {
     }
 }
 
+@media screen and (max-width:767px){
+    .bglightblue {
+    padding: 0;
+}
+}
+
+/* ========== Color Blind Mode ========== */
+body.color-blind-mode .bglightblue, body.color-blind-mode .content ,body.color-blind-mode .form-select,body.color-blind-mode .form-control,body.color-blind-mode .logoSection  {
+  background-color: #eaeaea !important;
+  color: #111111 !important;
+}
+
+body.color-blind-mode .darkblue {
+  background-color: #002b5c;
+}
+
+body.color-blind-mode .btn-primary {
+  background-color: #005aa7;
+  border-color: #005aa7;
+}
+
+body.color-blind-mode a {
+  color: #004e89;
+}
+
+body.color-blind-mode .text-danger {
+  color: #8b0000; /* Dark red */
+}
+
+body.color-blind-mode .text-success {
+  color: #4b8b3b; /* Olive green */
+}

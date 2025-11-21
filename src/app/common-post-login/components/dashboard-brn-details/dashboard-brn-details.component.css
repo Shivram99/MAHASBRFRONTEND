@@ -28,3 +28,18 @@ ul.details li strong {
 font-size: 13px;
 font-weight: 500;
 }
+
+
+.details li span {
+  width: 50%; /* value width */
+  word-break: break-word; /* ensures long strings break into next line */
+  white-space: normal; /* allows wrapping */
+}
+
+.mat-typography h4 {
+   margin: 0 6px !important;
+}
+.d-flex.justify-content-between.align-items-center {
+    border-bottom: 1px solid #efefef;
+    padding-bottom: 5px;
+}

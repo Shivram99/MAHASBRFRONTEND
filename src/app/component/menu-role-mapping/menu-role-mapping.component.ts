@@ -83,9 +83,9 @@ export class MenuRoleMappingComponent  implements OnInit {
 
   
   loadMenus(): void {
-    this.menuService.getAllMenus().subscribe(menus => {
-      this.menus = menus;
-    });
+    // this.menuService.getAllMenus().subscribe(menus => {
+    //   this.menus = menus;
+    // });
   }
 
   
