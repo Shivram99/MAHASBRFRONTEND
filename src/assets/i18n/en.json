@@ -241,5 +241,9 @@
     "view": "View",
     "download": "Download",
     "close": "Close"
+  },
+  "awards": {
+    "AWARDS": "Awards",
+    "altText": "Award Image"
   }
 }
