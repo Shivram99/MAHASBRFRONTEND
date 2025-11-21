@@ -53,7 +53,7 @@
                                     <option value="-1">{{ 'ReqForm.district_select' | translate }}</option>
 
                                     <option *ngFor="let district of districts" 
-                                            [value]="district.censusDistrictCode">
+                                            [value]="district.districtName">
                                         {{ district.districtName | capitalize }}
                                     </option>
                                 </select>

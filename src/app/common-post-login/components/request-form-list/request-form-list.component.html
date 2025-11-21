@@ -1,0 +1,45 @@
+<div class="card shadow">
+  <div class="card-body table-responsive">
+
+    <h4 class="mb-3">Request Form Records</h4>
+
+    <table class="table table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Request ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Mobile</th>
+          <th>District</th>
+          <th style="width: 200px;">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let r of requestList">
+          <td><strong>{{ r.requestId }}</strong></td>
+          <td>{{ r.name }}</td>
+          <td>{{ r.email }}</td>
+          <td>{{ r.mobile || '-' }}</td>
+          <td>{{ r.district || '-' }}</td>
+
+          <td>
+            <button class="btn btn-sm btn-warning me-1" (click)="edit(r.id)">
+              Edit
+            </button>
+            <button class="btn btn-sm btn-danger" (click)="delete(r.id)">
+              Delete
+            </button>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    <!-- Loading Spinner -->
+    <div class="text-center" *ngIf="loading">
+      <div class="spinner-border text-primary"></div>
+    </div>
+
+  </div>
