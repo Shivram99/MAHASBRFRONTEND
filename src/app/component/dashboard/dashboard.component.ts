@@ -32,7 +32,16 @@ toggleMenu() {
   apiResponse: any[] = [];
   mainapiResponse: any[] = [];
   loading = false;
+typesOfDataLable = [
+  { key: 'NR', value: 'New Registration' },
+  { key: 'TR', value: 'Total Registration' },
+  { key: 'DR', value: 'Deregistration' }
+];
 
+
+get selectedCountLabel() {
+  return this.typesOfDataLable.find(t => t.key === this.selectedCountType)?.value || '';
+}
   // 🔸 Selected filter values
   selectedCountType = 'NR';
   selectedAct = '';

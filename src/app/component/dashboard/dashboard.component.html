@@ -122,12 +122,12 @@
       <div [ngClass]="menuVisible ? 'col-md-8' : 'col-md-12'">
 
         <div class="p-4 text-center" style="min-height: 400px;">
-          <h2 class="mb-4 fw-bold">NR/TR/DR - Dashboard Overview</h2>
+          <h2 class="mb-4 fw-bold"> {{ selectedCountLabel }} - Dashboard Overview</h2>
 
           <div class="row">
 
             <div class="col-md-12 mb-4">
-              <h6 class="text-secondary fw-bold mb-2">District & Industry Wise</h6>
+              <h4 class="mb-2">District & Industry Wise</h4>
               <canvas id="chart1"></canvas>
             </div>
 
