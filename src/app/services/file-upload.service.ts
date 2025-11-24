@@ -107,5 +107,24 @@ downloadFile(fileName: string): Observable<Blob> {
     })
   );
 }
+
+preview(file: File): Observable<any> {
+    const form = new FormData();
+    form.append('file', file);
+    return this.http.post<any>(`${this.apiUrl}/auth/preview`, form);
+  }
+
+  save(rows: Record<string, string>[]): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/save`, rows);
+  }
+
+
+  // Returns a raw EventSource for SSE connection to the server progress endpoint.
+  // Caller is responsible for closing the EventSource.
+  progressEventSource(fileId: string): EventSource {
+    // NOTE: Ensure your backend endpoint matches this path: /api/progress/{fileId}
+    const url = `${this.apiUrl}/progress/${fileId}`;
+    return new EventSource(url);
+  }
   
 }

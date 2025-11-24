@@ -193,9 +193,9 @@
     "read_more": "अधिक वाचा"
   },
   "ReqForm": {
-    "title": "विनंती सादर फॉर्म",
+    "title": "विनंती फॉर्म",
     "breadcrumb_home": "मुख्यपृष्ठ",
-    "breadcrumb_form": "विनंती सादर फॉर्म",
+    "breadcrumb_form": "विनंती फॉर्म",
 
     "success_msg": "विनंती यशस्वीपणे सादर झाली!",
     "success_id": "विनंती क्रमांक",

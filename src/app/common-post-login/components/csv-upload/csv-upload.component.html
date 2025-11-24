@@ -1,37 +1,47 @@
 <div class="upload-wrapper">
-  <!-- Validation Instructions -->
+
+  <!-- Instructions -->
   <div class="instructions mb-3">
-   <p>{{ 'upload.ALLOWED_TYPES' | translate }}</p>
+    <p>{{ 'upload.ALLOWED_TYPES' | translate }}</p>
     <p>{{ 'upload.DRAG_DROP' | translate }}</p>
   </div>
 
-  <!-- Upload Area -->
+  <!-- Drop Zone -->
   <div class="upload-container"
        (drop)="onDrop($event)"
        (dragover)="onDragOver($event)">
+       
     <div class="upload-box">
       <i class="cloud-icon">☁️</i>
-      <p class="text-muted">{{'upload.DRAG_TEXT' | translate }}</p>
+      <p class="text-muted">{{ 'upload.DRAG_TEXT' | translate }}</p>
       <p class="text-muted mb-2">{{ 'upload.OR' | translate }}</p>
-      <input type="file"
-             multiple
-             hidden
-             #fileInput
+
+      <input type="file" multiple hidden #fileInput
              accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
              (change)="onFileSelected($event)">
-      <button type="button" class="browse-btn" (click)="fileInput.click()">{{'upload.BROWSE' | translate }}</button>
+
+      <button type="button" class="browse-btn" (click)="fileInput.click()">
+        {{ 'upload.BROWSE' | translate }}
+      </button>
     </div>
   </div>
 
-  <!-- Selected Files List -->
+  <!-- Selected Files -->
   <div *ngIf="selectedFiles.length > 0" class="file-list-wrapper mt-4">
-    <h5 class="mb-3">✅ Selected Files</h5>
+    <h5 class="mb-3">Selected Files</h5>
+
     <ul class="file-list">
       <li *ngFor="let file of selectedFiles; let i = index" class="file-item">
-        <span class="file-name">
+        <div>
           {{ file.name }} ({{ file.size / 1024 | number:'1.0-0' }} KB)
-        </span>
-        <button type="button" class="remove-btn" (click)="removeFile(i)">🗑️</button>
+        </div>
+
+        <div>
+          <button class="btn btn-sm btn-outline-danger" (click)="removeFile(i)">🗑️</button>
+          <button class="btn btn-sm btn-outline-primary" (click)="previewFile(file)">
+            Preview
+          </button>
+        </div>
       </li>
     </ul>
   </div>
@@ -41,28 +51,104 @@
     <progress [value]="uploadProgress" max="100"></progress>
     <span>{{ uploadProgress }}%</span>
   </div>
-  
-  <div *ngIf="validationMessages.length > 0" class="error-messages">
-  <ul>
-    <li *ngFor="let msg of validationMessages">{{ msg }}</li>
-  </ul>
-</div>
-<div class="text-center mt-3">
-  <button (click)="downloadFile('sample.xlsx')" 
-          class="btn btn-outline-success btn-sm shadow-sm">
-    📄 Download Sample Excel File
-  </button>
-</div>
-<div *ngIf="successMessage" class="success-message mt-3">
+
+  <!-- SSE Processing Progress -->
+  <div *ngIf="(processingProgress | keyvalue).length > 0" class="processing-wrapper mt-3">
+    <h5>Processing</h5>
+
+    <div *ngFor="let p of (processingProgress | keyvalue)" class="mb-2">
+      <div class="d-flex justify-content-between">
+        <span>{{ processingFileMap[p.key] }}</span>
+        <span *ngIf="p.value >= 0">{{ p.value }}%</span>
+        <span *ngIf="p.value === -1" class="text-danger">Failed</span>
+      </div>
+
+      <progress [value]="p.value > 0 ? p.value : 0" max="100"></progress>
+    </div>
+  </div>
+
+  <!-- Validation messages -->
+  <div *ngIf="validationMessages.length > 0" class="error-messages mt-3">
+    <ul>
+      <li *ngFor="let msg of validationMessages">{{ msg }}</li>
+    </ul>
+  </div>
+
+  <!-- Download Sample -->
+  <div class="text-center mt-3">
+    <button (click)="downloadFile('sample.xlsx')"
+            class="btn btn-outline-success btn-sm">
+      📄 Download Sample
+    </button>
+  </div>
+
+  <!-- Success -->
+  <div *ngIf="successMessage" class="success-message mt-3">
     {{ successMessage }}
   </div>
+
   <!-- Upload Button -->
   <div class="upload-btn-wrapper mt-4">
-    <button type="button"
-            class="upload-btn"
+    <button class="btn btn-primary" 
             [disabled]="selectedFiles.length === 0"
             (click)="uploadFiles()">
+
       {{ 'upload.UPLOAD' | translate }}
     </button>
+  </div>
+
+  <!-- -------------------------
+       Preview Table
+       ------------------------- -->
+  <div *ngIf="previewVisible" class="preview-wrapper mt-4">
+
+    <h5>Preview: {{ previewFileName }}</h5>
+
+    <div class="table-responsive" style="max-height:400px; overflow:auto;">
+      <table class="table table-bordered table-sm">
+
+        <thead class="table-light">
+          <tr>
+            <th *ngFor="let col of previewRows[0]?.rowData | keyvalue">
+              {{ col.key }}
+            </th>
+            <th>Status</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let row of previewRows"
+              [ngClass]="{ 'table-danger': !row.valid }">
+
+            <td *ngFor="let col of row.rowData | keyvalue">{{ col.value }}</td>
+
+            <td>
+              <span *ngIf="row.valid" class="text-success">Valid</span>
+              <span *ngIf="!row.valid" class="text-danger">{{ row.errorMessage }}</span>
+            </td>
+
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+
+    <div class="d-flex justify-content-between mt-3">
+      <div><small>Total rows: {{ previewRows.length }}</small></div>
+
+      <div>
+        <button class="btn btn-success btn-sm"
+                (click)="saveValidRows()"
+                [disabled]="!hasValidRows()">
+          💾 Save Valid Rows
+        </button>
+
+        <button class="btn btn-secondary btn-sm"
+                (click)="closePreview()">
+          Close
+        </button>
+      </div>
+    </div>
+
   </div>
 </div>

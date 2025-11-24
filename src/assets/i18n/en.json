@@ -189,9 +189,9 @@
     "read_more": "Read More"
   },
   "ReqForm": {
-    "title": "Request Submission Form",
+    "title": "Request Form",
     "breadcrumb_home": "Home",
-    "breadcrumb_form": "Request Submission Form",
+    "breadcrumb_form": "Request Form",
 
     "success_msg": "Request submitted successfully!",
     "success_id": "Request ID",

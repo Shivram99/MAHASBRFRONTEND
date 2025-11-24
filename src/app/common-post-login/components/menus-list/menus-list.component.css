@@ -1,7 +1,12 @@
 .table-secondary td {
-  background-color: #f8f9fa !important;
+  background-color: #2676C3 !important;
 }
 
 .ps-5 {
   padding-left: 3rem !important;
+}
+
+.custom-header {
+  background-color: #2676C3 !important;
+  color: white !important;
 }
