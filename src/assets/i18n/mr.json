@@ -249,6 +249,27 @@
   "awards": {
     "AWARDS": "पुरस्कार",
     "altText": "पुरस्काराचे चित्र"
+  },
+  "newsTicker": {
+    "heading": "माहिती काय आहे",
+    "prevBtn": "मागे",
+    "playBtn": "पुढे चालवा",
+    "stopBtn": "थांबा",
+    "nextBtn": "पुढे"
+  },
+  "footer": {
+    "totalVisitors": "एकूण अभ्यागत",
+    "todayCount": "आजचा गणना",
+    "feedback": "अभिप्राय",
+    "contactUs": "संपर्क करा",
+    "importantDocs": "महत्त्वाची कागदपत्रे",
+    "copyright": "कॉपीराईट © महाराष्ट्र अप्रेंटिसशिप प्रमोशन योजना. डिझाइन व विकसित: ",
+    "socialAlt": {
+      "facebook": "फेसबुक",
+      "twitter": "ट्विटर",
+      "instagram": "इंस्टाग्राम",
+      "youtube": "यूट्यूब"
+    }
   }
 }
 

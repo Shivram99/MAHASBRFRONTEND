@@ -245,5 +245,26 @@
   "awards": {
     "AWARDS": "Awards",
     "altText": "Award Image"
+  },
+  "newsTicker": {
+    "heading": "What's News",
+    "prevBtn": "Previous",
+    "playBtn": "Play",
+    "stopBtn": "Stop",
+    "nextBtn": "Next"
+  },
+  "footer": {
+    "totalVisitors": "Total Visitors",
+    "todayCount": "Today's Count",
+    "feedback": "Feedback",
+    "contactUs": "Contact Us",
+    "importantDocs": "Important Documents",
+    "copyright": "Copyright © Maharashtra Apprenticeship Promotion Scheme. Designed and Developed by",
+    "socialAlt": {
+      "facebook": "Facebook",
+      "twitter": "Twitter",
+      "instagram": "Instagram",
+      "youtube": "YouTube"
+    }
   }
 }

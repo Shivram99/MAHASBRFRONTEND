@@ -14,15 +14,9 @@
   </span> -->
 </div>
       <div class="footerLink">
-        <a routerLink="/feedback">
-         Feedback
-        </a>
-        <a routerLink="/contactus">
-          Contact Us
-        </a>
-        <a routerLink="/important-document">
-          Important Documents
-        </a>
+        <a routerLink="/feedback">{{ 'footer.feedback' | translate }}</a>
+        <a routerLink="/contactus">{{ 'footer.contactUs' | translate }}</a>
+        <a routerLink="/important-document">{{ 'footer.importantDocs' | translate }}</a>
       </div>
     </div>
      
@@ -43,9 +37,7 @@
         <i class="bi bi-youtube"></i>
       </a>
     </div>
-<span>
-     Copyright © Maharashtra Apprenticeship Promotion Scheme. Designed and Developed by <a routerLink="#links">MahaIT</a>
-    </span>
+    <span>{{ 'footer.copyright' | translate }}<a routerLink="#links">MahaIT</a></span>
   </div>
   </div>
 </footer>
