@@ -15,6 +15,7 @@ import { AddCircularComponent } from './components/add-circular/add-circular.com
 import { AddMenusComponent } from './components/add-menus/add-menus.component';
 import { MenusListComponent } from './components/menus-list/menus-list.component';
 import { MenuRoleAssignComponent } from './components/menu-role-assign/menu-role-assign.component';
+import { RequestFormListComponent } from './components/request-form-list/request-form-list.component';
 
 const routes: Routes = [{
   path: '', component: LayoutComponent, children: [
@@ -39,7 +40,7 @@ const routes: Routes = [{
   { path: 'add-menu/:id', component: AddMenusComponent },
   { path: 'menu-list', component: MenusListComponent },
   { path: 'add-menu-role', component: MenuRoleAssignComponent },
-
+  { path: 'request-form-list', component: RequestFormListComponent },
   ]
 }];
 

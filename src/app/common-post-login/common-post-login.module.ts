@@ -20,7 +20,8 @@ import { MultiSelectOptionComponent } from '../component/util/multi-select-optio
 import { FilterUsersPipe } from '../pipes/filter-users.pipe';
 import { AddMenusComponent } from './components/add-menus/add-menus.component';
 import { MenusListComponent } from './components/menus-list/menus-list.component';
-import { MenuRoleAssignComponent } from './components/menu-role-assign/menu-role-assign.component'; 
+import { MenuRoleAssignComponent } from './components/menu-role-assign/menu-role-assign.component';
+import { RequestFormListComponent } from './components/request-form-list/request-form-list.component'; 
 
 
 @NgModule({
@@ -41,6 +42,7 @@ import { MenuRoleAssignComponent } from './components/menu-role-assign/menu-role
     AddMenusComponent,
     MenusListComponent,
     MenuRoleAssignComponent,
+    RequestFormListComponent,
 
   
   ],

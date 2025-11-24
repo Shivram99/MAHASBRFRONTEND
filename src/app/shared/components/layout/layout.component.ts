@@ -26,7 +26,7 @@ activeLabel: string = 'Dashboard';
     { label: 'MENU.USER', routerLink: 'user', icon: 'assets/images/icon/region.png', roles: ['ROLE_ADMIN'] },
     { label: 'registery', routerLink: 'registery', icon: 'assets/images/icon/region.png', roles: ['ROLE_ADMIN'] },
     { label: 'Circular', routerLink: 'add-circular', icon: 'assets/images/icon/region.png', roles: ['ROLE_ADMIN'] },
-
+     { label: 'Request Form', routerLink: 'request-form-list', icon: 'assets/images/icon/region.png', roles: ['ROLE_ADMIN'] },
     
     
   ];

@@ -182,6 +182,89 @@
   "BUTTON": {
     "LOGOUT": "Log out",
     "LOGIN": "Login"
-  }
+  },
+  "Home": {
+    "welcome_title": "Welcome to our Website",
+    "welcome_desc": "Sanstha Aadhaar Number (SAN) is a unique ID assigned to all government departments, boards, corporations, autonomous bodies, NGOs and private enterprises in Rajasthan. This centralized database will support planning, monitoring, and distribution of benefits, services, and subsidies through Sanstha Aadhaar.",
+    "read_more": "Read More"
+  },
+  "ReqForm": {
+    "title": "Request Submission Form",
+    "breadcrumb_home": "Home",
+    "breadcrumb_form": "Request Submission Form",
 
+    "success_msg": "Request submitted successfully!",
+    "success_id": "Request ID",
+
+    "name": "Name",
+    "name_req": "Please enter name",
+    "name_max": "Maximum 100 characters allowed",
+
+    "district": "District",
+    "district_select": "-- Select District --",
+    "district_req": "Please select district",
+
+    "email": "Email ID",
+    "email_req": "Please enter email ID",
+    "email_valid": "Please enter valid email ID",
+    "email_max": "Email too long",
+
+    "mobile": "Mobile Number",
+    "mobile_req": "Please enter mobile number",
+    "mobile_valid": "Please enter valid 10 digit mobile number",
+
+    "message": "Message",
+    "message_req": "Please enter message",
+    "message_max": "Maximum 5000 characters allowed",
+
+    "submit": "Submit Request",
+    "submitting": "Submitting...",
+
+    "preview_title": "Preview Your Details",
+    "edit": "Edit",
+    "confirm_submit": "Confirm Submit"
+  },
+  "Circular": {
+    "title": "Circular",
+    "breadcrumb_home": "Home",
+    "breadcrumb_page": "Circular",
+
+    "search": "Search",
+    "search_ph": "Enter keyword",
+    "from_date": "From Date",
+    "to_date": "To Date",
+
+    "sr_no": "Sr. No",
+    "subject": "Subject",
+    "date": "Date",
+    "view_download": "View / Download",
+    "view": "View",
+    "download": "Download",
+    "close": "Close"
+  },
+  "awards": {
+    "AWARDS": "Awards",
+    "altText": "Award Image"
+  },
+  "newsTicker": {
+    "heading": "What's News",
+    "prevBtn": "Previous",
+    "playBtn": "Play",
+    "stopBtn": "Stop",
+    "nextBtn": "Next"
+  },
+  "footer": {
+    "totalVisitors": "Total Visitors",
+    "todayCount": "Today's Count",
+    "feedback": "Feedback",
+    "contactUs": "Contact Us",
+    "importantDocs": "Important Documents",
+    "copyright": "Copyright © Maharashtra Apprenticeship Promotion Scheme. Designed and Developed by",
+    "socialAlt": {
+      "facebook": "Facebook",
+      "twitter": "Twitter",
+      "instagram": "Instagram",
+      "youtube": "YouTube"
+    }
+  }
 }
