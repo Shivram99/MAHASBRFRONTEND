@@ -111,11 +111,11 @@ downloadFile(fileName: string): Observable<Blob> {
 preview(file: File): Observable<any> {
     const form = new FormData();
     form.append('file', file);
-    return this.http.post<any>(`${this.apiUrl}/auth/preview`, form);
+    return this.http.post<any>(`${this.apiUrl}/api/auth/preview`, form);
   }
 
   save(rows: Record<string, string>[]): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/auth/save`, rows);
+    return this.http.post<any>(`${this.apiUrl}/api/auth/save`, rows);
   }
 
 
@@ -123,7 +123,7 @@ preview(file: File): Observable<any> {
   // Caller is responsible for closing the EventSource.
   progressEventSource(fileId: string): EventSource {
     // NOTE: Ensure your backend endpoint matches this path: /api/progress/{fileId}
-    const url = `${this.apiUrl}/progress/${fileId}`;
+    const url = `${this.apiUrl}/api/auth/progress/${fileId}`;
     return new EventSource(url);
   }
   
