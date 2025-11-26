@@ -100,16 +100,32 @@
   <!-- -------------------------
        Preview Table
        ------------------------- -->
-  <div *ngIf="previewVisible" class="preview-wrapper mt-4">
+  <!-- -------------------------
+     Preview Table (Improved UI)
+-------------------------- -->
+<div *ngIf="previewVisible" class="card shadow-sm border-0 mt-4">
 
-    <h5>Preview: {{ previewFileName }}</h5>
+  <!-- Header -->
+  <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">
+      <i class="bi bi-table"></i> Preview: {{ previewFileName }}
+    </h5>
 
-    <div class="table-responsive" style="max-height:400px; overflow:auto;">
-      <table class="table table-bordered table-sm">
+    <button class="btn btn-light btn-sm" (click)="closePreview()">
+      ✖ Close
+    </button>
+  </div>
 
-        <thead class="table-light">
+  <!-- Body -->
+  <div class="card-body">
+
+    <!-- Scrollable Table -->
+    <div class="table-responsive preview-scroll">
+      <table class="table table-hover table-bordered table-sm">
+
+        <thead class="table-primary sticky-top">
           <tr>
-            <th *ngFor="let col of previewRows[0]?.rowData | keyvalue">
+            <th *ngFor="let col of previewRows[0]?.rowData | keyvalue" class="fw-semibold">
               {{ col.key }}
             </th>
             <th>Status</th>
@@ -117,14 +133,19 @@
         </thead>
 
         <tbody>
-          <tr *ngFor="let row of previewRows"
-              [ngClass]="{ 'table-danger': !row.valid }">
+          <tr *ngFor="let row of previewRows" 
+              class="align-middle"
+              [ngClass]="{ 'table-danger': !row.valid, 'table-success': row.valid }">
 
-            <td *ngFor="let col of row.rowData | keyvalue">{{ col.value }}</td>
+            <td *ngFor="let col of row.rowData | keyvalue">
+              {{ col.value || '-' }}
+            </td>
 
             <td>
-              <span *ngIf="row.valid" class="text-success">Valid</span>
-              <span *ngIf="!row.valid" class="text-danger">{{ row.errorMessage }}</span>
+              <span *ngIf="row.valid" class="badge bg-success">Valid</span>
+              <span *ngIf="!row.valid" class="badge bg-danger">
+                {{ row.errorMessage || 'Invalid' }}
+              </span>
             </td>
 
           </tr>
@@ -133,11 +154,15 @@
       </table>
     </div>
 
-    <div class="d-flex justify-content-between mt-3">
-      <div><small>Total rows: {{ previewRows.length }}</small></div>
+    <!-- Footer Bar -->
+    <div class="d-flex justify-content-between align-items-center mt-3">
+
+      <small class="text-muted">
+        <strong>Total Rows:</strong> {{ previewRows.length }}
+      </small>
 
       <div>
-        <button class="btn btn-success btn-sm"
+        <button class="btn btn-success btn-sm me-2"
                 (click)="saveValidRows()"
                 [disabled]="!hasValidRows()">
           💾 Save Valid Rows
@@ -148,7 +173,32 @@
           Close
         </button>
       </div>
+
     </div>
 
   </div>
+</div>
+<div *ngIf="savedRows.length > 0" class="mt-4">
+  <h4 class="mb-3">Saved Records</h4>
+
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th *ngFor="let col of getColumns()">{{ col }}</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let row of savedRows; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td *ngFor="let col of getColumns()">
+          {{ row.rowData[col] }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
 </div>

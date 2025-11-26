@@ -32,12 +32,8 @@
               <label class="form-label text-white fw-bold">Select Count Type:</label><br>
 
               <div class="form-check text-white" *ngFor="let type of ['NR','TR','DR']">
-                <input class="form-check-input" type="radio"
-                       [id]="type"
-                       name="countType"
-                       [(ngModel)]="selectedCountType"
-                       (ngModelChange)="onCountTypeChange($event)"
-                       [value]="type">
+                <input class="form-check-input" type="radio" [id]="type" name="countType"
+                  [(ngModel)]="selectedCountType" (ngModelChange)="onCountTypeChange($event)" [value]="type">
 
                 <label class="form-check-label" [for]="type">
                   {{ type }} :
@@ -109,7 +105,7 @@
             <!-- Buttons -->
             <div class="d-flex justify-content-between">
               <button type="button" class="btn w-50 me-2 fw-bold" style="background-color: #ffcc00;"
-                      (click)="onSubmit()">Submit</button>
+                (click)="onSubmit()">Submit</button>
               <button type="button" class="btn w-50 fw-bold btn-dark" (click)="onClear()">Clear</button>
             </div>
 
@@ -123,21 +119,27 @@
 
         <div class="p-4 text-center" style="min-height: 400px;">
           <h2 class="mb-4 fw-bold"> {{ selectedCountLabel }} - Dashboard Overview</h2>
+          <div *ngIf="loading" class="text-center py-5">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+            <p class="mt-3 fw-bold text-primary">Loading data...</p>
+          </div>
 
-          <div class="row">
+          <div *ngIf="!loading && apiResponse.length === 0" class="text-center py-5">
+            <h4 class="text-danger fw-bold">No Data Found</h4>
+            <p>Please adjust your filters and try again.</p>
+          </div>
+
+          <div class="row" *ngIf="!loading && apiResponse.length > 0">
 
             <div class="col-md-12 mb-4">
-              <h4 class="mb-2">District & Industry Wise</h4>
               <canvas id="chart1"></canvas>
             </div>
 
             <div class="col-md-12 mb-4">
-              <h6 class="text-secondary fw-bold mb-2">Region Wise</h6>
               <canvas id="chart2"></canvas>
             </div>
 
             <div class="col-md-12 mb-4">
-              <h6 class="text-secondary fw-bold mb-2">Industry/NIC Wise</h6>
               <canvas id="chart3"></canvas>
             </div>
 
@@ -146,6 +148,5 @@
         </div>
       </div>
     </div>
-
   </div>
 </div>

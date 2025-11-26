@@ -23,6 +23,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   // ==============================
 menuVisible = false;
 
+
 toggleMenu() {
   this.menuVisible = !this.menuVisible;
 }
@@ -170,6 +171,7 @@ get selectedCountLabel() {
    * Fetches filtered dashboard data from API and updates charts.
    */
   citizenDasbhordData(): void {
+     this.loading = true;
     if (!this.payload) {
       this.payload = {
         countType: this.selectedCountType || 'NR',
@@ -187,10 +189,14 @@ get selectedCountLabel() {
         this.apiResponse = response;
         this.mainapiResponse = response;
         // console.log('✅ API Data:', response);
-        this.updateCharts();
+         this.loading = false;
+        setTimeout(() => {
+  this.updateCharts();
+}, 50);
       },
       error: (error) => {
         console.error('❌ Error fetching dashboard data:', error.message);
+        this.loading = false; 
       }
     });
   }
@@ -266,7 +272,7 @@ get selectedCountLabel() {
     this.chart1 = new Chart('chart1', {
       type: 'bar',
       data: { labels: districtLabels, datasets: districtDatasets },
-      options: this.getChartOptions('District and Quarter-wise Registrations', 'Districts', 'Registrations', true)
+      options: this.getChartOptions('District and Quarter-wise Registrations', 'Districts', 'Total Registrations', true)
     });
 
     // ==================================

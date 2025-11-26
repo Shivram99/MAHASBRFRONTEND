@@ -139,14 +139,15 @@ export class DashboardBrnDetailsComponent implements OnInit {
   const brnNo = this.mstRegistryDetailsPage?.brnNo || 'BRN';
   const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
-  // 🧭 Title
+  // Title
   doc.setFontSize(14);
   doc.setFont('helvetica', 'bold');
   doc.text(`Business Registration Details (${brnNo})`, 14, 10);
 
-  // --- Left Column Fields ---
-  const leftFields = [
-    { key: 'siNo', label: 'SI.No' },
+  // --- Merge Left + Right fields in one list ---
+  const allFields = [
+    // Left Section
+    { key: 'siNo', label: 'SR.No' },
     { key: 'nameOfEstablishmentOrOwner', label: 'Name of Establishment / Owner' },
     { key: 'houseNo', label: 'House No' },
     { key: 'streetName', label: 'Street Name' },
@@ -164,10 +165,8 @@ export class DashboardBrnDetailsComponent implements OnInit {
     { key: 'headOfficeEmailAddress', label: 'Head Office: Email Address' },
     { key: 'descriptionOfMajorActivity', label: 'Description of Major Activity' },
     { key: 'nic2008ActivityCode', label: 'NIC 2008 Activity Code' },
-  ];
 
-  // --- Right Column Fields ---
-  const rightFields = [
+    // Right Section
     { key: 'yearOfStartOfOperation', label: 'Year of Start of Operation' },
     { key: 'ownershipCode', label: 'Ownership Code' },
     { key: 'totalNumberOfPersonsWorking', label: 'Total Number of Persons Working' },
@@ -187,30 +186,22 @@ export class DashboardBrnDetailsComponent implements OnInit {
     { key: 'hsnCode', label: 'HSN Code' },
   ];
 
-  // Prepare data
-  const leftBody = leftFields.map(f => [
+  // Prepare table rows
+  const tableBody = allFields.map(f => [
     f.label,
     this.formatValue(f.key, (this.mstRegistryDetailsPage as any)[f.key])
   ]);
 
-  const rightBody = rightFields.map(f => [
-    f.label,
-    this.formatValue(f.key, (this.mstRegistryDetailsPage as any)[f.key])
-  ]);
-
-  // 🧾 Left Table
+  // Generate single table
   autoTable(doc, {
-    head: [['Field Name', 'Value']],
-    body: leftBody,
     startY: 20,
-    margin: { left: 10 },
-    tableWidth: 90,
+    head: [['Field Name', 'Value']],
+    body: tableBody,
     styles: {
       fontSize: 9,
       cellPadding: 2,
       lineColor: [0, 0, 0],
       lineWidth: 0.1,
-      cellWidth: 'wrap'
     },
     headStyles: {
       fillColor: [52, 152, 219],
@@ -219,40 +210,15 @@ export class DashboardBrnDetailsComponent implements OnInit {
       halign: 'center'
     },
     columnStyles: {
-      0: { cellWidth: 45, fontStyle: 'bold' },
-      1: { cellWidth: 45 }
-    }
+      0: { cellWidth: 60, fontStyle: 'bold' },
+      1: { cellWidth: 110 }
+    },
   });
 
-  // 🧾 Right Table
-  autoTable(doc, {
-    head: [['Field Name', 'Value']],
-    body: rightBody,
-    startY: 20,
-    margin: { left: 110 },
-    tableWidth: 90,
-    styles: {
-      fontSize: 9,
-      cellPadding: 2,
-      lineColor: [0, 0, 0],
-      lineWidth: 0.1,
-      cellWidth: 'wrap'
-    },
-    headStyles: {
-      fillColor: [52, 152, 219],
-      textColor: [255, 255, 255],
-      fontStyle: 'bold',
-      halign: 'center'
-    },
-    columnStyles: {
-      0: { cellWidth: 45, fontStyle: 'bold' },
-      1: { cellWidth: 45 }
-    }
-  });
-
-  // 💾 Save the PDF
+  // Save PDF
   doc.save(`${brnNo}_Details.pdf`);
 }
+
 
   /**
    * ✅ Format field name (e.g., headOfficeStreetName → Head Office Street Name)

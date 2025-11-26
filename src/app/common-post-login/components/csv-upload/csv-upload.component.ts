@@ -8,6 +8,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { RegistryRowDto } from '../../../interface/registry-row-dto';
+import { UploadResultResponse } from '../../../interface/upload-result-response';
 
 
 @Component({
@@ -27,6 +28,8 @@ export class CsvUploadComponent implements OnDestroy {  uploadForm: FormGroup;
   previewRows: RegistryRowDto[] = [];
   previewVisible = false;
   previewFileName = '';
+
+  savedRows: any[] = [];
 
   // SSE processing progress
   processingProgress: Record<string, number> = {};
@@ -130,7 +133,7 @@ export class CsvUploadComponent implements OnDestroy {  uploadForm: FormGroup;
           this.uploadProgress = 0;
           this.selectedFiles = [];
 
-          setTimeout(() => (this.successMessage = ''), 60000);
+          setTimeout(() => (this.successMessage = ''), 60);
 
           // SSE subscribe for each file
           if (response?.files) {
@@ -171,10 +174,24 @@ export class CsvUploadComponent implements OnDestroy {  uploadForm: FormGroup;
       }
 
       if (percent >= 100) {
-        this.processingProgress[fileId] = 100;
-        Swal.fire('Success', `${fileName} processed`, 'success');
-        this.closeSse(fileId);
-      }
+  this.processingProgress[fileId] = 100;
+
+  Swal.fire('Success', `${fileName} processed`, 'success');
+
+  // Fetch saved rows for this file
+  this.fileUploadService.getUploadResult(fileId).subscribe({
+    next: (resp: UploadResultResponse) => {
+      this.savedRows = resp.rows || [];
+      console.log("Saved Rows:", this.savedRows);
+    },
+    error: () => {
+      console.error("Failed to fetch saved rows.");
+    }
+  });
+
+  this.closeSse(fileId);
+}
+
 
       if (percent === -1) {
         Swal.fire('Error', `${fileName} failed during processing`, 'error');
@@ -287,4 +304,9 @@ export class CsvUploadComponent implements OnDestroy {  uploadForm: FormGroup;
       } catch {}
     });
   }
+
+  getColumns(): string[] {
+  return this.savedRows.length > 0 ? Object.keys(this.savedRows[0].rowData) : [];
+}
+
 }

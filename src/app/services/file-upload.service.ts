@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import { MstRegistryDetailsPage } from '../model/mst-registry-details-page';
 import { PaginatedResponse } from '../interface/paginated-response';
 import { BRNGenerationRecordCount } from '../interfaces/brngeneration-record-count';
+import { UploadResultResponse } from '../interface/upload-result-response';
 
 
 @Injectable({
@@ -122,9 +123,15 @@ preview(file: File): Observable<any> {
   // Returns a raw EventSource for SSE connection to the server progress endpoint.
   // Caller is responsible for closing the EventSource.
   progressEventSource(fileId: string): EventSource {
-    // NOTE: Ensure your backend endpoint matches this path: /api/progress/{fileId}
-    const url = `${this.apiUrl}/api/auth/progress/${fileId}`;
-    return new EventSource(url);
-  }
+  return new EventSource(
+    `${this.apiUrl}/api/auth/progress/${fileId}`,
+    { withCredentials: true }
+  );
+}
+
+  getUploadResult(fileId: string): Observable<UploadResultResponse> {
+  return this.http.get<UploadResultResponse>(`/api/auth/result/${fileId}`);
+}
+
   
 }
