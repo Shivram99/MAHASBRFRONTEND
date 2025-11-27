@@ -24,9 +24,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 menuVisible = false;
 
 
-toggleMenu() {
-  this.menuVisible = !this.menuVisible;
-}
+
   districts: any[] = [];
   registries: RegistryResponse[] = [];
   division: Division[] = [];
@@ -73,6 +71,11 @@ get selectedCountLabel() {
   // ==============================
 
   constructor(private dataService: SerachBrnService) {}
+
+  toggleMenu() {
+  this.menuVisible = !this.menuVisible;
+   this.citizenDasbhordData();
+}
 
   ngOnInit(): void {
     this.fetchDistricts();

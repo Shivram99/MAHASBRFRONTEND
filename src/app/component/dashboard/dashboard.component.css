@@ -33,3 +33,9 @@
 .col-md-4, .col-md-8, .col-md-12 {
   transition: all 0.3s ease;
 }
+.mb-3 {
+    margin-bottom: 0.4rem !important;
+}
+.form-select {
+    padding: .3rem 2.25rem .3rem .75rem !important;
+}
