@@ -115,9 +115,9 @@
       </div>
 
       <!-- Right Dashboard Area -->
-      <div [ngClass]="menuVisible ? 'col-md-8' : 'col-md-12'" class="p-2">
+      <div [ngClass]="menuVisible ? 'col-md-8' : 'col-md-12'" class="p-2 shadow-cust">
 
-        <div class="p-4 text-center shadow-lg p-2" style="min-height: 400px;">
+        <div class="text-center  p-2" style="min-height: 400px;">
           <h2 class="mb-4 fw-bold"> {{ selectedCountLabel }} - Dashboard Overview</h2>
           <div *ngIf="loading" class="text-center py-5">
             <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
@@ -133,7 +133,8 @@
             <div class="row">
               <div class="col-md-12 mb-4">
                 <div class="">
-                <canvas id="chart1"></canvas></div>
+                  <canvas id="chart1"></canvas>
+                </div>
               </div>
             </div>
           </div>
@@ -143,14 +144,14 @@
     </div>
     <div *ngIf="!loading && apiResponse.length > 0">
       <div class="row mt-5">
-        <div class="col-md-6 mb-4">
-          <div class="shadow p-2">
+        <div class="col-md-12 mb-4">
+          <div class="shadow-cust p-2">
             <canvas id="chart2"></canvas>
           </div>
         </div>
 
-        <div class="col-md-6 mb-4">
-          <div class="shadow p-2">
+        <div class="col-md-12 mb-4">
+          <div class="shadow-cust p-2">
             <canvas id="chart3"></canvas>
           </div>
         </div>
