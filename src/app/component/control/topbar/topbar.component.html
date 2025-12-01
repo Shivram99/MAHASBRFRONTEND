@@ -1,44 +1,46 @@
 <div class="darkblue p-2">
   <div class="container d-flex justify-content-between  mx-auto">
-  <!-- <div class="searchPannel d-flex">
+    <!-- <div class="searchPannel d-flex">
     <div class="search d-flex me-3">
       <input placeholder="Search here" class="pl-2" />
       <button class="btn btn-org"><i class="bi bi-search"></i> </button>
     </div>
     <div class="text-white pl-3 pt-2">
-    Toll Free:  <a  class="text-white " routerLink="tel:0141-1234567">0141-1234567</a> </div>
+      Toll Free:  <a  class="text-white " routerLink="tel:0141-1234567">0141-1234567</a> </div>
 
-  </div> -->
-  <div class="emblem">
-    <a routerLink="https://www.india.gov.in/" target="_blank" class="emb">
-      <img [src]="emblemImg" alt="Example Image">
-  </a>
-  
- 
-  </div>
-  <div class="rightPannel">
+    </div> -->
+    <div class="emblem">
+      <a routerLink="https://www.india.gov.in/" target="_blank" class="emb">
+        <img [src]="emblemImg" alt="Example Image">
+      </a>
 
-    <ul class="accessibility-menu posHome m-0">
-      <li><div class="font-size-controls">
-  <button (click)="changeFontSize('small')" class="font-size-btn">A-</button>
-  <button (click)="changeFontSize('medium')" class="font-size-btn">A</button>
-  <button (click)="changeFontSize('large')" class="font-size-btn">A+</button>
-  <!-- <button (click)="toggleColorBlindMode()" aria-label="Toggle Color Blind Mode">
-    <i class="fa fa-eye" *ngIf="!isColorBlindMode"></i>
-    <i class="fa fa-eye-slash" *ngIf="isColorBlindMode"></i>
-    Color Blind Mode
-  </button> -->
- 
-</div></li>
+
+    </div>
+    <div class="rightPannel">
+
+      <ul class="accessibility-menu posHome m-0">
+        <li><div class="font-size-controls">
+          <button (click)="changeFontSize('small')" class="font-size-btn">A-</button>
+          <button (click)="changeFontSize('medium')" class="font-size-btn">A</button>
+          <button (click)="changeFontSize('large')" class="font-size-btn">A+</button>
+          <!-- <button (click)="toggleColorBlindMode()" aria-label="Toggle Color Blind Mode">
+          <i class="fa fa-eye" *ngIf="!isColorBlindMode"></i>
+          <i class="fa fa-eye-slash" *ngIf="isColorBlindMode"></i>
+          Color Blind Mode
+        </button> -->
+
+      </div></li>
       <li><app-language-switcher></app-language-switcher></li>
       <li class="text-light">|</li>
       <li>
-  <a *ngIf="!isLoggedIn" [routerLink]="['/login']">
-    {{ 'BUTTON.LOGIN' | translate }}
-  </a>
-</li>
-  </ul>
-  
+        @if (!isLoggedIn) {
+          <a [routerLink]="['/login']">
+            {{ 'BUTTON.LOGIN' | translate }}
+          </a>
+        }
+      </li>
+    </ul>
+
   </div>
 </div>
 </div>

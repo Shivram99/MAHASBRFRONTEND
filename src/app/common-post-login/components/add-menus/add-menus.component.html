@@ -1,132 +1,129 @@
-<div class="container mt-4" *ngIf="!isLoading; else loadingTpl">
-  <div class="card shadow-sm">
-
-    <!-- Header -->
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-      <h5 class="mb-0">{{ isEdit ? 'Edit Menu' : 'Create Menu' }}</h5>
-
-      <!-- 🔵 Button to Show Menu List -->
-      <button type="button" class="btn btn-light btn-sm" [routerLink]="['/common-post-login/menu-list']">
-        <i class="bi bi-list"></i> Menu List
-      </button>
-      
-    </div>
-
-    <!-- Body -->
-    <div class="card-body">
-      <form [formGroup]="menuForm" (ngSubmit)="submit()">
-
-        <!-- Names -->
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Menu Name (English)</label>
-            <input class="form-control" formControlName="nameEn" />
-            <div *ngIf="f['nameEn'].touched && f['nameEn'].invalid" class="text-danger small">
-              English name is required
+@if (!isLoading) {
+  <div class="container mt-4">
+    <div class="card shadow-sm">
+      <!-- Header -->
+      <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">{{ isEdit ? 'Edit Menu' : 'Create Menu' }}</h5>
+        <!-- 🔵 Button to Show Menu List -->
+        <button type="button" class="btn btn-light btn-sm" [routerLink]="['/common-post-login/menu-list']">
+          <i class="bi bi-list"></i> Menu List
+        </button>
+      </div>
+      <!-- Body -->
+      <div class="card-body">
+        <form [formGroup]="menuForm" (ngSubmit)="submit()">
+          <!-- Names -->
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Menu Name (English)</label>
+              <input class="form-control" formControlName="nameEn" />
+              @if (f['nameEn'].touched && f['nameEn'].invalid) {
+                <div class="text-danger small">
+                  English name is required
+                </div>
+              }
+            </div>
+            <div class="col-md-6 mb-3 position-relative">
+              <label class="form-label">Menu Name (Marathi)</label>
+              <input class="form-control" formControlName="nameMr" autocomplete="off" />
+              @if (f['nameMr'].touched && f['nameMr'].invalid) {
+                <div class="text-danger small">
+                  Marathi name is required
+                </div>
+              }
+              <!-- Suggestions Dropdown -->
+              @if (marathiSuggestions.length > 0) {
+                <ul class="list-group position-absolute w-100 shadow"
+                  style="z-index: 10;">
+                  @for (suggestion of marathiSuggestions; track suggestion) {
+                    <li class="list-group-item list-group-item-action"
+                      (click)="setMarathiValue(suggestion)">
+                      {{ suggestion }}
+                    </li>
+                  }
+                </ul>
+              }
             </div>
           </div>
-
-          <div class="col-md-6 mb-3 position-relative">
-            <label class="form-label">Menu Name (Marathi)</label>
-
-            <input class="form-control" formControlName="nameMr" autocomplete="off" />
-
-            <div *ngIf="f['nameMr'].touched && f['nameMr'].invalid" class="text-danger small">
-              Marathi name is required
+          <!-- Route -->
+          <div class="mb-3">
+            <label class="form-label">Route (optional)</label>
+            <input class="form-control" formControlName="route" placeholder="/dashboard/example" />
+          </div>
+          <!-- Icon / Sequence / Active -->
+          <div class="row">
+            <div class="col-md-3 mb-3">
+              <label class="form-label">Icon</label>
+              <input class="form-control" formControlName="icon" placeholder="bi bi-house" />
             </div>
-
-            <!-- Suggestions Dropdown -->
-            <ul class="list-group position-absolute w-100 shadow" *ngIf="marathiSuggestions.length > 0"
-              style="z-index: 10;">
-              <li class="list-group-item list-group-item-action" *ngFor="let suggestion of marathiSuggestions"
-                (click)="setMarathiValue(suggestion)">
-                {{ suggestion }}
-              </li>
-            </ul>
-          </div>
-
-        </div>
-
-        <!-- Route -->
-        <div class="mb-3">
-          <label class="form-label">Route (optional)</label>
-          <input class="form-control" formControlName="route" placeholder="/dashboard/example" />
-        </div>
-
-        <!-- Icon / Sequence / Active -->
-        <div class="row">
-          <div class="col-md-3 mb-3">
-            <label class="form-label">Icon</label>
-            <input class="form-control" formControlName="icon" placeholder="bi bi-house" />
-          </div>
-
-          <div class="col-md-3 mb-3">
-            <label class="form-label">Sequence</label>
-            <input type="number" class="form-control" formControlName="sequence" />
-            <div *ngIf="f['sequence'].touched && f['sequence'].invalid" class="text-danger small">
-              Sequence is required
+            <div class="col-md-3 mb-3">
+              <label class="form-label">Sequence</label>
+              <input type="number" class="form-control" formControlName="sequence" />
+              @if (f['sequence'].touched && f['sequence'].invalid) {
+                <div class="text-danger small">
+                  Sequence is required
+                </div>
+              }
+            </div>
+            <div class="col-md-3 mb-3">
+              <label class="form-label">Active Status</label>
+              <select class="form-select" formControlName="active">
+                <option [ngValue]="true">Active</option>
+                <option [ngValue]="false">Inactive</option>
+              </select>
+            </div>
+            <div class="col-md-3 mb-3">
+              <label class="form-label">Menu Type</label>
+              <select class="form-select" formControlName="menuType">
+                <option [ngValue]="-1">-- Select Type --</option>
+                <option [ngValue]="1">Type 1</option>
+                <option [ngValue]="2">Type 2</option>
+                <option [ngValue]="3">Type 3</option>
+              </select>
+              @if (f['menuType'].touched && f['menuType'].invalid) {
+                <div class="text-danger small">
+                  Menu type is required
+                </div>
+              }
             </div>
           </div>
-
-          <div class="col-md-3 mb-3">
-            <label class="form-label">Active Status</label>
-            <select class="form-select" formControlName="active">
-              <option [ngValue]="true">Active</option>
-              <option [ngValue]="false">Inactive</option>
+          <!-- Parent Menu -->
+          <div class="mb-3">
+            <label class="form-label">Parent Menu (optional)</label>
+            <select class="form-select" formControlName="parentId">
+              <option [ngValue]="null">— Root menu —</option>
+              @for (p of validParentMenus; track p) {
+                <option [value]="p.id">
+                  {{ p.nameEn }} <small class="text-muted">/ {{ p.nameMr }}</small>
+                </option>
+              }
             </select>
+            @if (isEdit) {
+              <div class="form-text text-muted">
+                * You cannot assign this menu or its children as parent (cycle prevention)
+              </div>
+            }
           </div>
-          <div class="col-md-3 mb-3">
-  <label class="form-label">Menu Type</label>
-  <select class="form-select" formControlName="menuType">
-    <option [ngValue]="-1">-- Select Type --</option>
-    <option [ngValue]="1">Type 1</option>
-    <option [ngValue]="2">Type 2</option>
-    <option [ngValue]="3">Type 3</option>
-  </select>
-  <div *ngIf="f['menuType'].touched && f['menuType'].invalid" class="text-danger small">
-    Menu type is required
-  </div>
-</div>
-        </div>
-
-        <!-- Parent Menu -->
-        <div class="mb-3">
-          <label class="form-label">Parent Menu (optional)</label>
-          <select class="form-select" formControlName="parentId">
-            <option [ngValue]="null">— Root menu —</option>
-
-            <option *ngFor="let p of validParentMenus" [value]="p.id">
-              {{ p.nameEn }} <small class="text-muted">/ {{ p.nameMr }}</small>
-            </option>
-          </select>
-
-          <div *ngIf="isEdit" class="form-text text-muted">
-            * You cannot assign this menu or its children as parent (cycle prevention)
+          <!-- Buttons -->
+          <div class="d-flex gap-2">
+            <button class="btn btn-success" [disabled]="isSubmitting">
+              {{ isSubmitting ? (isEdit ? 'Updating...' : 'Saving...')
+              : (isEdit ? 'Update' : 'Save') }}
+            </button>
+            <button type="button" class="btn btn-secondary" [routerLink]="['/common-post-login/menu-list']"
+              [disabled]="isSubmitting">
+              Cancel
+            </button>
           </div>
-        </div>
-
-        <!-- Buttons -->
-        <div class="d-flex gap-2">
-          <button class="btn btn-success" [disabled]="isSubmitting">
-            {{ isSubmitting ? (isEdit ? 'Updating...' : 'Saving...')
-            : (isEdit ? 'Update' : 'Save') }}
-          </button>
-
-          <button type="button" class="btn btn-secondary" [routerLink]="['/common-post-login/menu-list']"
-            [disabled]="isSubmitting">
-            Cancel
-          </button>
-        </div>
-
-      </form>
+        </form>
+      </div>
     </div>
   </div>
-</div>
-
-<!-- Loading Template -->
-<ng-template #loadingTpl>
+} @else {
   <div class="text-center py-5">
     <div class="spinner-border"></div>
     <p class="mt-2">Loading, please wait...</p>
   </div>
-</ng-template>
+}
+
+<!-- Loading Template -->

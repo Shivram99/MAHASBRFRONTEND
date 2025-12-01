@@ -1,20 +1,22 @@
 <div class="footerLogo p-5">
 
-    <div class="container mx-auto">
-     
- 
+  <div class="container mx-auto">
 
-      <div class="owl-carousel footer-logos">
-        <div class="item" *ngFor="let logo of footerLogo">
+
+
+    <div class="owl-carousel footer-logos">
+      @for (logo of footerLogo; track logo) {
+        <div class="item">
           <a [href]="logo.url" class="block" target="_blank">
             <img [src]="logo.src" alt="Footer Logo">
           </a>
         </div>
-      </div>
-      
+      }
+    </div>
 
 
 
-</div>
+
+  </div>
 
 </div>

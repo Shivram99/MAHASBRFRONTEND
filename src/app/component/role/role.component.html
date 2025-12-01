@@ -1,15 +1,17 @@
 <div>
-    <h2>Roles</h2>
-    <div *ngFor="let role of roles">
+  <h2>Roles</h2>
+  @for (role of roles; track role) {
+    <div>
       <p>{{ role.name }}</p>
       <!-- Add more fields as necessary -->
       <button (click)="updateRole(role)">Update</button>
       <button (click)="deleteRole(role)">Delete</button>
     </div>
-  </div>
-  
-  <hr>
-  
+  }
+</div>
+
+<hr>
+
   <div>
     <h2>Create Role</h2>
     <form>
@@ -21,4 +23,3 @@
       <button (click)="createRole()" [disabled]="!newRole.name">Create</button>
     </form>
   </div>
-  

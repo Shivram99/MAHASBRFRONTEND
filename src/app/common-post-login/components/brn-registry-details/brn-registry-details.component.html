@@ -1,138 +1,139 @@
 <div class="row">
 
   <div class="col-md-6" [hidden]="!isAllowed()"><app-multi-select-option [items]="districts"
-      (selectionChange)="onSelectionDistrictChange($event)" [placeholder]="'District'" />
+    (selectionChange)="onSelectionDistrictChange($event)" [placeholder]="'District'" />
   </div>
 
 
   <div class="col-md-6" [hidden]="!isAllowed()">
     <app-multi-select-option [items]="talukas" (selectionChange)="onSelectionTalukaChange($event)"
       [placeholder]="'Taluka'" />
-  </div>
-
-  <div class="col-md-4">
-    <label>BRN :</label>
-    <input type="text" placeholder="Enter BRN number" class="form-control" id="BNR" name="BNR" [(ngModel)]="BNR"
-      (keypress)="allowOnlyNumbers($event)" />
-    <br />
-  </div>
-  <div class="col-md-4" *ngIf="false">
-
-    <label for="registerDateFrom"> From Date:</label>
-    <input type="date" id="registerDateFrom" name="registerDateFrom" class="form-control"
-      [(ngModel)]="filters.registerDateFrom" (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
-
-  </div>
-  <div class="col-md-4" *ngIf="false">
-
-    <label for="registerDateTo"> To Date:</label>
-    <input type="date" id="registerDateTo" class="form-control" [(ngModel)]="filters.registerDateTo"
-      (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
-
-  </div>
-  <div class="col-12 ">
-    <button type="button" class="btn btn-primary" [disabled]="!BNR" (click)="searchBRN()">
-      Search BRN
-    </button>
-  </div>
-</div>
-
-
-<div *ngIf="registryDetails.length > 0; else noData" class="mt-3">
-  <!-- Header with Export Buttons -->
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4>Registered Establishments</h4>
-    <div>
-      <button class="btn btn-outline-success btn-sm me-2" (click)="exportToExcel()">
-        <i class="bi bi-file-earmark-excel"></i>Excel Export
-      </button>
-      <!-- <button class="btn btn-outline-danger btn-sm" (click)="exportToPDF()">
-        <i class="bi bi-file-earmark-pdf"></i>PDF Export
-      </button> -->
     </div>
-  </div>
-  <!-- filter component start -->
-  <table class="table table-bordered table-striped">
-    <thead>
-      <tr>
-        <th class="first">Sr.No</th>
-        <th>BRN </th>
-        <th>Establishment Name</th>
-        <th>City</th>
-        <th>District</th>
-        <th>Institution Type</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let detail of registryDetails; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td>
-          <a class="nav-link" (click)="goToDetails(detail.brnNo)">
-            {{ detail.brnNo }}
-          </a>
-        </td>
-        <td>{{ detail.nameOfEstablishmentOrOwner }}</td>
-        <td>{{ detail.taluka  }}</td>
-        <td>{{ detail.district  }}</td> <!-- assuming you meant taluka -->
-        <td>{{ detail.sector }}</td>
-      </tr>
-    </tbody>
-  </table>
-  <div *ngIf="totalPages != 1" class="d-flex nav-dflex">
-    <nav aria-label="Page navigation">
-      <ul class="pagination">
 
-        <!-- First -->
-        <li class="page-item" [class.disabled]="currentPage === 0">
-          <a class="page-link" (click)="goToFirst()" aria-label="First">
-            « First
-          </a>
-        </li>
-
-        <!-- Previous -->
-        <li class="page-item" [class.disabled]="currentPage === 0">
-          <a class="page-link" (click)="goToPage(currentPage - 1)" aria-label="Previous">
-            ‹ Prev
-          </a>
-        </li>
-
-        <!-- Page Numbers -->
-        <li class="page-item" *ngFor="let page of getVisiblePages()" [class.disabled]="page === -1"
-          [class.active]="page === currentPage">
-          <ng-container *ngIf="page === -1">
-            <span class="page-link">…</span>
-          </ng-container>
-          <ng-container *ngIf="page !== -1">
-            <a class="page-link" (click)="goToPage(page)">{{ page + 1 }}</a>
-          </ng-container>
-        </li>
-
-        <!-- Next -->
-        <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
-          <a class="page-link" (click)="goToPage(currentPage + 1)" aria-label="Next">
-            Next ›
-          </a>
-        </li>
-
-        <!-- Last -->
-        <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
-          <a class="page-link" (click)="goToLast()" aria-label="Last">
-            Last »
-          </a>
-        </li>
-
-      </ul>
-    </nav>
+    <div class="col-md-4">
+      <label>BRN :</label>
+      <input type="text" placeholder="Enter BRN number" class="form-control" id="BNR" name="BNR" [(ngModel)]="BNR"
+        (keypress)="allowOnlyNumbers($event)" />
+        <br />
+      </div>
+      @if (false) {
+        <div class="col-md-4">
+          <label for="registerDateFrom"> From Date:</label>
+          <input type="date" id="registerDateFrom" name="registerDateFrom" class="form-control"
+            [(ngModel)]="filters.registerDateFrom" (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
+          </div>
+        }
+        @if (false) {
+          <div class="col-md-4">
+            <label for="registerDateTo"> To Date:</label>
+            <input type="date" id="registerDateTo" class="form-control" [(ngModel)]="filters.registerDateTo"
+              (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
+            </div>
+          }
+          <div class="col-12 ">
+            <button type="button" class="btn btn-primary" [disabled]="!BNR" (click)="searchBRN()">
+              Search BRN
+            </button>
+          </div>
+        </div>
 
 
-    <div class="form-group">
-      <label for="pageSize">Page Size:</label>
-      <select id="pageSize" [(ngModel)]="pageSize" (change)="onPageSizeChange($event)" class="no-form-control">
-        <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
-      </select>
-    </div>
-  </div>
-</div>
-<ng-template #noData>
-  <p class="">No data available.</p>
-</ng-template>
+        @if (registryDetails.length > 0) {
+          <div class="mt-3">
+            <!-- Header with Export Buttons -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h4>Registered Establishments</h4>
+              <div>
+                <button class="btn btn-outline-success btn-sm me-2" (click)="exportToExcel()">
+                  <i class="bi bi-file-earmark-excel"></i>Excel Export
+                </button>
+                <!-- <button class="btn btn-outline-danger btn-sm" (click)="exportToPDF()">
+                <i class="bi bi-file-earmark-pdf"></i>PDF Export
+              </button> -->
+            </div>
+          </div>
+          <!-- filter component start -->
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th class="first">Sr.No</th>
+                <th>BRN </th>
+                <th>Establishment Name</th>
+                <th>City</th>
+                <th>District</th>
+                <th>Institution Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (detail of registryDetails; track detail; let i = $index) {
+                <tr>
+                  <td>{{ i + 1 }}</td>
+                  <td>
+                    <a class="nav-link" (click)="goToDetails(detail.brnNo)">
+                      {{ detail.brnNo }}
+                    </a>
+                  </td>
+                  <td>{{ detail.nameOfEstablishmentOrOwner }}</td>
+                  <td>{{ detail.taluka  }}</td>
+                  <td>{{ detail.district  }}</td> <!-- assuming you meant taluka -->
+                  <td>{{ detail.sector }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+          @if (totalPages != 1) {
+            <div class="d-flex nav-dflex">
+              <nav aria-label="Page navigation">
+                <ul class="pagination">
+                  <!-- First -->
+                  <li class="page-item" [class.disabled]="currentPage === 0">
+                    <a class="page-link" (click)="goToFirst()" aria-label="First">
+                      « First
+                    </a>
+                  </li>
+                  <!-- Previous -->
+                  <li class="page-item" [class.disabled]="currentPage === 0">
+                    <a class="page-link" (click)="goToPage(currentPage - 1)" aria-label="Previous">
+                      ‹ Prev
+                    </a>
+                  </li>
+                  <!-- Page Numbers -->
+                  @for (page of getVisiblePages(); track page) {
+                    <li class="page-item" [class.disabled]="page === -1"
+                      [class.active]="page === currentPage">
+                      @if (page === -1) {
+                        <span class="page-link">…</span>
+                      }
+                      @if (page !== -1) {
+                        <a class="page-link" (click)="goToPage(page)">{{ page + 1 }}</a>
+                      }
+                    </li>
+                  }
+                  <!-- Next -->
+                  <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+                    <a class="page-link" (click)="goToPage(currentPage + 1)" aria-label="Next">
+                      Next ›
+                    </a>
+                  </li>
+                  <!-- Last -->
+                  <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+                    <a class="page-link" (click)="goToLast()" aria-label="Last">
+                      Last »
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+              <div class="form-group">
+                <label for="pageSize">Page Size:</label>
+                <select id="pageSize" [(ngModel)]="pageSize" (change)="onPageSizeChange($event)" class="no-form-control">
+                  @for (size of pageSizeOptions; track size) {
+                    <option [value]="size">{{ size }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+          }
+        </div>
+      } @else {
+        <p class="">No data available.</p>
+      }

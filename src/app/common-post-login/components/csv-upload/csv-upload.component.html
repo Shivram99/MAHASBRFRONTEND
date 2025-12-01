@@ -8,197 +8,215 @@
 
   <!-- Drop Zone -->
   <div class="upload-container"
-       (drop)="onDrop($event)"
-       (dragover)="onDragOver($event)">
-       
+    (drop)="onDrop($event)"
+    (dragover)="onDragOver($event)">
+
     <div class="upload-box">
       <i class="cloud-icon">☁️</i>
       <p class="text-muted">{{ 'upload.DRAG_TEXT' | translate }}</p>
       <p class="text-muted mb-2">{{ 'upload.OR' | translate }}</p>
 
       <input type="file" multiple hidden #fileInput
-             accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-             (change)="onFileSelected($event)">
+        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        (change)="onFileSelected($event)">
 
-      <button type="button" class="browse-btn" (click)="fileInput.click()">
-        {{ 'upload.BROWSE' | translate }}
+        <button type="button" class="browse-btn" (click)="fileInput.click()">
+          {{ 'upload.BROWSE' | translate }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Selected Files -->
+    @if (selectedFiles.length > 0) {
+      <div class="file-list-wrapper mt-4">
+        <h5 class="mb-3">Selected Files</h5>
+        <ul class="file-list">
+          @for (file of selectedFiles; track file; let i = $index) {
+            <li class="file-item">
+              <div>
+                {{ file.name }} ({{ file.size / 1024 | number:'1.0-0' }} KB)
+              </div>
+              <div>
+                <button class="btn btn-sm btn-outline-danger" (click)="removeFile(i)">🗑️</button>
+                <button class="btn btn-sm btn-outline-primary" (click)="previewFile(file)">
+                  Preview
+                </button>
+              </div>
+            </li>
+          }
+        </ul>
+      </div>
+    }
+
+    <!-- Upload Progress -->
+    @if (uploadProgress > 0) {
+      <div class="progress-wrapper mt-3">
+        <progress [value]="uploadProgress" max="100"></progress>
+        <span>{{ uploadProgress }}%</span>
+      </div>
+    }
+
+    <!-- SSE Processing Progress -->
+    @if ((processingProgress | keyvalue).length > 0) {
+      <div class="processing-wrapper mt-3">
+        <h5>Processing</h5>
+        @for (p of (processingProgress | keyvalue); track p) {
+          <div class="mb-2">
+            <div class="d-flex justify-content-between">
+              <span>{{ processingFileMap[p.key] }}</span>
+              @if (p.value >= 0) {
+                <span>{{ p.value }}%</span>
+              }
+              @if (p.value === -1) {
+                <span class="text-danger">Failed</span>
+              }
+            </div>
+            <progress [value]="p.value > 0 ? p.value : 0" max="100"></progress>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Validation messages -->
+    @if (validationMessages.length > 0) {
+      <div class="error-messages mt-3">
+        <ul>
+          @for (msg of validationMessages; track msg) {
+            <li>{{ msg }}</li>
+          }
+        </ul>
+      </div>
+    }
+
+    <!-- Download Sample -->
+    <div class="text-center mt-3">
+      <button (click)="downloadFile('sample.xlsx')"
+        class="btn btn-outline-success btn-sm">
+        📄 Download Sample
       </button>
     </div>
-  </div>
 
-  <!-- Selected Files -->
-  <div *ngIf="selectedFiles.length > 0" class="file-list-wrapper mt-4">
-    <h5 class="mb-3">Selected Files</h5>
+    <!-- Success -->
+    @if (successMessage) {
+      <div class="success-message mt-3">
+        {{ successMessage }}
+      </div>
+    }
 
-    <ul class="file-list">
-      <li *ngFor="let file of selectedFiles; let i = index" class="file-item">
-        <div>
-          {{ file.name }} ({{ file.size / 1024 | number:'1.0-0' }} KB)
-        </div>
+    <!-- Upload Button -->
+    <div class="upload-btn-wrapper mt-4">
+      <button class="btn btn-primary"
+        [disabled]="selectedFiles.length === 0"
+        (click)="uploadFiles()">
 
-        <div>
-          <button class="btn btn-sm btn-outline-danger" (click)="removeFile(i)">🗑️</button>
-          <button class="btn btn-sm btn-outline-primary" (click)="previewFile(file)">
-            Preview
+        {{ 'upload.UPLOAD' | translate }}
+      </button>
+    </div>
+
+    <!-- -------------------------
+    Preview Table
+    ------------------------- -->
+    <!-- -------------------------
+    Preview Table (Improved UI)
+    -------------------------- -->
+    @if (previewVisible) {
+      <div class="card shadow-sm border-0 mt-4">
+        <!-- Header -->
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">
+            <i class="bi bi-table"></i> Preview: {{ previewFileName }}
+          </h5>
+          <button class="btn btn-light btn-sm" (click)="closePreview()">
+            ✖ Close
           </button>
         </div>
-      </li>
-    </ul>
-  </div>
-
-  <!-- Upload Progress -->
-  <div *ngIf="uploadProgress > 0" class="progress-wrapper mt-3">
-    <progress [value]="uploadProgress" max="100"></progress>
-    <span>{{ uploadProgress }}%</span>
-  </div>
-
-  <!-- SSE Processing Progress -->
-  <div *ngIf="(processingProgress | keyvalue).length > 0" class="processing-wrapper mt-3">
-    <h5>Processing</h5>
-
-    <div *ngFor="let p of (processingProgress | keyvalue)" class="mb-2">
-      <div class="d-flex justify-content-between">
-        <span>{{ processingFileMap[p.key] }}</span>
-        <span *ngIf="p.value >= 0">{{ p.value }}%</span>
-        <span *ngIf="p.value === -1" class="text-danger">Failed</span>
-      </div>
-
-      <progress [value]="p.value > 0 ? p.value : 0" max="100"></progress>
-    </div>
-  </div>
-
-  <!-- Validation messages -->
-  <div *ngIf="validationMessages.length > 0" class="error-messages mt-3">
-    <ul>
-      <li *ngFor="let msg of validationMessages">{{ msg }}</li>
-    </ul>
-  </div>
-
-  <!-- Download Sample -->
-  <div class="text-center mt-3">
-    <button (click)="downloadFile('sample.xlsx')"
-            class="btn btn-outline-success btn-sm">
-      📄 Download Sample
-    </button>
-  </div>
-
-  <!-- Success -->
-  <div *ngIf="successMessage" class="success-message mt-3">
-    {{ successMessage }}
-  </div>
-
-  <!-- Upload Button -->
-  <div class="upload-btn-wrapper mt-4">
-    <button class="btn btn-primary" 
-            [disabled]="selectedFiles.length === 0"
-            (click)="uploadFiles()">
-
-      {{ 'upload.UPLOAD' | translate }}
-    </button>
-  </div>
-
-  <!-- -------------------------
-       Preview Table
-       ------------------------- -->
-  <!-- -------------------------
-     Preview Table (Improved UI)
--------------------------- -->
-<div *ngIf="previewVisible" class="card shadow-sm border-0 mt-4">
-
-  <!-- Header -->
-  <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-    <h5 class="mb-0">
-      <i class="bi bi-table"></i> Preview: {{ previewFileName }}
-    </h5>
-
-    <button class="btn btn-light btn-sm" (click)="closePreview()">
-      ✖ Close
-    </button>
-  </div>
-
-  <!-- Body -->
-  <div class="card-body">
-
-    <!-- Scrollable Table -->
-    <div class="table-responsive preview-scroll">
-      <table class="table table-hover table-bordered table-sm">
-
-        <thead class="table-primary sticky-top">
-          <tr>
-            <th *ngFor="let col of previewRows[0]?.rowData | keyvalue" class="fw-semibold">
-              {{ col.key }}
-            </th>
-            <th>Status</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr *ngFor="let row of previewRows" 
-              class="align-middle"
-              [ngClass]="{ 'table-danger': !row.valid, 'table-success': row.valid }">
-
-            <td *ngFor="let col of row.rowData | keyvalue">
-              {{ col.value || '-' }}
-            </td>
-
-            <td>
-              <span *ngIf="row.valid" class="badge bg-success">Valid</span>
-              <span *ngIf="!row.valid" class="badge bg-danger">
-                {{ row.errorMessage || 'Invalid' }}
-              </span>
-            </td>
-
-          </tr>
-        </tbody>
-
-      </table>
-    </div>
-
-    <!-- Footer Bar -->
-    <div class="d-flex justify-content-between align-items-center mt-3">
-
-      <small class="text-muted">
-        <strong>Total Rows:</strong> {{ previewRows.length }}
-      </small>
-
-      <div>
-        <button class="btn btn-success btn-sm me-2"
+        <!-- Body -->
+        <div class="card-body">
+          <!-- Scrollable Table -->
+          <div class="table-responsive preview-scroll">
+            <table class="table table-hover table-bordered table-sm">
+              <thead class="table-primary sticky-top">
+                <tr>
+                  @for (col of previewRows[0]?.rowData | keyvalue; track col) {
+                    <th class="fw-semibold">
+                      {{ col.key }}
+                    </th>
+                  }
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of previewRows; track row) {
+                  <tr
+                    class="align-middle"
+                    [ngClass]="{ 'table-danger': !row.valid, 'table-success': row.valid }">
+                    @for (col of row.rowData | keyvalue; track col) {
+                      <td>
+                        {{ col.value || '-' }}
+                      </td>
+                    }
+                    <td>
+                      @if (row.valid) {
+                        <span class="badge bg-success">Valid</span>
+                      }
+                      @if (!row.valid) {
+                        <span class="badge bg-danger">
+                          {{ row.errorMessage || 'Invalid' }}
+                        </span>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+          <!-- Footer Bar -->
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <small class="text-muted">
+              <strong>Total Rows:</strong> {{ previewRows.length }}
+            </small>
+            <div>
+              <button class="btn btn-success btn-sm me-2"
                 (click)="saveValidRows()"
                 [disabled]="!hasValidRows()">
-          💾 Save Valid Rows
-        </button>
-
-        <button class="btn btn-secondary btn-sm"
+                💾 Save Valid Rows
+              </button>
+              <button class="btn btn-secondary btn-sm"
                 (click)="closePreview()">
-          Close
-        </button>
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
+    }
+    @if (savedRows.length > 0) {
+      <div class="mt-4">
+        <h4 class="mb-3">Saved Records</h4>
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>#</th>
+              @for (col of getColumns(); track col) {
+                <th>{{ col }}</th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of savedRows; track row; let i = $index) {
+              <tr>
+                <td>{{ i + 1 }}</td>
+                @for (col of getColumns(); track col) {
+                  <td>
+                    {{ row.rowData[col] }}
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
 
-    </div>
 
   </div>
-</div>
-<div *ngIf="savedRows.length > 0" class="mt-4">
-  <h4 class="mb-3">Saved Records</h4>
-
-  <table class="table table-bordered table-striped">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th *ngFor="let col of getColumns()">{{ col }}</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr *ngFor="let row of savedRows; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td *ngFor="let col of getColumns()">
-          {{ row.rowData[col] }}
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-
-</div>

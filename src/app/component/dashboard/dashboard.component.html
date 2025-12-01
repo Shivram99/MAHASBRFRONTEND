@@ -22,140 +22,150 @@
     <div class="row mt-3">
 
       <!-- Left Filter Panel (Hidden Initially) -->
-      <div class="col-md-4" *ngIf="menuVisible">
-        <div class="p-4" style="background-color: #2676C3; border-radius: 2px;">
+      @if (menuVisible) {
+        <div class="col-md-4">
+          <div class="p-4" style="background-color: #2676C3; border-radius: 2px;">
+            <form>
+              <!-- Count Type -->
+              <div class="mb-3">
+                <label class="form-label text-white fw-bold">Select Count Type:</label><br>
+                @for (type of ['NR','TR','DR']; track type) {
+                  <div class="form-check text-white">
+                    <input class="form-check-input" type="radio" [id]="type" name="countType"
+                      [(ngModel)]="selectedCountType" (ngModelChange)="onCountTypeChange($event)" [value]="type">
+                      <label class="form-check-label" [for]="type">
+                        {{ type }} :
+                        {{ type === 'NR' ? 'New Registration' : type === 'TR' ? 'Total Registration' : 'Deregistration' }}
+                      </label>
+                    </div>
+                  }
+                </div>
+                <!-- Acts -->
+                <div class="mb-3">
+                  <label class="form-label text-white fw-bold">Acts/Registering Authorities:</label>
+                  <select class="form-select" [(ngModel)]="selectedAct" name="act">
+                    <option value="">-- Select Acts/Registering Authorities --</option>
+                    @for (act of registries; track act) {
+                      <option [value]="act.registryNameEn">
+                        {{ act.registryNameEn }}
+                      </option>
+                    }
+                  </select>
+                </div>
+                <!-- Region -->
+                <div class="mb-3">
+                  <label class="form-label text-white fw-bold">Region:</label>
+                  <select class="form-select" [(ngModel)]="selectedRegion" name="region">
+                    <option value="">-- Select Region --</option>
+                    @for (divis of division; track divis) {
+                      <option [value]="divis.divisionCode">
+                        {{ divis.divisionName }}
+                      </option>
+                    }
+                  </select>
+                </div>
+                <!-- District -->
+                <div class="mb-3">
+                  <label class="form-label text-white fw-bold">District:</label>
+                  <select class="form-select" [(ngModel)]="selectedDistrict" name="district">
+                    <option value="">-- Select District --</option>
+                    @for (district of districts; track district) {
+                      <option [value]="district.districtName">
+                        {{ district.districtName }}
+                      </option>
+                    }
+                  </select>
+                </div>
+                <!-- Year -->
+                <div class="mb-3">
+                  <label class="form-label text-white fw-bold">Year:</label>
+                  <select class="form-select" [(ngModel)]="selectedYear" name="year">
+                    <option value="">-- Select Year --</option>
+                    @for (year of years; track year) {
+                      <option [value]="year">{{ year }}</option>
+                    }
+                  </select>
+                </div>
+                <!-- Quarter -->
+                <div class="mb-3">
+                  <label class="form-label text-white fw-bold">Quarter:</label>
+                  <select class="form-select" [(ngModel)]="selectedQuarter" name="quarter">
+                    <option value="">-- Select Quarter --</option>
+                    @for (q of quarters; track q) {
+                      <option [value]="q">{{ q }}</option>
+                    }
+                  </select>
+                </div>
+                <!-- NIC -->
+                <div class="mb-4">
+                  <label class="form-label text-white fw-bold">Industry/NIC Classification:</label>
+                  <select class="form-select" [(ngModel)]="selectedNic" name="nic">
+                    <option value="">-- Select Industry/NIC Classification --</option>
+                    @for (nic of nicList; track nic) {
+                      <option [value]="nic">{{ nic }}</option>
+                    }
+                  </select>
+                </div>
+                <!-- Buttons -->
+                <div class="d-flex justify-content-between">
+                  <button type="button" class="btn w-50 me-2 fw-bold" style="background-color: #ffcc00;"
+                  (click)="onSubmit()">Submit</button>
+                  <button type="button" class="btn w-50 fw-bold btn-dark" (click)="onClear()">Clear</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        }
 
-          <form>
+        <!-- Right Dashboard Area -->
+        <div [ngClass]="menuVisible ? 'col-md-8' : 'col-md-12'" class="p-2 shadow-cust">
 
-            <!-- Count Type -->
-            <div class="mb-3">
-              <label class="form-label text-white fw-bold">Select Count Type:</label><br>
-
-              <div class="form-check text-white" *ngFor="let type of ['NR','TR','DR']">
-                <input class="form-check-input" type="radio" [id]="type" name="countType"
-                  [(ngModel)]="selectedCountType" (ngModelChange)="onCountTypeChange($event)" [value]="type">
-
-                <label class="form-check-label" [for]="type">
-                  {{ type }} :
-                  {{ type === 'NR' ? 'New Registration' : type === 'TR' ? 'Total Registration' : 'Deregistration' }}
-                </label>
+          <div class="text-center  p-2" style="min-height: 400px;">
+            <h2 class="mb-4 fw-bold"> {{ selectedCountLabel }} - Dashboard Overview</h2>
+            @if (loading) {
+              <div class="text-center py-5">
+                <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+                <p class="mt-3 fw-bold text-primary">Loading data...</p>
               </div>
-            </div>
+            }
 
-            <!-- Acts -->
-            <div class="mb-3">
-              <label class="form-label text-white fw-bold">Acts/Registering Authorities:</label>
-              <select class="form-select" [(ngModel)]="selectedAct" name="act">
-                <option value="">-- Select Acts/Registering Authorities --</option>
-                <option *ngFor="let act of registries" [value]="act.registryNameEn">
-                  {{ act.registryNameEn }}
-                </option>
-              </select>
-            </div>
+            @if (!loading && apiResponse.length === 0) {
+              <div class="text-center py-5">
+                <h4 class="text-danger fw-bold">No Data Found</h4>
+                <p>Please adjust your filters and try again.</p>
+              </div>
+            }
 
-            <!-- Region -->
-            <div class="mb-3">
-              <label class="form-label text-white fw-bold">Region:</label>
-              <select class="form-select" [(ngModel)]="selectedRegion" name="region">
-                <option value="">-- Select Region --</option>
-                <option *ngFor="let divis of division" [value]="divis.divisionCode">
-                  {{ divis.divisionName }}
-                </option>
-              </select>
-            </div>
-
-            <!-- District -->
-            <div class="mb-3">
-              <label class="form-label text-white fw-bold">District:</label>
-              <select class="form-select" [(ngModel)]="selectedDistrict" name="district">
-                <option value="">-- Select District --</option>
-                <option *ngFor="let district of districts" [value]="district.districtName">
-                  {{ district.districtName }}
-                </option>
-              </select>
-            </div>
-
-            <!-- Year -->
-            <div class="mb-3">
-              <label class="form-label text-white fw-bold">Year:</label>
-              <select class="form-select" [(ngModel)]="selectedYear" name="year">
-                <option value="">-- Select Year --</option>
-                <option *ngFor="let year of years" [value]="year">{{ year }}</option>
-              </select>
-            </div>
-
-            <!-- Quarter -->
-            <div class="mb-3">
-              <label class="form-label text-white fw-bold">Quarter:</label>
-              <select class="form-select" [(ngModel)]="selectedQuarter" name="quarter">
-                <option value="">-- Select Quarter --</option>
-                <option *ngFor="let q of quarters" [value]="q">{{ q }}</option>
-              </select>
-            </div>
-
-            <!-- NIC -->
-            <div class="mb-4">
-              <label class="form-label text-white fw-bold">Industry/NIC Classification:</label>
-              <select class="form-select" [(ngModel)]="selectedNic" name="nic">
-                <option value="">-- Select Industry/NIC Classification --</option>
-                <option *ngFor="let nic of nicList" [value]="nic">{{ nic }}</option>
-              </select>
-            </div>
-
-            <!-- Buttons -->
-            <div class="d-flex justify-content-between">
-              <button type="button" class="btn w-50 me-2 fw-bold" style="background-color: #ffcc00;"
-                (click)="onSubmit()">Submit</button>
-              <button type="button" class="btn w-50 fw-bold btn-dark" (click)="onClear()">Clear</button>
-            </div>
-
-          </form>
-
-        </div>
-      </div>
-
-      <!-- Right Dashboard Area -->
-      <div [ngClass]="menuVisible ? 'col-md-8' : 'col-md-12'" class="p-2 shadow-cust">
-
-        <div class="text-center  p-2" style="min-height: 400px;">
-          <h2 class="mb-4 fw-bold"> {{ selectedCountLabel }} - Dashboard Overview</h2>
-          <div *ngIf="loading" class="text-center py-5">
-            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
-            <p class="mt-3 fw-bold text-primary">Loading data...</p>
-          </div>
-
-          <div *ngIf="!loading && apiResponse.length === 0" class="text-center py-5">
-            <h4 class="text-danger fw-bold">No Data Found</h4>
-            <p>Please adjust your filters and try again.</p>
-          </div>
-
-          <div *ngIf="!loading && apiResponse.length > 0">
-            <div class="row">
-              <div class="col-md-12 mb-4">
-                <div class="">
-                  <canvas id="chart1"></canvas>
+            @if (!loading && apiResponse.length > 0) {
+              <div>
+                <div class="row">
+                  <div class="col-md-12 mb-4">
+                    <div class="">
+                      <canvas id="chart1"></canvas>
+                    </div>
+                  </div>
                 </div>
               </div>
+            }
+
+          </div>
+        </div>
+      </div>
+      @if (!loading && apiResponse.length > 0) {
+        <div>
+          <div class="row mt-5">
+            <div class="col-md-12 mb-4">
+              <div class="shadow-cust p-2">
+                <canvas id="chart2"></canvas>
+              </div>
+            </div>
+            <div class="col-md-12 mb-4">
+              <div class="shadow-cust p-2">
+                <canvas id="chart3"></canvas>
+              </div>
             </div>
           </div>
-
         </div>
-      </div>
-    </div>
-    <div *ngIf="!loading && apiResponse.length > 0">
-      <div class="row mt-5">
-        <div class="col-md-12 mb-4">
-          <div class="shadow-cust p-2">
-            <canvas id="chart2"></canvas>
-          </div>
-        </div>
-
-        <div class="col-md-12 mb-4">
-          <div class="shadow-cust p-2">
-            <canvas id="chart3"></canvas>
-          </div>
-        </div>
-      </div>
+      }
     </div>
   </div>
-</div>

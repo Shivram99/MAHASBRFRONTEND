@@ -17,29 +17,32 @@
 
       <tbody>
 
-        <tr *ngFor="let r of requestList">
-          <td>{{ r.requestId }}</td>
-          <td>{{ r.name }}</td>
-          <td>{{ r.email }}</td>
-          <td>{{ r.mobile || '-' }}</td>
-          <td>{{ r.district || '-' }}</td>
-
-          <td>
-            <button class="btn btn-sm btn-warning me-1" (click)="edit(r.id)">
-              Edit
-            </button>
-            <button class="btn btn-sm btn-danger" (click)="delete(r.id)">
-              Delete
-            </button>
-          </td>
-        </tr>
+        @for (r of requestList; track r) {
+          <tr>
+            <td>{{ r.requestId }}</td>
+            <td>{{ r.name }}</td>
+            <td>{{ r.email }}</td>
+            <td>{{ r.mobile || '-' }}</td>
+            <td>{{ r.district || '-' }}</td>
+            <td>
+              <button class="btn btn-sm btn-warning me-1" (click)="edit(r.id)">
+                Edit
+              </button>
+              <button class="btn btn-sm btn-danger" (click)="delete(r.id)">
+                Delete
+              </button>
+            </td>
+          </tr>
+        }
 
       </tbody>
     </table>
 
     <!-- Loading Spinner -->
-    <div class="text-center" *ngIf="loading">
-      <div class="spinner-border text-primary"></div>
-    </div>
+    @if (loading) {
+      <div class="text-center">
+        <div class="spinner-border text-primary"></div>
+      </div>
+    }
 
   </div>

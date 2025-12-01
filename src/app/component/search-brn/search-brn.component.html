@@ -23,13 +23,17 @@
                 <label> {{'search-brn.district' | translate }} </label>
                 <select class="form-select" formControlName="district">
                   <option [value]="-1">--Select--</option>
-                  <option *ngFor="let district of districts" [value]="district.censusDistrictCode">
-                    {{ district.districtName | capitalize }}
-                  </option>
+                  @for (district of districts; track district) {
+                    <option [value]="district.censusDistrictCode">
+                      {{ district.districtName | capitalize }}
+                    </option>
+                  }
                 </select>
-                <div *ngIf="searchBrnFilter.get('district')?.hasError('forbiddenValue')">
-                  Invalid value selected.
-                </div>
+                @if (searchBrnFilter.get('district')?.hasError('forbiddenValue')) {
+                  <div>
+                    Invalid value selected.
+                  </div>
+                }
               </div>
             </div>
             <div class="col-md-4">
@@ -37,9 +41,11 @@
                 <label>{{'search-brn.establishment-name' | translate }} </label>
                 <textarea class="form-control" formControlName="nameOfEstablishmentOrOwner"></textarea>
 
-                <div *ngIf="searchBrnFilter.hasError('atLeastOneRequired')">
-                 {{'search-brn.establishment-name-instruction' | translate }}
-                </div>
+                @if (searchBrnFilter.hasError('atLeastOneRequired')) {
+                  <div>
+                    {{'search-brn.establishment-name-instruction' | translate }}
+                  </div>
+                }
               </div>
             </div>
             <div class="col-md-3">
@@ -47,68 +53,81 @@
                 <label> {{'search-brn.brn' | translate }} </label>
                 <input type="text" class="form-control" id="brnNo" formControlName="brnNo"
                   placeholder="{{'search-brn.brn-placeholder' | translate}}" />
-                <div
-                  *ngIf="searchBrnFilter.get('brnNo')?.invalid && (searchBrnFilter.get('brnNo')?.dirty || searchBrnFilter.get('brnNo')?.touched)">
-                  <div *ngIf="searchBrnFilter.get('brnNo')?.errors?.['pattern']"> {{'search-brn.brn-instruction' | translate}}</div>
-                </div>
-                <div *ngIf="searchBrnFilter.hasError('atLeastOneRequired')">
-                  {{'search-brn.establishment-name-instruction' | translate }}
-                </div>
-                <div
-                  *ngIf="searchBrnFilter.get('brnNo')?.hasError('minlength') || searchBrnFilter.get('brnNo')?.hasError('maxlength')">
-                  {{'search-brn.brn-instruction1' | translate}}
+                  @if (searchBrnFilter.get('brnNo')?.invalid && (searchBrnFilter.get('brnNo')?.dirty || searchBrnFilter.get('brnNo')?.touched)) {
+                    <div
+                      >
+                      @if (searchBrnFilter.get('brnNo')?.errors?.['pattern']) {
+                        <div> {{'search-brn.brn-instruction' | translate}}</div>
+                      }
+                    </div>
+                  }
+                  @if (searchBrnFilter.hasError('atLeastOneRequired')) {
+                    <div>
+                      {{'search-brn.establishment-name-instruction' | translate }}
+                    </div>
+                  }
+                  @if (searchBrnFilter.get('brnNo')?.hasError('minlength') || searchBrnFilter.get('brnNo')?.hasError('maxlength')) {
+                    <div
+                      >
+                      {{'search-brn.brn-instruction1' | translate}}
+                    </div>
+                  }
                 </div>
               </div>
-            </div>
-            <div class="col-md-2">
-              <div class="form-group">
-                <label> </label>
-                <div class="d-md-flex">
-                  <button type="submit" [disabled]="searchBrnFilter.invalid" class="btn btn-primary ms-2 w-75">Search <i
-                      class="bi bi-search"></i> </button>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label> </label>
+                  <div class="d-md-flex">
+                    <button type="submit" [disabled]="searchBrnFilter.invalid" class="btn btn-primary ms-2 w-75">Search <i
+                    class="bi bi-search"></i> </button>
+                  </div>
                 </div>
+
+
               </div>
 
-
             </div>
-
+          </form>
+          @if (registryDetails.length > 0) {
+            <div>
+            </div>
+          }
+          <div class="table-responsive mt-5">
+            @if (registryDetails.length > 0) {
+              <div>
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <th class="first">Sr.No</th>
+                    <th>BRN </th>
+                    <th>Establishment Name</th>
+                    <th>City</th>
+                    <th>District</th>
+                    <th>Institution Type</th>
+                  </thead>
+                  <tbody>
+                    @for (detail of registryDetails; track detail; let i = $index) {
+                      <tr>
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ detail.brnNo }}</td>
+                        <td>{{ detail.nameOfEstablishmentOrOwner | capitalize }}</td>
+                        <td>{{ detail.taluka | capitalize }}</td>
+                        <td>{{ detail.district | capitalize }}</td>
+                        <td>{{ detail.sector | capitalize }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            } @else {
+              @if (showNoDataAlert) {
+                <div class="alert alert-warning mt-3" role="alert">
+                  No data available!
+                </div>
+              }
+            }
           </div>
-        </form>
-        <div *ngIf="registryDetails.length > 0">
 
         </div>
-        <div class="table-responsive mt-5">
-          <div *ngIf="registryDetails.length > 0; else noData">
-            <table class="table table-bordered table-striped">
-              <thead>
-                <th class="first">Sr.No</th>
-                <th>BRN </th>
-                <th>Establishment Name</th>
-                <th>City</th>
-                <th>District</th>
-                <th>Institution Type</th>
-              </thead>
-              <tbody>
-                <tr *ngFor="let detail of registryDetails; let i = index">
-                  <td>{{ i + 1 }}</td>
-                  <td>{{ detail.brnNo }}</td>
-                  <td>{{ detail.nameOfEstablishmentOrOwner | capitalize }}</td>
-
-                  <td>{{ detail.taluka | capitalize }}</td>
-                  <td>{{ detail.district | capitalize }}</td>
-                  <td>{{ detail.sector | capitalize }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <ng-template #noData>
-            <div *ngIf="showNoDataAlert" class="alert alert-warning mt-3" role="alert">
-            No data available!
-            </div>
-          </ng-template>
-        </div>
-
       </div>
     </div>
   </div>
-</div>

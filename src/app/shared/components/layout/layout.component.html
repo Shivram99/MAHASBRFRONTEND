@@ -1,62 +1,63 @@
 <div class="bglightblue">
-    <div class="container">
-        <div class="content">
-            <div class="d-md-flex justify-content-between border-b-org p-3">
-                <h1>{{activeLabel | uppercase | translate }} </h1>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a [routerLink]="['/']">{{ 'HOME' | translate }}</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ activeLabel | uppercase | translate }}</li>
-                    </ol>
-                </nav>
-            </div>
-            <div class="p-3">
-                <div class="d-flex align-items-stretch align-items-start dashboardTabs">
-                    <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist"
-                        aria-orientation="vertical">
-                        <button *ngFor="let item of menuItems; let i = index" [routerLink]="item.routerLink"
-                            class="nav-link" id="v-pills-{{ item.label | lowercase }}-tab" data-bs-toggle="pill"
-                            type="button" role="tab" [attr.aria-controls]="'v-pills-' + (item.label | lowercase)"
-                            [attr.aria-selected]="i === 0" [ngClass]="{ 'active': i === 0 }">
+  <div class="container">
+    <div class="content">
+      <div class="d-md-flex justify-content-between border-b-org p-3">
+        <h1>{{activeLabel | uppercase | translate }} </h1>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a [routerLink]="['/']">{{ 'HOME' | translate }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ activeLabel | uppercase | translate }}</li>
+          </ol>
+        </nav>
+      </div>
+      <div class="p-3">
+        <div class="d-flex align-items-stretch align-items-start dashboardTabs">
+          <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist"
+            aria-orientation="vertical">
+            @for (item of menuItems; track item; let i = $index) {
+              <button [routerLink]="item.routerLink"
+                class="nav-link" id="v-pills-{{ item.label | lowercase }}-tab" data-bs-toggle="pill"
+                type="button" role="tab" [attr.aria-controls]="'v-pills-' + (item.label | lowercase)"
+                [attr.aria-selected]="i === 0" [ngClass]="{ 'active': i === 0 }">
+                <img [src]="item.icon" /> {{ item.label | translate }}
+              </button>
+            }
+          </div>
 
-                            <img [src]="item.icon" /> {{ item.label | translate }} 
-                        </button>
-                    </div>
+          <div class="cust-butns d-flex align-items-center">
+            <!-- Logout Button -->
+            <button class="btn btn-warning btn-sm me-2" (click)="logout()">
+              {{ 'BUTTON.LOGOUT' | translate }}
+            </button>
 
-                    <div class="cust-butns d-flex align-items-center">
-                        <!-- Logout Button -->
-                        <button class="btn btn-warning btn-sm me-2" (click)="logout()">
-  {{ 'BUTTON.LOGOUT' | translate }}
-</button>
+            <!-- Admin Dropdown -->
+            <div class="dropdown" id="adminDropdown">
+              <button class="btn btn-primary btn-sm dropdown-toggle d-flex align-items-center"
+                type="button" data-bs-toggle="dropdown">
+                <img [src]="progfileIcon" style="width: 19px; margin-right: 5px;" />   {{ user?.userProfile?.fullName || 'Admin' }}
+              </button>
 
-                        <!-- Admin Dropdown -->
-                        <div class="dropdown" id="adminDropdown">
-                            <button class="btn btn-primary btn-sm dropdown-toggle d-flex align-items-center"
-                                type="button" data-bs-toggle="dropdown">
-                                <img [src]="progfileIcon" style="width: 19px; margin-right: 5px;" />   {{ user?.userProfile?.fullName || 'Admin' }}
-                            </button>
 
-                            
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" [routerLink]="['profile']">{{ 'MENU.PROFILE' | translate}}</a></li>
-                                <!-- <li><a class="dropdown-item" href="#">Settings</a></li> -->
-                                <!-- <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li>
-                                    <button class="dropdown-item text-danger" (click)="logout()">
-                                        Log out
-                                    </button>
-                                </li> -->
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="tab-content tab-content-set " id="v-pills-tabContent">
-                        <router-outlet></router-outlet>
-                    </div>
-                </div>
-            </div>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" [routerLink]="['profile']">{{ 'MENU.PROFILE' | translate}}</a></li>
+                <!-- <li><a class="dropdown-item" href="#">Settings</a></li> -->
+                <!-- <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li>
+                <button class="dropdown-item text-danger" (click)="logout()">
+                  Log out
+                </button>
+              </li> -->
+            </ul>
+          </div>
         </div>
+
+        <div class="tab-content tab-content-set " id="v-pills-tabContent">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
 </div>

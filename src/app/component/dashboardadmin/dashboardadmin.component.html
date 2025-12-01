@@ -7,98 +7,109 @@
         <label for="registerDateFrom">Registration From Date:</label>
         <input type="date" id="registerDateFrom" name="registerDateFrom" class="form-control"
           [(ngModel)]="filters.registerDateFrom" (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
+        </div>
       </div>
-    </div>
 
-    <div class="col-md-4 blk">
-      <label for="district">District:</label>
-      <select class="form-control" id="district" name="district" [(ngModel)]="filters.district"
-        (change)="onChangeFunction($event)">
-        <option [value]="11111">All</option>
-        <option *ngFor="let district of districts" [value]="district.censusDistrictCode">
-          {{ district.districtName }}
-        </option>
-      </select>
-    </div>
-
-    <div class="col-md-4 blk">
-      <label>BNR :</label>
-      <input type="text" class="form-control" id="BNR" name="BNR" [(ngModel)]="BNR">
-      <button type="button" class="btn btn-primary" [disabled]="!BNR" (click)="searchBRN()">
-        Search BRN
-      </button>
-    </div>
-
-    <div class="col-md-4 blk">
-      <div style="display: block">
-        <label for="registerDateTo">Registration To Date:</label>
-        <input type="date" id="registerDateTo" class="form-control" [(ngModel)]="filters.registerDateTo"
-          (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
+      <div class="col-md-4 blk">
+        <label for="district">District:</label>
+        <select class="form-control" id="district" name="district" [(ngModel)]="filters.district"
+          (change)="onChangeFunction($event)">
+          <option [value]="11111">All</option>
+          @for (district of districts; track district) {
+            <option [value]="district.censusDistrictCode">
+              {{ district.districtName }}
+            </option>
+          }
+        </select>
       </div>
-    </div>
 
-    <div class="col-md-4 blk">
-      <label for="talukas">Taluka:</label>
-      <select class="form-control" id="talukas" name="talukas" [(ngModel)]="filters.talukas"
-        (ngModelChange)="applyFilters()">
-        <option *ngFor="let taluka of talukas" [value]="taluka.censusTalukaCode">
-          {{ taluka.talukaName }}
-        </option>
-      </select>
-    </div>
-  </div>
-  <!-- </form> -->
+      <div class="col-md-4 blk">
+        <label>BNR :</label>
+        <input type="text" class="form-control" id="BNR" name="BNR" [(ngModel)]="BNR">
+        <button type="button" class="btn btn-primary" [disabled]="!BNR" (click)="searchBRN()">
+          Search BRN
+        </button>
+      </div>
 
-  <div id="pdfContent">
+      <div class="col-md-4 blk">
+        <div style="display: block">
+          <label for="registerDateTo">Registration To Date:</label>
+          <input type="date" id="registerDateTo" class="form-control" [(ngModel)]="filters.registerDateTo"
+            (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
+          </div>
+        </div>
 
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th scope="col">Sr. No.</th>
-          <th scope="col">Data received from department name</th>
-          <th scope="col">District</th>
-          <th scope="col">BRN number</th>
-          <th scope="col">Remark</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of tableData1;let i = index; ">
-          <td>{{ i + 1 }}</td>
-          <td>{{ item.nameofAct }}</td>
-          <td>{{ item.district }}</td>
-          <td>{{ item.brnNo }}</td>
-          <td><button (click)="openDialog()">View Details</button></td>
-        </tr>
-      </tbody>
-    </table>
-    <ng-template #noRecords>
+        <div class="col-md-4 blk">
+          <label for="talukas">Taluka:</label>
+          <select class="form-control" id="talukas" name="talukas" [(ngModel)]="filters.talukas"
+            (ngModelChange)="applyFilters()">
+            @for (taluka of talukas; track taluka) {
+              <option [value]="taluka.censusTalukaCode">
+                {{ taluka.talukaName }}
+              </option>
+            }
+          </select>
+        </div>
+      </div>
+    <!-- </form> -->
+
+    <div id="pdfContent">
+
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">Sr. No.</th>
+            <th scope="col">Data received from department name</th>
+            <th scope="col">District</th>
+            <th scope="col">BRN number</th>
+            <th scope="col">Remark</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of tableData1; track item; let i = $index) {
+            <tr>
+              <td>{{ i + 1 }}</td>
+              <td>{{ item.nameofAct }}</td>
+              <td>{{ item.district }}</td>
+              <td>{{ item.brnNo }}</td>
+              <td><button (click)="openDialog()">View Details</button></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      @if (totalElements > 0) {
+        <div>
+          <!-- <div *ngIf="totalElements === 0">
+          <p>No records found.</p>
+        </div> -->
+        @if (totalPages > 0) {
+          <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                <a class="page-link" (click)="firstPage()">First</a>
+              </li>
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                <a class="page-link" (click)="previousPage()">Previous</a>
+              </li>
+              @for (page of getDisplayedPages(); track page) {
+                <li class="page-item" [class.active]="page === currentPage">
+                  <a class="page-link" (click)="onPageChange(page)">{{ page }}</a>
+                </li>
+              }
+              <li class="page-item" [class.disabled]="currentPage === totalPages">
+                <a class="page-link" (click)="nextPage()">Next</a>
+              </li>
+              <li class="page-item" [class.disabled]="currentPage === totalPages">
+                <a class="page-link" (click)="lastPage()">Last</a>
+              </li>
+            </ul>
+          </nav>
+        }
+      </div>
+    } @else {
       <p>No records found.</p>
-    </ng-template>
-
-    <div *ngIf="totalElements > 0; else noRecords">
-      <!-- <div *ngIf="totalElements === 0">
-    <p>No records found.</p>
-  </div> -->
-      <nav aria-label="Page navigation example" *ngIf="totalPages > 0">
-        <ul class="pagination justify-content-center">
-          <li class="page-item" [class.disabled]="currentPage === 1">
-            <a class="page-link" (click)="firstPage()">First</a>
-          </li>
-          <li class="page-item" [class.disabled]="currentPage === 1">
-            <a class="page-link" (click)="previousPage()">Previous</a>
-          </li>
-          <li class="page-item" *ngFor="let page of getDisplayedPages()" [class.active]="page === currentPage">
-            <a class="page-link" (click)="onPageChange(page)">{{ page }}</a>
-          </li>
-          <li class="page-item" [class.disabled]="currentPage === totalPages">
-            <a class="page-link" (click)="nextPage()">Next</a>
-          </li>
-          <li class="page-item" [class.disabled]="currentPage === totalPages">
-            <a class="page-link" (click)="lastPage()">Last</a>
-          </li>
-        </ul>
-      </nav>
-    </div>
+    }
     <div>
     </div>
     <button (click)="generateExcel(tableData)" class="btn btn-primary btn-sm">Export to Excel</button> &nbsp;&nbsp;

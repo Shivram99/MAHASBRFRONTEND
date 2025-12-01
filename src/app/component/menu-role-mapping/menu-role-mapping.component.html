@@ -1,42 +1,48 @@
 <!-- mst-menu-role-mapping.component.html -->
 <h2>MstMenuRoleMappings</h2>
 
-<div *ngFor="let mapping of mappings">
+@for (mapping of mappings; track mapping) {
   <div>
-    <p>Menu Map ID: {{ mapping.menuMapID }}</p>
-    <p>Is Active: {{ mapping.isActive }}</p>
-    <p>Is Active: {{ mapping.menu.menuNameEnglish }}</p>
-    <p>Is Active: {{ mapping.role.name }}</p>
-    <!-- Add more fields as needed -->
-    <button (click)="updateMapping(mapping)">Update</button>
-    <button (click)="deleteMapping(mapping.menuMapID)">Delete</button>
+    <div>
+      <p>Menu Map ID: {{ mapping.menuMapID }}</p>
+      <p>Is Active: {{ mapping.isActive }}</p>
+      <p>Is Active: {{ mapping.menu.menuNameEnglish }}</p>
+      <p>Is Active: {{ mapping.role.name }}</p>
+      <!-- Add more fields as needed -->
+      <button (click)="updateMapping(mapping)">Update</button>
+      <button (click)="deleteMapping(mapping.menuMapID)">Delete</button>
+    </div>
   </div>
-</div>
+}
 
 <hr>
 
-<h2>Create New Mapping</h2>
-<form   [formGroup]="mappingForm"  (submit)="createMapping()"  >
-  <label for="isActive">Is Active:</label>
-  <select name="isActive" formControlName="isActive" >
-    <option [value]="1" selected>Active</option>
-    <option [value]="0" selected>InActive</option>
-    
-  </select>
+  <h2>Create New Mapping</h2>
+  <form   [formGroup]="mappingForm"  (submit)="createMapping()"  >
+    <label for="isActive">Is Active:</label>
+    <select name="isActive" formControlName="isActive" >
+      <option [value]="1" selected>Active</option>
+      <option [value]="0" selected>InActive</option>
 
-  <label for="menuId">Menu ID:</label>
-  
-  <select id="menuId" formControlName="menuId">
-    <option [value]="0" selected>Please Select</option>
-      <option *ngFor="let menu of menus" [value]="menu.menuId">{{ menu.menuNameEnglish }}</option>
-  </select>
+    </select>
 
-  <label>User Roles:</label>
-  <select name="roleId"  formControlName="roleId">
-    <option [value]="0" selected>Please Select</option>
-      <option *ngFor="let role of roles" [value]="role.id">{{ role.name }}</option>
-  </select>
-  <br>
+    <label for="menuId">Menu ID:</label>
 
-  <button type="submit">Create</button>
-</form>
+    <select id="menuId" formControlName="menuId">
+      <option [value]="0" selected>Please Select</option>
+      @for (menu of menus; track menu) {
+        <option [value]="menu.menuId">{{ menu.menuNameEnglish }}</option>
+      }
+    </select>
+
+    <label>User Roles:</label>
+    <select name="roleId"  formControlName="roleId">
+      <option [value]="0" selected>Please Select</option>
+      @for (role of roles; track role) {
+        <option [value]="role.id">{{ role.name }}</option>
+      }
+    </select>
+    <br>
+
+      <button type="submit">Create</button>
+    </form>

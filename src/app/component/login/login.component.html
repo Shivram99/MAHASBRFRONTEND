@@ -21,8 +21,10 @@
           </div>
           <div class="col-md-6">
             <form (ngSubmit)="login()" [formGroup]="loginForm" autocomplete="on">
-              
-               <p *ngIf="errorMessage" class="text-danger">{{ errorMessage }}</p>
+
+              @if (errorMessage) {
+                <p class="text-danger">{{ errorMessage }}</p>
+              }
 
               <!-- Username -->
               <div class="form-group mb-3">
@@ -30,70 +32,82 @@
                 <input id="username" formControlName="username" class="form-control" type="text" autocomplete="username"
                   placeholder="Enter your username">
 
-                <!-- Client-side error -->
-                <small class="text-danger"
-                  *ngIf="loginForm.get('username')?.touched && loginForm.get('username')?.hasError('required')">
-                  Username is required.
-                </small>
+                  <!-- Client-side error -->
+                  @if (loginForm.get('username')?.touched && loginForm.get('username')?.hasError('required')) {
+                    <small class="text-danger"
+                      >
+                      Username is required.
+                    </small>
+                  }
 
-                <!-- Server-side error -->
-                <small class="text-danger" *ngIf="serverErrors.username">
-                  {{ serverErrors.username }}
-                </small>
+                  <!-- Server-side error -->
+                  @if (serverErrors.username) {
+                    <small class="text-danger">
+                      {{ serverErrors.username }}
+                    </small>
+                  }
+                </div>
+
+                <!-- Password -->
+                <div class="form-group mb-3 position-relative">
+                  <label for="password">{{ 'Password' | translate }}</label>
+
+                  <input id="password" formControlName="password" class="form-control pe-5"
+                    [type]="passwordVisible ? 'text' : 'password'" autocomplete="current-password"
+                    placeholder="Enter your password">
+
+                    <!-- Toggle icon -->
+                    <span class="position-absolute top-50 end-0 translate-middle-y me-3 nyEye" style="cursor: pointer;"
+                      (click)="togglePasswordVisibility()">
+                      <i class="bi" [ngClass]="passwordVisible ? 'bi-eye-slash' : 'bi-eye'"></i>
+                    </span>
+
+                    <!-- Client-side errors -->
+                    @if (loginForm.get('password')?.touched && loginForm.get('password')?.hasError('required')) {
+                      <small class="text-danger"
+                        >
+                        Password is required.
+                      </small>
+                    }
+                    @if (loginForm.get('password')?.touched && loginForm.get('password')?.hasError('minlength')) {
+                      <small class="text-danger"
+                        >
+                        Password must be at least 6 characters long.
+                      </small>
+                    }
+
+                    <!-- Server-side error -->
+                    @if (serverErrors.password) {
+                      <small class="text-danger">
+                        {{ serverErrors.password }}
+                      </small>
+                    }
+                  </div>
+
+
+
+                  <!-- Captcha -->
+                  <input formControlName="recaptchaResponse" type="hidden" autocomplete="off">
+                  <div class="form-group">
+                    <div id="recaptchaElement"></div>
+                    @if (captchaError) {
+                      <small class="text-danger">Recaptcha not verified.</small>
+                    }
+                  </div>
+
+                  <!-- Submit -->
+                  <button class="btn btn-primary" type="submit">
+                    {{ 'signUpPageHeading' | translate }}
+                  </button>
+                </form>
+
+
+
               </div>
-
-              <!-- Password -->
-              <div class="form-group mb-3 position-relative">
-                <label for="password">{{ 'Password' | translate }}</label>
-
-                <input id="password" formControlName="password" class="form-control pe-5"
-                  [type]="passwordVisible ? 'text' : 'password'" autocomplete="current-password"
-                  placeholder="Enter your password">
-
-                <!-- Toggle icon -->
-                <span class="position-absolute top-50 end-0 translate-middle-y me-3 nyEye" style="cursor: pointer;"
-                  (click)="togglePasswordVisibility()">
-                  <i class="bi" [ngClass]="passwordVisible ? 'bi-eye-slash' : 'bi-eye'"></i>
-                </span>
-
-                <!-- Client-side errors -->
-                <small class="text-danger"
-                  *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.hasError('required')">
-                  Password is required.
-                </small>
-                <small class="text-danger"
-                  *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.hasError('minlength')">
-                  Password must be at least 6 characters long.
-                </small>
-
-                <!-- Server-side error -->
-                <small class="text-danger" *ngIf="serverErrors.password">
-                  {{ serverErrors.password }}
-                </small>
-              </div>
-
-
-
-              <!-- Captcha -->
-              <input formControlName="recaptchaResponse" type="hidden" autocomplete="off">
-              <div class="form-group">
-                <div id="recaptchaElement"></div>
-                 <small class="text-danger" *ngIf="captchaError">Recaptcha not verified.</small>
-              </div>
-
-              <!-- Submit -->
-              <button class="btn btn-primary" type="submit">
-                {{ 'signUpPageHeading' | translate }}
-              </button>
-            </form>
-
-
+            </div>
 
           </div>
+
+
         </div>
-
       </div>
-
-
-    </div>
-  </div>

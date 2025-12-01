@@ -1,43 +1,47 @@
 <div class="dashboardTab">
   <label>Select Count Type:</label>
   <div class="">
-  <div class="" *ngFor="let option of countOptions">
-    <label>
-    <input
-      type="radio"
-      [value]="option"
-      [(ngModel)]="countType"
-      (change)="sendDataToParent()"
-    />
-    {{ option }}
-  </label>
+    @for (option of countOptions; track option) {
+      <div class="">
+        <label>
+          <input
+            type="radio"
+            [value]="option"
+            [(ngModel)]="countType"
+            (change)="sendDataToParent()"
+            />
+            {{ option }}
+          </label>
+        </div>
+      }
+    </div>
   </div>
-</div>
-</div>
-<br />
-<div class="dashboardTab">
-  <form #registrationForm="ngForm" (ngSubmit)="onSubmit()">
-    <div class="row form-group">
-      <div class="col-12 mb-2">
-        <label for="region">Acts/Registering Authorities:</label><br />
-        <select
-          class="form-select"
-          id="region"
-          name="act"
-          [(ngModel)]="registration.registration_act"
-          required
-          (ngModelChange)="onFieldChange()"
-        >
-          <option *ngFor="let act of acts" [value]="act">{{ act }}</option>
-        </select>
-      </div>
+  <br />
+  <div class="dashboardTab">
+    <form #registrationForm="ngForm" (ngSubmit)="onSubmit()">
+      <div class="row form-group">
+        <div class="col-12 mb-2">
+          <label for="region">Acts/Registering Authorities:</label><br />
+          <select
+            class="form-select"
+            id="region"
+            name="act"
+            [(ngModel)]="registration.registration_act"
+            required
+            (ngModelChange)="onFieldChange()"
+            >
+            @for (act of acts; track act) {
+              <option [value]="act">{{ act }}</option>
+            }
+          </select>
+        </div>
 
-      <!-- <div style="flex: 1 1 25%; padding: 0 10px;">
-              <label for="region">Region:</label><br>
-              <select id="region" name="region" [(ngModel)]="registration.region" required (ngModelChange)="onFieldChange()">
-                <option *ngFor="let region of regions" [value]="region">{{ region }}</option>
-              </select>
-            </div> -->
+        <!-- <div style="flex: 1 1 25%; padding: 0 10px;">
+        <label for="region">Region:</label><br>
+        <select id="region" name="region" [(ngModel)]="registration.region" required (ngModelChange)="onFieldChange()">
+          <option *ngFor="let region of regions" [value]="region">{{ region }}</option>
+        </select>
+      </div> -->
       <div class="col-12 mb-2">
         <label for="region">Region:</label><br />
         <select
@@ -47,84 +51,94 @@
           [(ngModel)]="registration.region"
           required
           (ngModelChange)="onRegionChange($event)"
-        >
-          <option *ngFor="let region of regions" [value]="region">
-            {{ region }}
-          </option>
+          >
+          @for (region of regions; track region) {
+            <option [value]="region">
+              {{ region }}
+            </option>
+          }
         </select>
       </div>
 
       <!-- <div style="flex: 1 1 25%; padding: 0 10px;">
-              <label for="district">District:</label><br>
-              <select id="district" name="district" [(ngModel)]="registration.district" required (ngModelChange)="onFieldChange()">
-                <option *ngFor="let district of districts" [value]="district">{{ district }}</option>
-              </select>
-            </div> -->
-      <div class="col-12 mb-2">
-        <label for="district">District:</label><br />
-        <select
-          class="form-select"
-          id="district"
-          name="district"
-          [(ngModel)]="registration.district"
-          required
-          (ngModelChange)="onFieldChange()"
+      <label for="district">District:</label><br>
+      <select id="district" name="district" [(ngModel)]="registration.district" required (ngModelChange)="onFieldChange()">
+        <option *ngFor="let district of districts" [value]="district">{{ district }}</option>
+      </select>
+    </div> -->
+    <div class="col-12 mb-2">
+      <label for="district">District:</label><br />
+      <select
+        class="form-select"
+        id="district"
+        name="district"
+        [(ngModel)]="registration.district"
+        required
+        (ngModelChange)="onFieldChange()"
         >
-          <option *ngFor="let district of districts" [value]="district">
+        @for (district of districts; track district) {
+          <option [value]="district">
             {{ district }}
           </option>
-        </select>
-      </div>
+        }
+      </select>
     </div>
-  
-    <div class="row form-group">
-      <div class="col-12 mb-2">
-        <label for="year">Year:</label><br />
-        <select
-          class="form-select"
-          id="year"
-          name="year"
-          [(ngModel)]="registration.year"
-          required
-          (ngModelChange)="onFieldChange()"
-        >
-          <option *ngFor="let year of years" [value]="year">{{ year }}</option>
-        </select>
-      </div>
+  </div>
 
-      <div class="col-12 mb-2">
-        <label for="quarter">Quarter:</label><br />
-        <select
-          class="form-select"
-          id="quarter"
-          name="quarter"
-          [(ngModel)]="registration.quarter"
-          required
-          (ngModelChange)="onFieldChange()"
+  <div class="row form-group">
+    <div class="col-12 mb-2">
+      <label for="year">Year:</label><br />
+      <select
+        class="form-select"
+        id="year"
+        name="year"
+        [(ngModel)]="registration.year"
+        required
+        (ngModelChange)="onFieldChange()"
         >
-          <option *ngFor="let quarter of quarters" [value]="quarter">
+        @for (year of years; track year) {
+          <option [value]="year">{{ year }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="col-12 mb-2">
+      <label for="quarter">Quarter:</label><br />
+      <select
+        class="form-select"
+        id="quarter"
+        name="quarter"
+        [(ngModel)]="registration.quarter"
+        required
+        (ngModelChange)="onFieldChange()"
+        >
+        @for (quarter of quarters; track quarter) {
+          <option [value]="quarter">
             {{ quarter }}
           </option>
-        </select>
-      </div>
-      <div class="col-12 mb-2">
-        <label for="industry">Industry/NIC Classification:</label><br />
-        <select
-          class="form-select"
-          id="industry"
-          name="industry"
-          [(ngModel)]="registration.industry"
-          required
-          (ngModelChange)="onFieldChange()"
+        }
+      </select>
+    </div>
+    <div class="col-12 mb-2">
+      <label for="industry">Industry/NIC Classification:</label><br />
+      <select
+        class="form-select"
+        id="industry"
+        name="industry"
+        [(ngModel)]="registration.industry"
+        required
+        (ngModelChange)="onFieldChange()"
         >
-          <option *ngFor="let option of industry" [value]="option">
+        @for (option of industry; track option) {
+          <option [value]="option">
             {{ option }}
           </option>
-        </select>
-      </div>
+        }
+      </select>
     </div>
-<div class="d-flex justify-content-between gap-2">
+  </div>
+  <div class="d-flex justify-content-between gap-2">
     <button class="btn btn-warning w-100">Submit</button>    <button class="btn btn-dark w-100">Clear</button>
-</div>
-  </form>
+  </div>
+</form>
 </div>

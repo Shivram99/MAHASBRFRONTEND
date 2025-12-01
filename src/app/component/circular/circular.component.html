@@ -1,141 +1,143 @@
 <div class="bglightblue">
-    <div class="container">
-        <div class="content">
-            <div class="d-md-flex justify-content-between border-b-org p-3">
-                <h1>{{ 'Circular.title' | translate }}</h1>
+  <div class="container">
+    <div class="content">
+      <div class="d-md-flex justify-content-between border-b-org p-3">
+        <h1>{{ 'Circular.title' | translate }}</h1>
 
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a routerLink="/">{{ 'Circular.breadcrumb_home' | translate }}</a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">
-                            {{ 'Circular.breadcrumb_page' | translate }}
-                        </li>
-                    </ol>
-                </nav>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <a routerLink="/">{{ 'Circular.breadcrumb_home' | translate }}</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+              {{ 'Circular.breadcrumb_page' | translate }}
+            </li>
+          </ol>
+        </nav>
+      </div>
+
+      <!-- Search Form -->
+      <div class="p-3">
+        <div class="form row px-3 mt-3">
+
+          <!-- Search Text -->
+          <div class="col-md-3">
+            <div class="form-group">
+              <label>{{ 'Circular.search' | translate }}</label>
+              <input
+                class="form-control"
+                type="text"
+                [(ngModel)]="searchText"
+                placeholder="{{ 'Circular.search_ph' | translate }}"
+                />
+              </div>
             </div>
 
-            <!-- Search Form -->
-            <div class="p-3">
-                <div class="form row px-3 mt-3">
+            <!-- From Date -->
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>{{ 'Circular.from_date' | translate }}</label>
+                <input
+                  class="form-control"
+                  type="date"
+                  [(ngModel)]="fromDate"
+                  />
+                </div>
+              </div>
 
-                    <!-- Search Text -->
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>{{ 'Circular.search' | translate }}</label>
-                            <input
-                                class="form-control"
-                                type="text"
-                                [(ngModel)]="searchText"
-                                placeholder="{{ 'Circular.search_ph' | translate }}"
-                            />
-                        </div>
-                    </div>
-
-                    <!-- From Date -->
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>{{ 'Circular.from_date' | translate }}</label>
-                            <input
-                                class="form-control"
-                                type="date"
-                                [(ngModel)]="fromDate"
-                            />
-                        </div>
-                    </div>
-
-                    <!-- To Date -->
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>{{ 'Circular.to_date' | translate }}</label>
-                            <input
-                                class="form-control"
-                                type="date"
-                                [(ngModel)]="toDate"
-                            />
-                        </div>
-                    </div>
-
-                    <!-- Search Button -->
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label class="d-block">&nbsp;</label>
-                            <button class="btn btn-primary ms-2 w-75" (click)="applyFilter()">
-                                {{ 'Circular.search' | translate }}
-                            </button>
-                        </div>
-                    </div>
-
+              <!-- To Date -->
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label>{{ 'Circular.to_date' | translate }}</label>
+                  <input
+                    class="form-control"
+                    type="date"
+                    [(ngModel)]="toDate"
+                    />
+                  </div>
                 </div>
 
-                <!-- Circular Table -->
-                <div class="table-responsive mt-5">
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th>{{ 'Circular.sr_no' | translate }}</th>
-                                <th>{{ 'Circular.subject' | translate }}</th>
-                                <th>{{ 'Circular.date' | translate }}</th>
-                                <th>{{ 'Circular.view_download' | translate }}</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            <tr *ngFor="let c of filteredCirculars; let i = index">
-                                <td>{{ i + 1 }}</td>
-                                <td>{{ c.subject }}</td>
-                                <td>{{ c.date }}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary"
-                                        (click)="openPdfModal(c.fileUrl, c.subject)">
-                                        <i class="bi bi-eye-fill"></i>
-                                        {{ 'Circular.view' | translate }}
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-
-                    </table>
+                <!-- Search Button -->
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label class="d-block">&nbsp;</label>
+                    <button class="btn btn-primary ms-2 w-75" (click)="applyFilter()">
+                      {{ 'Circular.search' | translate }}
+                    </button>
+                  </div>
                 </div>
+
+              </div>
+
+              <!-- Circular Table -->
+              <div class="table-responsive mt-5">
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th>{{ 'Circular.sr_no' | translate }}</th>
+                      <th>{{ 'Circular.subject' | translate }}</th>
+                      <th>{{ 'Circular.date' | translate }}</th>
+                      <th>{{ 'Circular.view_download' | translate }}</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    @for (c of filteredCirculars; track c; let i = $index) {
+                      <tr>
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ c.subject }}</td>
+                        <td>{{ c.date }}</td>
+                        <td>
+                          <button class="btn btn-sm btn-outline-primary"
+                            (click)="openPdfModal(c.fileUrl, c.subject)">
+                            <i class="bi bi-eye-fill"></i>
+                            {{ 'Circular.view' | translate }}
+                          </button>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+
+                </table>
+              </div>
             </div>
+          </div>
         </div>
-    </div>
-</div>
+      </div>
 
-<!-- PDF Modal -->
-<div class="modal fade show d-block" *ngIf="isPdfModalOpen">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content">
-
-            <div class="modal-header">
+      <!-- PDF Modal -->
+      @if (isPdfModalOpen) {
+        <div class="modal fade show d-block">
+          <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
                 <h5 class="modal-title">{{ pdfTitle }}</h5>
                 <button type="button" class="btn-close" (click)="closePdfModal()"></button>
-            </div>
-
-            <div class="modal-body" style="height:80vh; overflow:auto;">
-                <iframe
-                    *ngIf="pdfUrl"
+              </div>
+              <div class="modal-body" style="height:80vh; overflow:auto;">
+                @if (pdfUrl) {
+                  <iframe
                     [src]="pdfUrl"
                     width="100%"
                     height="100%">
-                </iframe>
-            </div>
-
-            <div class="modal-footer">
+                  </iframe>
+                }
+              </div>
+              <div class="modal-footer">
                 <a [href]="pdfUrl" [attr.download]="pdfTitle + '.pdf'" class="btn btn-success">
-                    <i class="bi bi-download"></i>
-                    {{ 'Circular.download' | translate }}
+                  <i class="bi bi-download"></i>
+                  {{ 'Circular.download' | translate }}
                 </a>
-
                 <button class="btn btn-secondary" (click)="closePdfModal()">
-                    {{ 'Circular.close' | translate }}
+                  {{ 'Circular.close' | translate }}
                 </button>
+              </div>
             </div>
-
+          </div>
         </div>
-    </div>
-</div>
+      }
 
-<!-- Backdrop -->
-<div class="modal-backdrop fade show" *ngIf="isPdfModalOpen"></div>
+      <!-- Backdrop -->
+      @if (isPdfModalOpen) {
+        <div class="modal-backdrop fade show"></div>
+      }
