@@ -29,7 +29,7 @@
 
             <!-- Count Type -->
             <div class="mb-3">
-              <label class="form-label text-white fw-bold">Select Count Type:</label><br>
+              <label class="form-label text-white">Select Count Type:</label><br>
 
               <div class="form-check text-white" *ngFor="let type of ['NR','TR','DR']">
                 <input class="form-check-input" type="radio" [id]="type" name="countType"
@@ -44,7 +44,7 @@
 
             <!-- Acts -->
             <div class="mb-3">
-              <label class="form-label text-white fw-bold">Acts/Registering Authorities:</label>
+              <label class="form-label text-white">Acts/Registering Authorities:</label>
               <select class="form-select" [(ngModel)]="selectedAct" name="act">
                 <option value="">-- Select Acts/Registering Authorities --</option>
                 <option *ngFor="let act of registries" [value]="act.registryNameEn">
@@ -55,10 +55,10 @@
 
             <!-- Region -->
             <div class="mb-3">
-              <label class="form-label text-white fw-bold">Region:</label>
-              <select class="form-select" [(ngModel)]="selectedRegion" name="region">
+              <label class="form-label text-white">Region:</label>
+              <select class="form-select" [(ngModel)]="selectedRegion" name="division">
                 <option value="">-- Select Region --</option>
-                <option *ngFor="let divis of division" [value]="divis.divisionCode">
+                <option *ngFor="let divis of division" [value]="divis.divisionName">
                   {{ divis.divisionName }}
                 </option>
               </select>
@@ -66,7 +66,7 @@
 
             <!-- District -->
             <div class="mb-3">
-              <label class="form-label text-white fw-bold">District:</label>
+              <label class="form-label text-white">District:</label>
               <select class="form-select" [(ngModel)]="selectedDistrict" name="district">
                 <option value="">-- Select District --</option>
                 <option *ngFor="let district of districts" [value]="district.districtName">
@@ -77,7 +77,7 @@
 
             <!-- Year -->
             <div class="mb-3">
-              <label class="form-label text-white fw-bold">Year:</label>
+              <label class="form-label text-white">Year:</label>
               <select class="form-select" [(ngModel)]="selectedYear" name="year">
                 <option value="">-- Select Year --</option>
                 <option *ngFor="let year of years" [value]="year">{{ year }}</option>
@@ -86,7 +86,7 @@
 
             <!-- Quarter -->
             <div class="mb-3">
-              <label class="form-label text-white fw-bold">Quarter:</label>
+              <label class="form-label text-white">Quarter:</label>
               <select class="form-select" [(ngModel)]="selectedQuarter" name="quarter">
                 <option value="">-- Select Quarter --</option>
                 <option *ngFor="let q of quarters" [value]="q">{{ q }}</option>
@@ -95,7 +95,7 @@
 
             <!-- NIC -->
             <div class="mb-4">
-              <label class="form-label text-white fw-bold">Industry/NIC Classification:</label>
+              <label class="form-label text-white">Industry/NIC Classification:</label>
               <select class="form-select" [(ngModel)]="selectedNic" name="nic">
                 <option value="">-- Select Industry/NIC Classification --</option>
                 <option *ngFor="let nic of nicList" [value]="nic">{{ nic }}</option>
@@ -130,7 +130,19 @@
           </div>
 
           <div *ngIf="!loading && apiResponse.length > 0">
+            <!-- KPI CARDS -->
+<div class="row mt-3 text-center">
+  <div class="col-md-3 mb-3" *ngFor="let card of dashboardCards">
+    <div class="kpi-card p-3">
+      <div class="kpi-value">{{ card.value | number }}</div>
+      <div class="kpi-label">{{ card.label }}</div>
+      <i class="kpi-icon" [class]="card.icon"></i>
+    </div>
+  </div>
+</div>
+
             <div class="row">
+              
               <div class="col-md-12 mb-4">
                 <div class="">
                   <canvas id="chart1"></canvas>
@@ -160,6 +172,12 @@
             <canvas id="chart5"></canvas>
           </div>
         </div>
+    <!-- SUNBURST CHART -->
+    <!-- <div class="col-md-12 mb-4">
+      <div class="shadow-cust p-2">
+        <div #sunburstChart style="width: 100%; height:80vh;"></div>
+      </div>
+    </div> -->
       </div>
     </div>
   </div>

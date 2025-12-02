@@ -8,6 +8,7 @@ import { District } from '../interface/district';
 import { RegistryResponse } from '../model/registry-response';
 import { Division } from '../model/division';
 import { CitizenDashboarFilter } from '../interface/citizen-dashboar-filter';
+import { CitizenDashboardDataRegDeRegNewReg } from '../interface/citizen-dashboard-data-reg-de-reg-new-reg';
 @Injectable({
   providedIn: 'root'
 })
@@ -43,5 +44,10 @@ export class SerachBrnService {
 
   submitRequest(payload: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/citizenSearch/requestForm`, payload);
+  }
+
+
+   getCitizenDashboardDataRegDeRegNewReg(): Observable<CitizenDashboardDataRegDeRegNewReg[]> {
+    return this.http.get<CitizenDashboardDataRegDeRegNewReg[]>(`${this.apiUrl}/citizenSearch/citizenDashboardDataRegDeRegNewReg`);
   }
 }
