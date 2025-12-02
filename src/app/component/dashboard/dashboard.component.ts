@@ -53,7 +53,11 @@ get selectedCountLabel() {
   // 🔸 Static lists for dropdowns
   acts = ['Industry Act', 'Factory Act', 'Companies Act'];
   regions = ['Konkan', 'Vidarbha', 'Marathwada'];
-  years = ['2021', '2022', '2023', '2024','2025','2026'];
+  years = [
+  '2010','2011','2012','2013','2014','2015',
+  '2016','2017','2018','2019','2020','2021',
+  '2022','2023','2024','2025','2026'
+];
   quarters = ['Q1', 'Q2', 'Q3', 'Q4'];
   nicList = ['Textile', 'Manufacturing', 'IT Services', 'Agriculture'];
 
@@ -65,6 +69,7 @@ get selectedCountLabel() {
   chart2!: Chart;
   chart3!: Chart;
   chart4!: Chart;
+  chart5!: Chart;
 
   // ==============================
   // 🔹 Constructor & Lifecycle Hooks
@@ -191,7 +196,7 @@ get selectedCountLabel() {
       next: (response) => {
         this.apiResponse = response;
         this.mainapiResponse = response;
-        // console.log('✅ API Data:', response);
+        console.log('✅ API Data:', response);
          this.loading = false;
         setTimeout(() => {
   this.updateCharts();
@@ -338,6 +343,40 @@ get selectedCountLabel() {
       },
       options: this.getChartOptions('Year-wise Registration Trends', 'Years', 'Registrations')
     });
+
+
+
+     // ================================
+// 🔸 Chart 5– District & Registry Wise Working Persons
+// ================================
+const groupedData = this.groupDataByDistrictAndRegistry(this.apiResponse);
+
+const districtLabels1 = Object.keys(groupedData);
+const registryNamesSet = new Set<string>();
+
+districtLabels1.forEach(district => {
+  Object.keys(groupedData[district]).forEach(reg =>
+    registryNamesSet.add(reg)
+  );
+});
+
+const registryNames = Array.from(registryNamesSet);
+
+const datasets = registryNames.map(reg => ({
+  label: reg,
+  data: districtLabels1.map(d => groupedData[d][reg] || 0),
+  backgroundColor: this.getRandomColor()  // or fixed colors
+}));
+
+this.chart5 = new Chart('chart5', {
+  type: 'bar',
+  data: { labels: districtLabels1, datasets: datasets },
+  options: this.getChartOptions(
+    'District & Registry Wise Total Working Persons', // 🔥 Updated Heading
+    'Districts',
+    'Total Working Persons'
+  )
+});
   }
 
   // ==============================
@@ -424,6 +463,44 @@ get selectedCountLabel() {
       }
     };
   }
+ 
+
+// 🔹 Group by District & Registry – sum totalpersonsworking
+groupDataByDistrictAndRegistry(data: any[]) {
+  const result: any = {};
+
+  data.forEach(item => {
+    const district = item.district;
+    const registry = item.registryName;
+    const working = item.totalpersonsworking || 0;
+
+    if (!result[district]) {
+      result[district] = {};
+    }
+
+    if (!result[district][registry]) {
+      result[district][registry] = 0;
+    }
+
+    result[district][registry] += working;
+  });
+
+  return result;
+}
+usedColors: string[] = [];
+  getRandomColor() {
+    let color;
+
+  do {
+    color = `rgba(${Math.floor(Math.random() * 255)}, 
+                   ${Math.floor(Math.random() * 255)}, 
+                   ${Math.floor(Math.random() * 255)}, 
+                   0.7)`;
+  } while (this.usedColors.includes(color));
+
+  this.usedColors.push(color);
+  return color;
+}
 }
 
 
