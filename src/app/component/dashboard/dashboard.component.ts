@@ -31,23 +31,26 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   loading = false;
 
   // ==============================
-  // 🔹 ECharts Elements
+  // 🔹 ECharts Elements (Sunburst, etc.)
   // ==============================
   @ViewChild('echart', { static: false }) chartEl!: ElementRef<HTMLDivElement>;
   @ViewChild('sunburstChart', { static: false }) sunburstChartEl!: ElementRef<HTMLDivElement>;
 
-  private chartInstance: echarts.ECharts | null = null;
-  private sunburstChart: echarts.ECharts | null = null;
+  private chartInstance: echarts.ECharts | null = null;      // For normal ECharts bar with brush (commented usage)
+  private sunburstChart: echarts.ECharts | null = null;      // For Sunburst chart
 
   // ==============================
-  // 🔹 Data
+  // 🔹 Data Collections
   // ==============================
   districts: any[] = [];
   registries: RegistryResponse[] = [];
   division: Division[] = [];
-  apiResponse: any[] = [];
-  mainapiResponse: any[] = [];
+  apiResponse: any[] = [];        // Filtered data used for charts
+  mainapiResponse: any[] = [];    // Raw API data used as base for filtering
 
+  // ==============================
+  // 🔹 Type of Data (Count Type)
+  // ==============================
   typesOfDataLable = [
     { key: 'NR', value: 'New Registration' },
     { key: 'TR', value: 'Total Registration' },
@@ -58,7 +61,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     return this.typesOfDataLable.find(t => t.key === this.selectedCountType)?.value || '';
   }
 
-  // 🔸 Selected filter values
+  // ==============================
+  // 🔹 Selected filter values (bound to UI dropdowns)
+  // ==============================
   selectedCountType = 'NR';
   selectedAct = '';
   selectedRegion = '';
@@ -78,33 +83,43 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   quarters = ['Q1', 'Q2', 'Q3', 'Q4'];
   nicList = ['Textile', 'Manufacturing', 'IT Services', 'Agriculture'];
 
-  // 🔸 Payload object for API
+  // 🔸 Payload object for API filter
   payload!: CitizenDashboarFilter;
 
-  // 🔸 Chart.js instances
-  chart1: Chart | null = null;
-  chart2: Chart | null = null;
-  chart3: Chart | null = null;
-  chart4: Chart | null = null;
-  chart5: Chart | null = null;
+  // ==============================
+  // 🔹 Chart.js Instances
+  // ==============================
+  chart1: Chart | null = null;   // District & Quarter Wise (stacked)
+  chart2: Chart | null = null;   // Registry vs Year
+  chart3: Chart | null = null;   // District vs Registry
+  chart4: Chart | null = null;   // (Currently commented usage / prepared)
+  chart5: Chart | null = null;   // District & Registry Wise Total Working Persons
 
+  // To avoid repeating random colors
   usedColors: string[] = [];
 
+  // ==============================
+  // 🔹 Constructor
+  // ==============================
   constructor(
     private dataService: SerachBrnService,
     @Inject(PLATFORM_ID) private platformId: any
   ) {}
 
   // ==============================
-  // 🔹 Lifecycle
+  // 🔹 Lifecycle Hooks
   // ==============================
   ngOnInit(): void {
+    // Load master data
     this.fetchDistricts();
     this.loadDivisions();
     this.loadRegistries();
-    this.citizenDasbhordData(); // initial load
-    this.fetchCitizenDashboardDataRegDeRegNewReg()
 
+    // Initial dashboard load with default filters
+    this.citizenDasbhordData();
+
+    // Load KPI cards summary (Totals / New Reg / DeReg / Working Persons)
+    this.fetchCitizenDashboardDataRegDeRegNewReg();
   }
 
   ngAfterViewInit(): void {
@@ -112,6 +127,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   ngOnDestroy(): void {
+    // Cleanup Chart.js and ECharts instances to avoid memory leaks
     this.destroyAllCharts();
     this.disposeECharts();
   }
@@ -121,13 +137,15 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   // ==============================
   toggleMenu() {
     this.menuVisible = !this.menuVisible;
+    // Re-fetch data when menu is toggled (if required by your UX)
     this.citizenDasbhordData();
   }
 
   // ==============================
-  // 🔹 Filters
+  // 🔹 Filters - Change Count Type
   // ==============================
   onCountTypeChange(type: string) {
+    // Prepare payload according to currently selected filters
     this.payload = {
       countType: this.selectedCountType,
       act: this.selectedAct,
@@ -137,10 +155,16 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       quarter: this.selectedQuarter,
       nic: this.selectedNic
     };
+
+    // Refresh dashboard with new count type
     this.citizenDasbhordData();
   }
 
+  // ==============================
+  // 🔹 Filters - Submit Button
+  // ==============================
   onSubmit(): void {
+    // Prepare payload using current UI selections
     this.payload = {
       countType: this.selectedCountType,
       act: this.selectedAct,
@@ -151,8 +175,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       nic: this.selectedNic
     };
 
-    // Start with full data
+    // Start with full data from main API response
     let filteredData = this.mainapiResponse;
+
+    // Mapping between UI filter keys and response object fields
     const fieldMapping: { [key: string]: string } = {
       act: 'registryName',
       region: 'division',
@@ -162,6 +188,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       nic: 'nic'
     };
 
+    // Apply text-based filtering on each field where value is present
     (Object.keys(this.payload) as (keyof typeof this.payload)[]).forEach(key => {
       const value = this.payload[key];
       if (value && value.toString().trim() !== '' && fieldMapping[key]) {
@@ -173,29 +200,38 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       }
     });
 
+    // Update filtered response
     this.apiResponse = filteredData;
 
+    // Rebuild chart visualizations based on filters
     this.updateCharts();
     // this.renderEchart();
     this.initSunburstChart();
   }
 
+  // ==============================
+  // 🔹 Filters - Clear Button
+  // ==============================
   onClear(): void {
+    // Reset all filters to default empty values
     this.selectedAct = '';
     this.selectedRegion = '';
     this.selectedDistrict = '';
     this.selectedYear = '';
     this.selectedQuarter = '';
     this.selectedNic = '';
+
+    // Re-apply filtering on base data (will show everything)
     this.onSubmit();
   }
 
   // ==============================
-  // 🔹 API Calls
+  // 🔹 API Calls - Main Dashboard Data
   // ==============================
   citizenDasbhordData(): void {
     this.loading = true;
 
+    // Initialize payload if not present (first load)
     if (!this.payload) {
       this.payload = {
         countType: this.selectedCountType || 'NR',
@@ -208,17 +244,18 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       };
     }
 
+    // Fetch filtered dashboard data from backend
     this.dataService.getFilteredDashboardData(this.payload).subscribe({
       next: (response) => {
         this.apiResponse = response;
         this.mainapiResponse = response;
         this.loading = false;
 
+        // Small delay to ensure DOM is ready for chart rendering
         setTimeout(() => {
           this.updateCharts();
           // this.renderEchart();
           // this.updateDashboardCards();
-
           this.initSunburstChart();
         }, 50);
       },
@@ -229,6 +266,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
+  // ==============================
+  // 🔹 API Calls - Registries
+  // ==============================
   loadRegistries(): void {
     this.loading = true;
     this.dataService.getAllRegistry().subscribe({
@@ -240,6 +280,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
+  // ==============================
+  // 🔹 API Calls - Divisions
+  // ==============================
   loadDivisions(): void {
     this.dataService.getAllDivisions().subscribe({
       next: (data: Division[]) => (this.division = data || []),
@@ -247,6 +290,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
+  // ==============================
+  // 🔹 API Calls - Districts
+  // ==============================
   fetchDistricts(): void {
     this.dataService.getAllDistricts().subscribe({
       next: (districtsData) => {
@@ -269,11 +315,13 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   // 🔹 Chart.js Creation & Update
   // ==============================
   private destroyAllCharts(): void {
-    [this.chart1, this.chart2, this.chart3,  this.chart5].forEach(c => c?.destroy());
-    this.chart1 = this.chart2 = this.chart3 =  this.chart5 = null;
+    // Safely destroy all Chart.js instances
+    [this.chart1, this.chart2, this.chart3, this.chart5].forEach(c => c?.destroy());
+    this.chart1 = this.chart2 = this.chart3 = this.chart5 = null;
   }
 
   updateCharts(): void {
+    // Remove previous chart instances before re-rendering
     this.destroyAllCharts();
 
     if (!this.apiResponse || this.apiResponse.length === 0) {
@@ -281,7 +329,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     }
 
     // -----------------------
-    // Chart 1 – District & Quarter Wise
+    // Chart 1 – District & Quarter Wise (Stacked Bar)
     // -----------------------
     const groupedByDistrict = this.groupDataByDistrictAndQuarter(this.apiResponse);
     const districtLabels = Object.keys(groupedByDistrict);
@@ -354,7 +402,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
 
     // -----------------------
-    // Chart 4 – Year-wise Trends
+    // Chart 4 – Year-wise Trends (Prepared / Commented)
     // -----------------------
     // const groupedByYear = this.groupDataByYear(this.apiResponse);
     // const yearLabels = Object.keys(groupedByYear).sort();
@@ -411,6 +459,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   // 🔹 Chart.js Helpers
   // ==============================
   private groupDataByDistrictAndQuarter(data: any[]): Record<string, Record<string, number>> {
+    // Aggregates data by District and Quarter → sum of totalRegistrations
     const grouped: Record<string, Record<string, number>> = {};
     data.forEach((item) => {
       const district = item.district || 'Unknown';
@@ -421,11 +470,16 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     return grouped;
   }
 
-  private groupDataByYear(data: any[]): Record<string, { totalRegistrations: number; totalDeRegistrations: number }> {
+  private groupDataByYear(
+    data: any[]
+  ): Record<string, { totalRegistrations: number; totalDeRegistrations: number }> {
+    // Aggregates data by Year → sum of registrations & deregistrations
     const grouped: Record<string, { totalRegistrations: number; totalDeRegistrations: number }> = {};
     data.forEach((item) => {
       const year = item.year || 'Unknown';
-      if (!grouped[year]) grouped[year] = { totalRegistrations: 0, totalDeRegistrations: 0 };
+      if (!grouped[year]) {
+        grouped[year] = { totalRegistrations: 0, totalDeRegistrations: 0 };
+      }
       grouped[year].totalRegistrations += item.totalRegistrations;
       grouped[year].totalDeRegistrations += item.totalDeRegistrations || 0;
     });
@@ -433,18 +487,22 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   getDistinctYears(data: any[]): string[] {
+    // Unique years sorted ascending
     return Array.from(new Set(data.map((item) => item.year))).sort();
   }
 
   getDistinctRegistryNames(data: any[]): string[] {
+    // Unique registry names sorted alphabetically
     return Array.from(new Set(data.map((item) => item.registryName))).sort();
   }
 
   getDistinctDistrictNames(data: any[]): string[] {
+    // Unique district names sorted alphabetically
     return Array.from(new Set(data.map((item) => item.district))).sort();
   }
 
   getYearWiseRegistrations(data: any[], registryName: string, years: string[]): number[] {
+    // For given registry, returns array of registrations for each year
     return years.map((year) =>
       data
         .filter((item) => item.registryName === registryName && item.year === year)
@@ -453,12 +511,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   getRegistrationsByDistrictAndRegistry(data: any[], district: string, registry: string): number {
+    // Sum of totalRegistrations for given district + registry combination
     return data
       .filter((item) => item.district === district && item.registryName === registry)
       .reduce((sum, item) => sum + (item.totalRegistrations || 0), 0);
   }
 
   groupDataByDistrictAndRegistry(data: any[]) {
+    // Aggregates Total Persons Working by District and Registry
     const result: any = {};
 
     data.forEach(item => {
@@ -479,11 +539,13 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   getColor(index: number): string {
+    // Fixed color palette for consistent coloring across charts
     const colors = ['#28a745', '#dc3545', '#007bff', '#ffc107', '#6f42c1', '#fd7e14', '#20c997'];
     return colors[index % colors.length];
   }
 
   getQuarterColor(quarter: string): string {
+    // Specific colors per quarter (align with MIS / reporting standards)
     const colors: Record<string, string> = {
       Q1: '#4472C4',
       Q2: '#ED7D31',
@@ -494,6 +556,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   getChartOptions(title: string, xLabel: string, yLabel: string, stacked: boolean = false): any {
+    // Common chart options for all bar charts (responsive, titles, axes labels)
     return {
       responsive: true,
       plugins: {
@@ -508,6 +571,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   getRandomColor(): string {
+    // Generates a semi-random RGBA color and ensures uniqueness in the session
     let color: string;
     do {
       color = `rgba(${Math.floor(Math.random() * 255)},
@@ -520,9 +584,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   // ==============================
-  // 🔹 ECharts – Brush + Stacked Bar
+  // 🔹 ECharts – Common Cleanup
   // ==============================
   private disposeECharts(): void {
+    // Dispose ECharts instances safely
     if (this.chartInstance) {
       this.chartInstance.dispose();
       this.chartInstance = null;
@@ -533,26 +598,29 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
+  // ==============================
+  // 🔹 ECharts – Brush + Stacked Bar (COMMENTED)
+  // ==============================
   // private renderEchart(): void {
   //   if (!isPlatformBrowser(this.platformId)) return;
   //   if (!this.chartEl?.nativeElement) return;
-
+  //
   //   if (!this.apiResponse || this.apiResponse.length === 0) {
   //     if (this.chartInstance) this.chartInstance.clear();
   //     return;
   //   }
-
+  //
   //   const grouped = this.groupDataByDistrictAndQuarter(this.apiResponse);
   //   const districtLabels = Object.keys(grouped);
   //   const quarters = ['Q1', 'Q2', 'Q3', 'Q4'];
-
+  //
   //   const emphasisStyle = {
   //     itemStyle: {
   //       shadowBlur: 10,
   //       shadowColor: 'rgba(0,0,0,0.3)'
   //     }
   //   };
-
+  //
   //   const series = quarters.map(q => ({
   //     name: q,
   //     type: 'bar' as const,
@@ -560,13 +628,13 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   //     emphasis: emphasisStyle,
   //     data: districtLabels.map(d => grouped[d]?.[q] || 0)
   //   }));
-
+  //
   //   if (this.chartInstance) {
   //     this.chartInstance.dispose();
   //   }
-
+  //
   //   this.chartInstance = echarts.init(this.chartEl.nativeElement);
-
+  //
   //   const option: echarts.EChartsOption = {
   //     legend: {
   //       data: quarters,
@@ -611,18 +679,18 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   //     },
   //     series
   //   };
-
+  //
   //   this.chartInstance.setOption(option);
-
+  //
   //   this.chartInstance.on('brushSelected', (params: any) => {
   //     const brushed: string[] = [];
   //     const brushComponent = params.batch[0];
-
+  //
   //     brushComponent.selected.forEach((sel: any, sIdx: number) => {
   //       const rawIndices = sel.dataIndex;
   //       brushed.push(`[${quarters[sIdx]}] → ${rawIndices.join(', ')}`);
   //     });
-
+  //
   //     this.chartInstance?.setOption({
   //       title: {
   //         backgroundColor: '#333',
@@ -637,12 +705,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   //       }
   //     });
   //   });
-
+  //
   //   window.addEventListener('resize', () => this.chartInstance?.resize());
   // }
 
   // ==============================
-  // 🔹 ECharts – Sunburst
+  // 🔹 ECharts – Sunburst (Quarter → Division → District → Registry)
   // ==============================
   initSunburstChart(): void {
     if (!isPlatformBrowser(this.platformId)) return;
@@ -664,6 +732,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     this.sunburstChart = echarts.init(el);
 
+    // Build hierarchical data structure for sunburst
     const sunburstData = this.buildSunburstData(this.apiResponse || []);
 
     const option: echarts.EChartsOption = {
@@ -707,27 +776,27 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           levels: [
             {},
             {
-              // Quarter
+              // Quarter level
               r0: '0%',
               r: '30%',
               label: { fontSize: 11, fontWeight: 'bold' },
               itemStyle: { borderWidth: 2 }
             },
             {
-              // Division
+              // Division level
               r0: '30%',
               r: '60%',
               label: { fontSize: 10 }
             },
             {
-              // District
+              // District level
               r0: '60%',
               r: '75%',
               label: { fontSize: 9 },
               itemStyle: { borderWidth: 1.5 }
             },
             {
-              // Registry
+              // Registry level (outer ring)
               r0: '75%',
               r: '90%',
               label: {
@@ -747,6 +816,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   private buildSunburstData(data: any[]): any[] {
+    // Builds nested structure: Quarter → Division → District → Registry
     const grouped: any = {};
 
     data.forEach(item => {
@@ -834,40 +904,43 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       };
     });
   }
+
+  // ==============================
+  // 🔹 Dashboard KPI Cards
+  // ==============================
   dashboardCards: any[] = [];
 
-fetchCitizenDashboardDataRegDeRegNewReg() {
-  this.loading = true;
-  this.dataService.getCitizenDashboardDataRegDeRegNewReg().subscribe({
-    next: (res) => {
-      ;
-      this.loading = false;
-      this.updateDashboardSummary(res); // Your KPI cards update
-      
-    },
-    error: (err) => {
-      console.error("Dashboard API Error:", err);
-      this.loading = false;
-    }
-  });
-}
-  
-updateDashboardSummary(response: any[]) {
-  // Calculate totals
-  const totalRegistrations = response.reduce((s, i) => s + (i.totalRegistrations || 0), 0);
-  const totalDeregistrations = response.reduce((s, i) => s + (i.totalDeregistrations || 0), 0);
-  const newRegistrationsThisYear = response.reduce((s, i) => s + (i.newRegistrationsThisYear || 0), 0);
-  const totalPersonsWorking = response.reduce((s, i) => s + (i.totalPersonsWorking || 0), 0);
+  fetchCitizenDashboardDataRegDeRegNewReg() {
+    // Fetch totals for registrations, deregistrations, working persons, etc.
+    this.loading = true;
+    this.dataService.getCitizenDashboardDataRegDeRegNewReg().subscribe({
+      next: (res) => {
+        this.loading = false;
+        // Update KPI cards with aggregated values
+        this.updateDashboardSummary(res);
+      },
+      error: (err) => {
+        console.error('Dashboard API Error:', err);
+        this.loading = false;
+      }
+    });
+  }
 
-  const activeRegistrations = totalRegistrations - totalDeregistrations;
+  updateDashboardSummary(response: any[]) {
+    // Calculate totals from response array
+    const totalRegistrations = response.reduce((s, i) => s + (i.totalRegistrations || 0), 0);
+    const totalDeregistrations = response.reduce((s, i) => s + (i.totalDeregistrations || 0), 0);
+    const newRegistrationsThisYear = response.reduce((s, i) => s + (i.newRegistrationsThisYear || 0), 0);
+    const totalPersonsWorking = response.reduce((s, i) => s + (i.totalPersonsWorking || 0), 0);
 
-  // Set KPI Cards Data
-  this.dashboardCards = [
-    { label: 'Total Registrations', value: totalRegistrations, icon: 'bi bi-bar-chart-fill text-primary' },
-    { label: 'Total working persion', value: totalPersonsWorking, icon: 'bi bi-people-fill text-success' },
-    { label: 'Deregistrations', value: totalDeregistrations, icon: 'bi bi-x-octagon-fill text-danger' },
-    { label: 'New Registrations This Year', value: newRegistrationsThisYear, icon: 'bi bi-stars text-warning' }
-  ];
-}
+    const activeRegistrations = totalRegistrations - totalDeregistrations; // (currently not displayed, but computed)
 
+    // Set KPI Cards Data (used in template HTML)
+    this.dashboardCards = [
+      { label: 'Total Registrations', value: totalRegistrations, icon: 'bi bi-building-check text-primary' },
+      { label: 'Total working persion', value: totalPersonsWorking, icon: 'bi bi-people-fill text-success' },
+      { label: 'Deregistrations', value: totalDeregistrations, icon: 'bi bi-x-octagon-fill text-danger' },
+      { label: 'New Registrations This Year', value: newRegistrationsThisYear, icon: 'bi bi-stars text-warning' }
+    ];
+  }
 }
