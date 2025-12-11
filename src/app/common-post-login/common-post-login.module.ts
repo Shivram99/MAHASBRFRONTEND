@@ -21,7 +21,12 @@ import { FilterUsersPipe } from '../pipes/filter-users.pipe';
 import { AddMenusComponent } from './components/add-menus/add-menus.component';
 import { MenusListComponent } from './components/menus-list/menus-list.component';
 import { MenuRoleAssignComponent } from './components/menu-role-assign/menu-role-assign.component';
-import { RequestFormListComponent } from './components/request-form-list/request-form-list.component'; 
+import { RequestFormListComponent } from './components/request-form-list/request-form-list.component';
+import { NICCategoryListComponent } from './components/nic/niccategory-list/niccategory-list.component';
+import { NICDivisionListComponent } from './components/nic/nicdivision-list/nicdivision-list.component'; 
+import { PaginationComponent } from '../shared/components/pagination/pagination.component';
+import { NICGroupListComponent } from './components/nic/nicgroup-list/nicgroup-list.component';
+import { NICClassListComponent } from './components/nic/nicclass-list/nicclass-list.component';
 
 
 @NgModule({
@@ -43,7 +48,10 @@ import { RequestFormListComponent } from './components/request-form-list/request
     MenusListComponent,
     MenuRoleAssignComponent,
     RequestFormListComponent,
-
+    NICCategoryListComponent,
+    NICDivisionListComponent,
+    NICGroupListComponent,
+    NICClassListComponent,
   
   ],
   imports: [

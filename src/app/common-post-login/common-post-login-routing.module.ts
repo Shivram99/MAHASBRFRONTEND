@@ -16,6 +16,10 @@ import { AddMenusComponent } from './components/add-menus/add-menus.component';
 import { MenusListComponent } from './components/menus-list/menus-list.component';
 import { MenuRoleAssignComponent } from './components/menu-role-assign/menu-role-assign.component';
 import { RequestFormListComponent } from './components/request-form-list/request-form-list.component';
+import { NICCategoryListComponent } from './components/nic/niccategory-list/niccategory-list.component';
+import { NICDivisionListComponent } from './components/nic/nicdivision-list/nicdivision-list.component';
+import { NICGroupListComponent } from './components/nic/nicgroup-list/nicgroup-list.component';
+import { NICClassListComponent } from './components/nic/nicclass-list/nicclass-list.component';
 
 const routes: Routes = [{
   path: '', component: LayoutComponent, children: [
@@ -41,6 +45,12 @@ const routes: Routes = [{
   { path: 'menu-list', component: MenusListComponent },
   { path: 'add-menu-role', component: MenuRoleAssignComponent },
   { path: 'request-form-list', component: RequestFormListComponent },
+  { path: 'category-list', component: NICCategoryListComponent },
+  { path: 'division-list', component: NICDivisionListComponent },
+  { path: 'group-list', component: NICGroupListComponent },
+  { path: 'class-list', component: NICClassListComponent },
+
+  
   ]
 }];
 

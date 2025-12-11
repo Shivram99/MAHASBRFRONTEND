@@ -1,0 +1,19 @@
+.pagination .page-link {
+  cursor: pointer;
+  min-width: 34px;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  color: white;
+}
+
+.pagination .page-item.disabled .page-link {
+  cursor: not-allowed;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+}

@@ -58,6 +58,7 @@
     "ng2-pdf-viewer": "^10.4.0",
     "ngx-captcha": "^13.0.0",
     "ngx-mask": "^17.0.8",
+    "ngx-pagination": "^6.0.3",
     "owl.carousel": "^2.3.4",
     "popper.js": "^1.16.1",
     "process": "^0.11.10",

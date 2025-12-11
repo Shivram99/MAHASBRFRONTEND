@@ -1,0 +1,6 @@
+/* src/app/common-post-login/components/nic/nicgroup-list/nicgroup-list.component.css */
+
+.table-responsive { overflow-x: auto; }
+.table td, .table th { vertical-align: middle; }
+.badge { font-size: 0.85rem; }
+.card { border-radius: 0.5rem; }

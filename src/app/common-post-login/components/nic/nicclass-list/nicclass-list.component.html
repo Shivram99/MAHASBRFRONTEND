@@ -1,0 +1,122 @@
+<div class="container-fluid mt-4">
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between mb-3">
+    <h4 class="fw-bold text-primary">NIC Class List</h4>
+
+    <button class="btn btn-success btn-sm" (click)="startAdd()">
+      <i class="bi bi-plus-circle"></i> Add Class
+    </button>
+  </div>
+
+  <!-- Form -->
+  <div *ngIf="showForm" class="card p-3 mb-3 shadow-sm">
+    <h5>{{ isEditMode ? 'Edit Class' : 'Add Class' }}</h5>
+
+    <form [formGroup]="classForm">
+
+      <div class="row">
+        <div class="col-md-4 mb-2">
+          <label>Class Code *</label>
+          <input type="text" class="form-control" formControlName="classCode" [readonly]="isEditMode">
+        </div>
+
+        <div class="col-md-6 mb-2">
+          <label>Description *</label>
+          <input type="text" class="form-control" formControlName="description">
+        </div>
+
+        <div class="col-md-4 mb-2">
+          <label>Group *</label>
+          <select class="form-select" formControlName="groupCode">
+            <option value="">Select Group</option>
+            <option *ngFor="let g of groups" [value]="g.groupCode">
+              {{ g.groupCode }} - {{ g.description }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-sm" (click)="saveClass()">Save</button>
+      <button class="btn btn-warning btn-sm ms-2" (click)="cancelForm()">Cancel</button>
+
+    </form>
+  </div>
+
+  <!-- Filters -->
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <input type="text" class="form-control form-control-sm" placeholder="Search..." [(ngModel)]="searchText" (input)="applyFilters()">
+    </div>
+
+    <div class="col-md-4">
+      <select class="form-select form-select-sm" [(ngModel)]="selectedGroup" (change)="applyFilters()">
+        <option value="">All Groups</option>
+        <option *ngFor="let g of groups" [value]="g.groupCode">
+          {{ g.groupCode }} - {{ g.description }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-responsive shadow-sm rounded">
+    <table class="table table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>#</th>
+          <th>Class Code</th>
+          <th>Description</th>
+          <th>Group</th>
+          <th>Status</th>
+          <th class="text-center">Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let c of pagedClasses; let i = index">
+          <td>{{ ((currentPage - 1) * pageSize) + i + 1 }}</td>
+          <td>{{ c.classCode }}</td>
+          <td>{{ c.description }}</td>
+          <td>{{ c.groupCode }}</td>
+
+          <td>
+            <span class="badge"
+                  [class.bg-success]="c.isActive === 'Y'"
+                  [class.bg-danger]="c.isActive === 'N'">
+              {{ c.isActive === 'Y' ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+
+          <td class="text-center">
+            <button class="btn btn-outline-primary btn-sm me-2" (click)="editClass(c)">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+
+            <button class="btn btn-sm"
+                    [class.btn-danger]="c.isActive === 'Y'"
+                    [class.btn-success]="c.isActive === 'N'"
+                    (click)="toggleStatus(c)">
+              <i [class.bi-ban]="c.isActive === 'Y'"
+                 [class.bi-check-circle]="c.isActive === 'N'"></i>
+            </button>
+          </td>
+        </tr>
+
+        <tr *ngIf="pagedClasses.length === 0">
+          <td colspan="6" class="text-center text-muted py-3">No records found</td>
+        </tr>
+      </tbody>
+
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <app-pagination
+    [totalItems]="totalItems"
+    [pageSize]="pageSize"
+    [currentPage]="currentPage"
+    (pageChanged)="setPage($event)">
+  </app-pagination>
+
+</div>

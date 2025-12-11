@@ -5,13 +5,14 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { TransliterateDirective } from './directives/transliterate.directive';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PaginationComponent } from './components/pagination/pagination.component';
 
 
 
 
 @NgModule({
-  declarations: [LayoutComponent,TransliterateDirective,],
-  exports: [LayoutComponent,TransliterateDirective],
+  declarations: [LayoutComponent,TransliterateDirective, PaginationComponent,],
+  exports: [LayoutComponent,TransliterateDirective,PaginationComponent],
   imports: [
     CommonModule,
     RouterModule,TranslateModule ,FormsModule,ReactiveFormsModule

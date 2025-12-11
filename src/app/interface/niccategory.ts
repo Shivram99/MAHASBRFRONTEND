@@ -4,4 +4,5 @@ export interface NICCategory {
     categoryCode: string;
     description: string;
     divisions?: NICDivision[]; // Optional
+    isActive: string;   
   }

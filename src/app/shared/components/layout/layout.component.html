@@ -26,8 +26,8 @@
                     <div class="cust-butns d-flex align-items-center">
                         <!-- Logout Button -->
                         <button class="btn btn-warning btn-sm me-2" (click)="logout()">
-  {{ 'BUTTON.LOGOUT' | translate }}
-</button>
+                            {{ 'BUTTON.LOGOUT' | translate }}
+                        </button>
 
                         <!-- Admin Dropdown -->
                         <div class="dropdown" id="adminDropdown">
@@ -39,15 +39,6 @@
                             
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" [routerLink]="['profile']">{{ 'MENU.PROFILE' | translate}}</a></li>
-                                <!-- <li><a class="dropdown-item" href="#">Settings</a></li> -->
-                                <!-- <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li>
-                                    <button class="dropdown-item text-danger" (click)="logout()">
-                                        Log out
-                                    </button>
-                                </li> -->
                             </ul>
                         </div>
                     </div>
