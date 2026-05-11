@@ -33,7 +33,7 @@
       <li><app-language-switcher></app-language-switcher></li>
       <li class="text-light">|</li>
       <li>
-  <a *ngIf="!isLoggedIn" [routerLink]="['/login']">
+  <a *ngIf="!(isLoggedIn$ | async)" [routerLink]="['/login']">
     {{ 'BUTTON.LOGIN' | translate }}
   </a>
 </li>

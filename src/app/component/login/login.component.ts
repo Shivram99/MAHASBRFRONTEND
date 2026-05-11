@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, Inject, OnInit, PLATFORM_ID, Renderer2, inject } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AfterViewInit, Component, Inject, OnInit, PLATFORM_ID, Renderer2 } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../../services/login.service';
 import { take } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     private renderer: Renderer2,
     private idleTimeoutService: IdleTimeoutService,
     private fb: FormBuilder,
-    private menuService:MenuService,
+    private menuService: MenuService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
@@ -104,9 +104,6 @@ export class LoginComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    // Ensure clean state
-    this.authService.logout();
-
     this.authService.login(
       this.loginForm.value.username,
       this.loginForm.value.password,
@@ -116,7 +113,6 @@ export class LoginComponent implements OnInit, AfterViewInit {
         grecaptcha.reset();
         this.menuService.loadMyMenus();
         const roles = this.authService.getUserRoles();
-        debugger
         if (roles.some(role => this.ALLOWED_ROLES.includes(role))) {
           this.router.navigate(['/common-post-login']);
         } else if (roles.some(role => role === 'ROLE_ADMIN')) {

@@ -1,4 +1,6 @@
 import { Component, Renderer2 } from '@angular/core';
+import { Observable } from 'rxjs';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
     selector: 'app-topbar',
@@ -9,11 +11,16 @@ import { Component, Renderer2 } from '@angular/core';
 export class TopbarComponent {
  emblemImg : string = 'assets/images/emblem.png';
 
- isLoggedIn: boolean = false;
+ isLoggedIn$: Observable<boolean>;
 private currentSize = 14;
   private intervalId: any;
 
-  constructor(private renderer: Renderer2) {}
+  constructor(
+    private renderer: Renderer2,
+    private authService: AuthService
+  ) {
+    this.isLoggedIn$ = this.authService.getIsLoggedIn();
+  }
  
   private animateFontSize(targetSize: number): void {
     const step = targetSize > this.currentSize ? 1 : -1;
