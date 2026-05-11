@@ -14,14 +14,81 @@
                 <div class="d-flex align-items-stretch align-items-start dashboardTabs">
                     <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist"
                         aria-orientation="vertical">
-                        <button *ngFor="let item of menuItems; let i = index" [routerLink]="item.routerLink"
+                        <!-- <button *ngFor="let item of menuItems; let i = index" [routerLink]="item.routerLink"
                             class="nav-link" id="v-pills-{{ item.label | lowercase }}-tab" data-bs-toggle="pill"
                             type="button" role="tab" [attr.aria-controls]="'v-pills-' + (item.label | lowercase)"
                             [attr.aria-selected]="i === 0" [ngClass]="{ 'active': i === 0 }">
 
                             <img [src]="item.icon" /> {{ item.label | translate }} 
-                        </button>
+                        </button> -->
+
+                         <ng-container *ngFor="let m of menus">
+
+    <!-- PARENT LEVEL -->
+    <button
+      class="nav-link parent-link d-flex align-items-center"
+      type="button"
+      (click)="toggleMenu(m)"
+      [ngClass]="{ 'active-parent': activeParent?.id === m.id }">
+
+      <i class="{{ m.icon }} menu-icon"></i>
+      <span>{{ m.nameEn }}</span>
+
+      <i *ngIf="m.children?.length"
+         class="bi ms-auto"
+         [ngClass]="{
+           'bi-chevron-down': activeParent?.id === m.id,
+           'bi-chevron-right': activeParent?.id !== m.id
+         }"></i>
+    </button>
+
+    <!-- CHILD LEVEL -->
+    <div *ngIf="activeParent?.id === m.id && m.children?.length"
+         class="submenu-container">
+
+      <ng-container *ngFor="let child of m.children">
+
+        <!-- CHILD MENU BUTTON -->
+        <button
+          class="nav-link child-link d-flex align-items-center"
+          type="button"
+          (click)="toggleChild(child)"
+          [ngClass]="{ 'active-child': activeChild?.id === child.id }">
+
+          <i class="{{ child.icon }} child-icon"></i>
+          <span>{{ child.nameEn }}</span>
+
+          <i *ngIf="child.children?.length"
+             class="bi ms-auto"
+             [ngClass]="{
+               'bi-chevron-down': activeChild?.id === child.id,
+               'bi-chevron-right': activeChild?.id !== child.id
+             }"></i>
+        </button>
+
+        <!-- SUB-CHILD LEVEL -->
+        <div *ngIf="activeChild?.id === child.id && child.children?.length"
+             class="subchild-container">
+
+          <a
+            *ngFor="let sub of child.children"
+            class="nav-link subchild-link d-flex align-items-center"
+            [routerLink]="sub.route"
+            routerLinkActive="active-subchild">
+
+            <i class="{{ sub.icon }} subchild-icon"></i>
+            <span>{{ sub.nameEn }}</span>
+          </a>
+        </div>
+
+      </ng-container>
+
+    </div>
+
+  </ng-container>
                     </div>
+
+                    
 
                     <div class="cust-butns d-flex align-items-center">
                         <!-- Logout Button -->
@@ -39,8 +106,9 @@
                             
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" [routerLink]="['profile']">{{ 'MENU.PROFILE' | translate}}</a></li>
-                            </ul>
+                            </ul> 
                         </div>
+                        
                     </div>
 
                     <div class="tab-content tab-content-set " id="v-pills-tabContent">

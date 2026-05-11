@@ -37,23 +37,34 @@ roles: Role[] = [];
   ngOnInit(): void {
     this.loadInitialData();
   }
-
+ 
   /** Load roles and menus */
+   /** Load roles + menus */
   private loadInitialData(): void {
     this.isLoading = true;
-    forkJoin([this.roleService.getAllRoles(), this.menuService.getAllMenus()])
-      .subscribe({
-        next: ([roles, menus]) => {
-          this.roles = roles;
-          this.menus = menus;
-        },
-        error: err => console.error('Initialization Error: ', err),
-        complete: () => this.isLoading = false
-      });
+
+    forkJoin({
+      roles: this.roleService.getAllRoles(),          // MUST RETURN Role[]
+      menus: this.menuService.getAllMenus()           // MUST RETURN Menu[]
+    })
+    .subscribe({
+      next: ({ roles, menus }) => {
+        this.roles = roles ?? [];
+        this.menus = menus ?? [];
+      },
+      error: (err) => {
+        console.error("Initialization Error:", err);
+        this.isLoading = false;
+      },
+      complete: () => {
+        this.isLoading = false;
+      }
+    });
   }
 
   /** Load menus already assigned to selected role */
   onRoleChange(): void {
+    debugger;
     if (!this.selectedRoleId) {
       this.assignedMenuIds = [];
       this.selectedMenuIds = [];

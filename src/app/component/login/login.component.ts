@@ -8,6 +8,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { LanguageService } from '../../core/services/language.service';
 import { isPlatformBrowser } from '@angular/common';
 import { IdleTimeoutService } from '../../services/idle-timeout.service';
+import { MenuService } from '../../services/menu.service';
 declare var grecaptcha: any;
 
 @Component({
@@ -45,6 +46,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     private renderer: Renderer2,
     private idleTimeoutService: IdleTimeoutService,
     private fb: FormBuilder,
+    private menuService:MenuService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
@@ -112,7 +114,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     ).subscribe({
       next: () => {
         grecaptcha.reset();
-
+        this.menuService.loadMyMenus();
         const roles = this.authService.getUserRoles();
         debugger
         if (roles.some(role => this.ALLOWED_ROLES.includes(role))) {

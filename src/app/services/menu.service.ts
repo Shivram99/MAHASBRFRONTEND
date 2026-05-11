@@ -1,16 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, throwError } from 'rxjs';
 import { MstMenu } from '../model/mst-menu';
 import { environment } from '../../environments/environment.development';
 import { Menu } from '../interface/menu';
 import { ApiResponse } from '../interface/api-response';
+import { MenuDTO } from '../interface/menu-dto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MenuService {
-  
+   private menuSubject = new BehaviorSubject<MenuDTO[]>([]);
+  menus$ = this.menuSubject.asObservable();
    apiUrl: String = "";
     constructor(private http: HttpClient) {
       this.apiUrl = environment.apiUrl;
@@ -97,5 +99,10 @@ export class MenuService {
     return this.http.put<void>(`${this.apiUrl}/citizenSearch/menus/${id}/deactivate`, {}).pipe(
       catchError(err => throwError(() => err))
     );
+  }
+   loadMyMenus() {
+    return this.http.get<ApiResponse<MenuDTO[]>>(
+      `${this.apiUrl}/citizenSearch/menus/my`
+    ).subscribe(res => this.menuSubject.next(res.data));
   }
 }

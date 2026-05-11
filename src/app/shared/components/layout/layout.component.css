@@ -53,9 +53,28 @@ text-align: left;
 .content {
     position: relative;
 }
-
+.submenu-container button {
+    width: 100%;
+}
+.subchild-link {
+    color: #fff !important;
+    border: 1px solid #48a5ff;
+    margin-left: 20px;
+    margin-top: 1px;
+    margin-bottom: 5px;
+}
+.subchild-link:hover {
+background: #004056;
+}
+.submenu-container {
+    padding-left: 15px;
+}
 @media screen and (max-width:767px){
     .bglightblue {
     padding: 0;
 }
 }
+
+
+
+

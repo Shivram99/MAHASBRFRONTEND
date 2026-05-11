@@ -27,6 +27,7 @@ import { NICDivisionListComponent } from './components/nic/nicdivision-list/nicd
 import { PaginationComponent } from '../shared/components/pagination/pagination.component';
 import { NICGroupListComponent } from './components/nic/nicgroup-list/nicgroup-list.component';
 import { NICClassListComponent } from './components/nic/nicclass-list/nicclass-list.component';
+import { RoleListComponent } from './components/role-list/role-list.component';
 
 
 @NgModule({
@@ -52,6 +53,7 @@ import { NICClassListComponent } from './components/nic/nicclass-list/nicclass-l
     NICDivisionListComponent,
     NICGroupListComponent,
     NICClassListComponent,
+    RoleListComponent,
   
   ],
   imports: [

@@ -20,6 +20,7 @@ import { NICCategoryListComponent } from './components/nic/niccategory-list/nicc
 import { NICDivisionListComponent } from './components/nic/nicdivision-list/nicdivision-list.component';
 import { NICGroupListComponent } from './components/nic/nicgroup-list/nicgroup-list.component';
 import { NICClassListComponent } from './components/nic/nicclass-list/nicclass-list.component';
+import { RoleListComponent } from './components/role-list/role-list.component';
 
 const routes: Routes = [{
   path: '', component: LayoutComponent, children: [
@@ -49,6 +50,8 @@ const routes: Routes = [{
   { path: 'division-list', component: NICDivisionListComponent },
   { path: 'group-list', component: NICGroupListComponent },
   { path: 'class-list', component: NICClassListComponent },
+
+  { path: 'role-list', component: RoleListComponent },
 
   
   ]

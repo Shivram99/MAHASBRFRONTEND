@@ -9,11 +9,9 @@ import { Router } from '@angular/router';
   templateUrl: './menus-list.component.html',
   styleUrl: './menus-list.component.css'
 })
-export class MenusListComponent  implements OnInit {
+export class MenusListComponent implements OnInit {
 
-  
   menus: Menu[] = [];
-  flatMenus: Menu[] = [];
   filteredMenus: Menu[] = [];
   searchText = '';
 
@@ -26,60 +24,71 @@ export class MenusListComponent  implements OnInit {
     this.loadMenus();
   }
 
-  /** Load all menus from API */
+  /** Load menus from API */
   loadMenus(): void {
     this.menuService.getAllMenus().subscribe({
       next: (data: Menu[]) => {
-        // Ensure children exist recursively
-        this.menus = data.map(m => this.ensureChildren(m));
-        this.flatMenus = this.flattenMenus(this.menus);
-        this.filteredMenus = [...this.flatMenus];
+        // Use backend tree directly — no custom recursion!
+        this.menus = JSON.parse(JSON.stringify(data)); 
+        this.filteredMenus = JSON.parse(JSON.stringify(data));
       },
       error: (err) => console.error('Failed to load menus', err)
     });
   }
 
-  /** Ensure children always exist */
-  private ensureChildren(menu: Menu): Menu {
-    return {
-      ...menu,
-      children: (menu.children ?? []).map(c => this.ensureChildren(c))
-    };
-  }
-
-  /** Convert nested tree → flat list with level indent */
-  private flattenMenus(menus: Menu[], level: number = 0): Menu[] {
-    let flat: Menu[] = [];
-
-    for (const m of menus) {
-      flat.push({
-        ...m,
-        displayNameEn: `${'— '.repeat(level)}${m.nameEn}`,
-        displayNameMr: `${'— '.repeat(level)}${m.nameMr}`
-      });
-
-      if (m.children?.length) {
-        flat = flat.concat(this.flattenMenus(m.children, level + 1));
-      }
-    }
-
-    return flat;
-  }
-
-  /** Search menus (all levels) */
+  /** Search nested menu structure */
   search(): void {
-    const query = this.searchText.toLowerCase().trim();
+    const q = this.searchText.toLowerCase().trim();
 
-    if (!query) {
-      this.filteredMenus = [...this.flatMenus];
+    if (!q) {
+      this.filteredMenus = JSON.parse(JSON.stringify(this.menus));
       return;
     }
 
-    this.filteredMenus = this.flatMenus.filter(m =>
-      m.nameEn.toLowerCase().includes(query) ||
-      m.nameMr.toLowerCase().includes(query)
-    );
+    this.filteredMenus = this.filterNested(this.menus, q);
   }
+
+  /** Recursively filter menu tree */
+  expandedMap = new Map<number, boolean>();
+
+  private filterNested(menus: Menu[], query: string): Menu[] {
+  const q = query.toLowerCase().trim();
+  const result: Menu[] = [];
+
+  for (const m of menus) {
+    const matches =
+      m.nameEn?.toLowerCase().includes(q) ||
+      m.nameMr?.toLowerCase().includes(q);
+
+    const filteredChildren = m.children?.length
+      ? this.filterNested(m.children, q)
+      : [];
+
+    if (matches || filteredChildren.length > 0) {
+
+      // ⭐ auto expand parents in UI map
+      if (filteredChildren.length > 0 || matches) {
+        this.expandedMap.set(m.id, true);
+      }
+
+      result.push({
+        ...m,
+        children: filteredChildren
+      });
+    }
+  }
+
+  return result;
+}
+toggle(menu: Menu): void {
+  const current = this.expandedMap.get(menu.id) ?? false;
+  this.expandedMap.set(menu.id, !current);
+}
+
+isExpanded(menu: Menu): boolean {
+  return this.expandedMap.get(menu.id) ?? false;
+}
+
 
   /** Edit menu */
   edit(id: number): void {
