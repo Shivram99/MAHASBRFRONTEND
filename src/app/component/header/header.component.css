@@ -1,8 +1,9 @@
-.logoSection{
-    background: rgb(255,255,255);
-background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(215,230,245,1) 100%);
+.logoSection {
+    background: rgb(255, 255, 255);
+    background: linear-gradient(0deg, rgba(255, 255, 255, 1) 0%, rgba(215, 230, 245, 1) 100%);
 }
-.logo h1{
+
+.logo h1 {
     font-weight: 800;
     font-size: 1.6rem;
     text-transform: uppercase;
@@ -20,6 +21,7 @@ background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(215,230,245,1) 10
     font-weight: 400;
     display: block;
     text-transform: capitalize;
+    white-space: nowrap;
 }
 
 h1 {
@@ -29,9 +31,9 @@ h1 {
 .logo img {
     height: 50px;
 }
- @media screen and (max-width:767px){
-    .logo h1{
-        width: auto;
-}
-}
 
+@media screen and (max-width:767px) {
+    .logo h1 {
+        width: auto;
+    }
+}
