@@ -67,6 +67,10 @@ export class SearchBrnComponent implements OnInit {
     return this.filterOptions(this.talukas, this.talukaSearchTerm, (taluka) => taluka.talukaName);
   }
 
+  get isTalukaControlDisabled(): boolean {
+    return this.talukaControl?.disabled ?? true;
+  }
+
   get showDistrictRequiredError(): boolean {
     return this.isControlInvalid('districtId', 'required');
   }
