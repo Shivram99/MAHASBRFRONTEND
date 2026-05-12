@@ -4,8 +4,24 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; font-family: 'Noto Sans Devanagari', sans-serif;}
+html,
+body {
+    height: 100%;
+}
+
+body {
+    --app-font-family: "Times New Roman", Times, serif;
+    margin: 0;
+    font-family: var(--app-font-family);
+}
+
+body.lang-en {
+    --app-font-family: "Times New Roman", Times, serif;
+}
+
+body.lang-mr {
+    --app-font-family: "DVOT SurekhMR", "Noto Sans Devanagari", serif;
+}
 .table-striped > tbody > tr:nth-of-type(odd) > * {
     background: #D4EBFF;
 }
