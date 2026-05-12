@@ -61,16 +61,21 @@ placeholder:string='';
   ngOnInit(): void {
     this.loadRegistryDetails(this.currentPage, this.pageSize, this.sortBy);
     this.fetchDistricts();
-    debugger;
-    this.userRole=this.authService.getUserRoles();
+    this.userRole = this.authService.getUserRoles();
   }
 
   fetchDistricts(): void {
-    this.dataService.getAllDistrictsForLoginUser().subscribe((districts1) => {
-      this.districts = districts1.map((district) => ({
-        id: district.censusDistrictCode, // Assuming `censusDistrictCode` is the ID
-        name: district.districtName, // Assuming `districtName` is the name
-      }));
+    this.dataService.getAllDistrictsForLoginUser().subscribe({
+      next: (districts1) => {
+        this.districts = districts1.map((district) => ({
+          id: district.censusDistrictCode,
+          name: district.districtName,
+        }));
+      },
+      error: (error) => {
+        this.districts = [];
+        console.error('Failed to load login user districts', error);
+      }
     });
   }
   //Call on chage the district
@@ -184,18 +189,21 @@ private fetchData(): void {
   }
 
   fetchTalukas(selectedValue: any): void {
-    this.dataService.getAllTaluka(selectedValue).subscribe((talukas1) => {
-      debugger;
-      this.talukas = talukas1.map((talukas) => ({
-        id: talukas.censusTalukaCode,
-        name: talukas.talukaName,
-      }));
-      
+    this.dataService.getAllTaluka(selectedValue).subscribe({
+      next: (talukas1) => {
+        this.talukas = talukas1.map((talukas) => ({
+          id: talukas.censusTalukaCode,
+          name: talukas.talukaName,
+        }));
+      },
+      error: (error) => {
+        this.talukas = [];
+        console.error('Failed to load talukas', error);
+      }
     });
   }
 
   postLoginDashboardData(page: number, size: number, sortBy: string){
-    debugger
   this.fileUploadService.postLoginDashboardData(page, size, sortBy,this.selectedDistrictIds,this.selectedTalukaIds,this.filters).subscribe(
     (response: PaginatedResponse<MstRegistryDetailsPage>) => {
       // Expecting an array of MstRegistryDetailsPage
