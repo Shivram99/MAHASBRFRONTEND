@@ -27,17 +27,6 @@ export class LoginComponent implements OnInit, AfterViewInit {
   currentLanguage: string = "en";
   passwordVisible = false;
 
-  readonly ALLOWED_ROLES = [
-    "ROLE_USER",
-    "ROLE_MODERATOR",
-    "ROLE_DEVELOPER",
-    "ROLE_DES_STATE",
-    "ROLE_DES_REGION",
-    "ROLE_DES_DISTRICT",
-    "ROLE_REG_AUTH_API",
-    "ROLE_REG_AUTH_CSV"
-  ];
-
   constructor(
     private authService: AuthService,
     private appService: LoginService,
@@ -112,12 +101,11 @@ export class LoginComponent implements OnInit, AfterViewInit {
       next: () => {
         grecaptcha.reset();
         this.menuService.loadMyMenus();
-        const roles = this.authService.getUserRoles();
-        if (roles.some(role => this.ALLOWED_ROLES.includes(role))) {
-          this.router.navigate(['/common-post-login']);
-        } else if (roles.some(role => role === 'ROLE_ADMIN')) {
-          this.router.navigate(['/common-post-login/profile']);
-        }else {
+        const homeRoute = this.authService.getDefaultHomeRoute();
+
+        if (homeRoute) {
+          this.router.navigateByUrl(homeRoute);
+        } else {
           this.router.navigate(['/unauthorized']);
         }
         this.idleTimeoutService.reset();

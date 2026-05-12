@@ -3,6 +3,8 @@ import { LanguageService } from '../../core/services/language.service';
 import { VisitTrackerService } from '../../services/sitevisitor/visit-tracker.service';
 import { VisitSummary } from '../../interface/visit-summary';
 import { isPlatformBrowser } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-homepage',
@@ -13,11 +15,26 @@ import { isPlatformBrowser } from '@angular/common';
 export class HomepageComponent  implements OnInit{
    private isBrowser: boolean;
 summary: VisitSummary = { totalVisits: 0, todayVisits: 0 };
-  constructor(private languageService: LanguageService,private visitService: VisitTrackerService, @Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(
+    private languageService: LanguageService,
+    private visitService: VisitTrackerService,
+    private authService: AuthService,
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
    }
 
   ngOnInit(): void {
+    if (this.isBrowser && this.authService.isAuthenticated()) {
+      const homeRoute = this.authService.getDefaultHomeRoute();
+
+      if (homeRoute && homeRoute !== '/') {
+        this.router.navigateByUrl(homeRoute);
+        return;
+      }
+    }
+
     // Subscribe to language changes
     this.languageService.getLanguageObservable().subscribe(language => {
       // Update homepage content based on the new language

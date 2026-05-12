@@ -15,6 +15,17 @@ import { User } from '../interface/user';
 })
 export class AuthService {
   private helper = new JwtHelperService();
+  private readonly roleHomeRoutes: Array<{ role: string; route: string }> = [
+    { role: 'ROLE_DEVELOPER', route: '/developer/developerDashboard' },
+    { role: 'ROLE_MODERATOR', route: '/admin/dashboardadmin' },
+    { role: 'ROLE_ADMIN', route: '/common-post-login/detailsPage' },
+    { role: 'ROLE_DES_STATE', route: '/common-post-login/detailsPage' },
+    { role: 'ROLE_DES_REGION', route: '/common-post-login/detailsPage' },
+    { role: 'ROLE_DES_DISTRICT', route: '/common-post-login/detailsPage' },
+    { role: 'ROLE_REG_AUTH_API', route: '/common-post-login/detailsPage' },
+    { role: 'ROLE_REG_AUTH_CSV', route: '/common-post-login/detailsPage' },
+    { role: 'ROLE_USER', route: '/dashboard' }
+  ];
 
   private isLoggedInSubject = new BehaviorSubject<boolean>(false);
   private rolesSubject = new BehaviorSubject<string[]>([]);
@@ -184,6 +195,11 @@ export class AuthService {
 
   getUserRoles(): string[] {
     return this.rolesSubject.value;
+  }
+
+  getDefaultHomeRoute(roles: string[] = this.getUserRoles()): string | null {
+    const matchedRoute = this.roleHomeRoutes.find(({ role }) => roles.includes(role));
+    return matchedRoute?.route ?? null;
   }
 
   // 🔹 Error Handling
