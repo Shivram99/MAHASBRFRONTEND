@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, map, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, throwError } from 'rxjs';
 import { MstMenu } from '../model/mst-menu';
 import { environment } from '../../environments/environment.development';
 import { Menu } from '../interface/menu';
 import { ApiResponse } from '../interface/api-response';
 import { MenuDTO } from '../interface/menu-dto';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class MenuService {
    private menuSubject = new BehaviorSubject<MenuDTO[]>([]);
   menus$ = this.menuSubject.asObservable();
    apiUrl: String = "";
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private authService: AuthService) {
       this.apiUrl = environment.apiUrl;
     }
   
@@ -100,9 +101,20 @@ export class MenuService {
       catchError(err => throwError(() => err))
     );
   }
-   loadMyMenus() {
-    return this.http.get<ApiResponse<MenuDTO[]>>(
+   loadMyMenus(): void {
+    if (!this.authService.isAuthenticated()) {
+      this.menuSubject.next([]);
+      return;
+    }
+
+    this.http.get<ApiResponse<MenuDTO[]>>(
       `${this.apiUrl}/citizenSearch/menus/my`
-    ).subscribe(res => this.menuSubject.next(res.data));
+    ).pipe(
+      map((res) => res.data ?? []),
+      catchError((error) => {
+        this.menuSubject.next([]);
+        return of([]);
+      })
+    ).subscribe((menus) => this.menuSubject.next(menus));
   }
 }
