@@ -47,6 +47,7 @@ import { RegionBRNDetailsComponent } from './component/region-brndetails/region-
 import { DistrictBRNDetailsComponent } from './component/district-brndetails/district-brndetails.component';
 import { CapitalizePipe } from './pipes/capitalize.pipe';
 import { LanguageSwitcherComponent } from './shared/components/language-switcher/language-switcher.component';
+import { SharedModule } from './shared/shared.module';
 import { GlobalErrorHandler } from './core/handlers/global-error.handler';
 import { RequestFormComponent } from './component/request-form/request-form.component';
 
@@ -99,6 +100,7 @@ import { RequestFormComponent } from './component/request-form/request-form.comp
         AppRoutingModule,
         ReactiveFormsModule,
         FormsModule,
+        SharedModule,
         NgIdleModule.forRoot(), // Initialize NgIdleModule
         NgIdleKeepaliveModule.forRoot(),
         TranslateModule.forRoot({

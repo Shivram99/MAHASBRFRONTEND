@@ -43,3 +43,7 @@ font-weight: 500;
     border-bottom: 1px solid #efefef;
     padding-bottom: 5px;
 }
+
+.btn i {
+    margin-right: 4px;
+}

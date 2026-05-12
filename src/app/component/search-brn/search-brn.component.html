@@ -4,7 +4,6 @@
       <div class="d-md-flex justify-content-between border-b-org p-3">
         <h1>{{'search-brn.search-BRN' | translate}}</h1>
         <nav aria-label="breadcrumb">
-
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{'search-brn.search-BRN' | translate}}</li>
@@ -13,70 +12,104 @@
       </div>
       <div class="p-3">
         <form [formGroup]="searchBrnFilter" (ngSubmit)="onSubmit()">
-          <div class="form row px-3 mt-3 ">
-            <p class="col-md-12">
+          <div class="form row px-3 mt-3 align-items-start">
+            <p class="col-12">
               {{'search-brn.instruction' | translate }}
             </p>
 
-            <div class="col-md-3">
+            <div class="col-lg-2 col-md-6">
               <div class="form-group">
-                <label> {{'search-brn.district' | translate }} </label>
-                <select class="form-select" formControlName="district">
-                  <option [value]="-1">--Select--</option>
-                  <option *ngFor="let district of districts" [value]="district.censusDistrictCode">
+                <label>
+                  {{'search-brn.district' | translate }}
+                  <span class="required-mark" aria-hidden="true">*</span>
+                </label>
+                <input
+                  type="text"
+                  class="form-control dropdown-search"
+                  [(ngModel)]="districtSearchTerm"
+                  [ngModelOptions]="{ standalone: true }"
+                  placeholder="{{'search-brn.search-district-placeholder' | translate}}"
+                />
+                <select class="form-select" formControlName="districtId">
+                  <option [ngValue]="null">{{'search-brn.select-placeholder' | translate}}</option>
+                  <option *ngFor="let district of filteredDistricts" [ngValue]="district.censusDistrictCode">
                     {{ district.districtName | capitalize }}
                   </option>
                 </select>
-                <div *ngIf="searchBrnFilter.get('district')?.hasError('forbiddenValue')">
-                  Invalid value selected.
+                <div *ngIf="showDistrictRequiredError" class="field-error">
+                  {{'search-brn.district-required' | translate}}
                 </div>
               </div>
             </div>
-            <div class="col-md-4">
+
+            <div class="col-lg-2 col-md-6">
+              <div class="form-group">
+                <label>{{'search-brn.taluka' | translate }}</label>
+                <input
+                  type="text"
+                  class="form-control dropdown-search"
+                  [(ngModel)]="talukaSearchTerm"
+                  [ngModelOptions]="{ standalone: true }"
+                  [disabled]="talukaControl?.disabled"
+                  placeholder="{{'search-brn.search-taluka-placeholder' | translate}}"
+                />
+                <select class="form-select" formControlName="talukaId">
+                  <option [ngValue]="null">{{'search-brn.select-placeholder' | translate}}</option>
+                  <option *ngFor="let taluka of filteredTalukas" [ngValue]="taluka.censusTalukaCode">
+                    {{ taluka.talukaName | capitalize }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
               <div class="form-group">
                 <label>{{'search-brn.establishment-name' | translate }} </label>
-                <textarea class="form-control" formControlName="nameOfEstablishmentOrOwner"></textarea>
-
-                <div *ngIf="searchBrnFilter.hasError('atLeastOneRequired')">
-                 {{'search-brn.establishment-name-instruction' | translate }}
+                <input type="text" class="form-control" formControlName="establishmentName" />
+                <div *ngIf="showEstablishmentOrBrnError" class="field-error">
+                  {{'search-brn.establishment-or-brn-required' | translate }}
                 </div>
               </div>
             </div>
-            <div class="col-md-3">
+
+            <div class="col-lg-3 col-md-6">
               <div class="form-group">
                 <label> {{'search-brn.brn' | translate }} </label>
-                <input type="text" class="form-control" id="brnNo" formControlName="brnNo"
-                  placeholder="{{'search-brn.brn-placeholder' | translate}}" />
-                <div
-                  *ngIf="searchBrnFilter.get('brnNo')?.invalid && (searchBrnFilter.get('brnNo')?.dirty || searchBrnFilter.get('brnNo')?.touched)">
-                  <div *ngIf="searchBrnFilter.get('brnNo')?.errors?.['pattern']"> {{'search-brn.brn-instruction' | translate}}</div>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="brn"
+                  formControlName="brn"
+                  inputmode="numeric"
+                  autocomplete="off"
+                  maxlength="16"
+                  placeholder="{{'search-brn.brn-placeholder' | translate}}"
+                />
+                <div *ngIf="showBrnPatternError" class="field-error">
+                  {{'search-brn.brn-instruction' | translate}}
                 </div>
-                <div *ngIf="searchBrnFilter.hasError('atLeastOneRequired')">
-                  {{'search-brn.establishment-name-instruction' | translate }}
-                </div>
-                <div
-                  *ngIf="searchBrnFilter.get('brnNo')?.hasError('minlength') || searchBrnFilter.get('brnNo')?.hasError('maxlength')">
+                <div *ngIf="showBrnLengthError" class="field-error">
                   {{'search-brn.brn-instruction1' | translate}}
                 </div>
-              </div>
-            </div>
-            <div class="col-md-2">
-              <div class="form-group">
-                <label> </label>
-                <div class="d-md-flex">
-                  <button type="submit" [disabled]="searchBrnFilter.invalid" class="btn btn-primary ms-2 w-75">Search <i
-                      class="bi bi-search"></i> </button>
+                <div *ngIf="showEstablishmentOrBrnError" class="field-error">
+                  {{'search-brn.establishment-or-brn-required' | translate }}
                 </div>
               </div>
-
-
             </div>
 
+            <div class="col-lg-2 col-md-6 search-action">
+              <div class="form-group action-group">
+                <label class="action-label">&nbsp;</label>
+                <div class="d-grid">
+                  <button type="submit" class="btn btn-primary">
+                    Search <i class="bi bi-search"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </form>
-        <div *ngIf="registryDetails.length > 0">
 
-        </div>
         <div class="table-responsive mt-5">
           <div *ngIf="registryDetails.length > 0; else noData">
             <table class="table table-bordered table-striped">
@@ -90,24 +123,31 @@
               </thead>
               <tbody>
                 <tr *ngFor="let detail of registryDetails; let i = index">
-                  <td>{{ i + 1 }}</td>
+                  <td>{{ ((currentPage - 1) * pageSize) + i + 1 }}</td>
                   <td>{{ detail.brnNo }}</td>
                   <td>{{ detail.nameOfEstablishmentOrOwner | capitalize }}</td>
-
                   <td>{{ detail.taluka | capitalize }}</td>
                   <td>{{ detail.district | capitalize }}</td>
                   <td>{{ detail.sector | capitalize }}</td>
                 </tr>
               </tbody>
             </table>
+
+            <div class="mt-3" *ngIf="totalElements > pageSize">
+              <app-pagination
+                [totalItems]="totalElements"
+                [pageSize]="pageSize"
+                [currentPage]="currentPage"
+                (pageChanged)="onPageChanged($event)">
+              </app-pagination>
+            </div>
           </div>
           <ng-template #noData>
             <div *ngIf="showNoDataAlert" class="alert alert-warning mt-3" role="alert">
-            No data available!
+              No data available!
             </div>
           </ng-template>
         </div>
-
       </div>
     </div>
   </div>

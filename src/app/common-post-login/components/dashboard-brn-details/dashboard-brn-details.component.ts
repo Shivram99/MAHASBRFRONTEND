@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MstRegistryDetailsPage } from '../../../model/mst-registry-details-page';
 import { DashboardDetailsService } from '../../../services/dashboard-details.service';
 import { PaginatedResponse } from '../../../interface/paginated-response';
 import jsPDF from 'jspdf';
 import * as XLSX from 'xlsx-js-style';
 import autoTable, { RowInput } from 'jspdf-autotable';
-import { formatDate } from '@angular/common';
+import { formatDate, Location } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard-brn-details',
@@ -18,7 +18,12 @@ export class DashboardBrnDetailsComponent implements OnInit {
   brn: any;
   mstRegistryDetailsPage!: MstRegistryDetailsPage;
 
-  constructor(private route: ActivatedRoute, private dashboardDetailsService: DashboardDetailsService) { }
+  constructor(
+    private readonly route: ActivatedRoute,
+    private readonly dashboardDetailsService: DashboardDetailsService,
+    private readonly location: Location,
+    private readonly router: Router
+  ) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
@@ -38,6 +43,15 @@ export class DashboardBrnDetailsComponent implements OnInit {
         console.error('Error fetching BRN details:', error);
       }
     );
+  }
+
+  goBack(): void {
+    if (window.history.length > 1) {
+      this.location.back();
+      return;
+    }
+
+    this.router.navigate(['/common-post-login']);
   }
 
   /**

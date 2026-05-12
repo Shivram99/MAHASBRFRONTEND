@@ -13,3 +13,37 @@ table i {
 td.first {
     width: 30px;
 }
+
+.required-mark {
+    color: #dc3545;
+}
+
+.field-error {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.35rem;
+}
+
+.dropdown-search {
+    margin-bottom: 0.5rem;
+}
+
+.dropdown-search:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
+.search-action .action-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.search-action .action-label {
+    margin-bottom: 10px;
+}
+
+@media (max-width: 991.98px) {
+    .search-action .action-label {
+        display: none;
+    }
+}

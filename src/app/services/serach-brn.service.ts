@@ -5,6 +5,10 @@ import { environment } from '../../environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 import { District } from '../interface/district';
+import { Page } from '../interface/page';
+import { SearchBrnRequest } from '../interface/search-brn-request';
+import { Talukas } from '../interface/talukas';
+import { MstRegistryDetailsPage } from '../model/mst-registry-details-page';
 import { RegistryResponse } from '../model/registry-response';
 import { Division } from '../model/division';
 import { CitizenDashboarFilter } from '../interface/citizen-dashboar-filter';
@@ -19,11 +23,21 @@ export class SerachBrnService {
     this.apiUrl = environment.apiUrl;
   }
 
-  submitForm(data: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/citizenSearch/searchBRN`, data);
+  submitForm(payload: SearchBrnRequest, page: number, size: number, sortBy: string): Observable<Page<MstRegistryDetailsPage>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sortBy', sortBy);
+
+    return this.http.post<Page<MstRegistryDetailsPage>>(`${this.apiUrl}/citizenSearch/searchBRN`, payload, { params });
   }
+
   getAllDistricts(): Observable<District[]> {
     return this.http.get<District[]>(`${this.apiUrl}/citizenSearch/districts`);
+  }
+
+  getTalukasByDistrict(districtId: number): Observable<Talukas[]> {
+    return this.http.get<Talukas[]>(`${this.apiUrl}/citizenSearch/api/talukas/by-district/${districtId}`);
   }
 
   getAllRegistry(): Observable<RegistryResponse[]> {
