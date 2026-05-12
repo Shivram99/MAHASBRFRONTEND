@@ -43,3 +43,27 @@ button i {
 .profileDetails span {
     color: #000;
 }
+
+.aboutus-section {
+    margin-top: 1.5rem;
+}
+
+.aboutus-section-title {
+    color: #2676C3;
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.aboutus-list {
+    margin-bottom: 0;
+    padding-left: 1.25rem;
+}
+
+.aboutus-list li {
+    margin-bottom: 0.5rem;
+}
+
+.aboutus-list li:last-child {
+    margin-bottom: 0;
+}
