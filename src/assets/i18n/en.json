@@ -219,10 +219,18 @@
 
     "submit": "Submit Request",
     "submitting": "Submitting...",
+    "error_msg": "Something went wrong. Try again later.",
 
     "preview_title": "Preview Your Details",
     "edit": "Edit",
     "confirm_submit": "Confirm Submit"
+  },
+  "ReqFormList": {
+    "title": "Request Form Records",
+    "request_id": "Request ID",
+    "actions": "Actions",
+    "edit": "Edit",
+    "delete": "Delete"
   },
   "Circular": {
     "title": "Circular",

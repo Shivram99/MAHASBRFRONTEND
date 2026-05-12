@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { SerachBrnService } from '../../services/serach-brn.service';
 import { RequestFormDTO } from '../../interface/request-form-dto';
 
@@ -19,7 +20,11 @@ export class RequestFormComponent implements OnInit {
 
   districts: any[]=[] ;
 
-  constructor(private fb: FormBuilder,private dataService: SerachBrnService) {
+  constructor(
+    private fb: FormBuilder,
+    private dataService: SerachBrnService,
+    private translate: TranslateService
+  ) {
     this.fetchDistricts();
   }
 
@@ -134,7 +139,7 @@ export class RequestFormComponent implements OnInit {
 
     error: () => {
       this.submitting = false;
-      alert("Something went wrong. Try again later.");
+      alert(this.translate.instant('ReqForm.error_msg'));
     }
   });
 }
