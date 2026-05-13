@@ -1,19 +1,19 @@
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { LanguageService } from '../../core/services/language.service'; 
+import { LanguageService } from '../../core/services/language.service';
 import { VisitTrackerService } from '../../services/sitevisitor/visit-tracker.service';
 import { VisitSummary } from '../../interface/visit-summary';
 import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-    selector: 'app-homepage',
-    templateUrl: './homepage.component.html',
-    styleUrl: './homepage.component.css',
-    standalone: false
+  selector: 'app-homepage',
+  templateUrl: './homepage.component.html',
+  styleUrl: './homepage.component.css',
+  standalone: false
 })
-export class HomepageComponent  implements OnInit{
-   private isBrowser: boolean;
-summary: VisitSummary = { totalVisits: 0, todayVisits: 0 };
+export class HomepageComponent implements OnInit {
+  private isBrowser: boolean;
+  summary: VisitSummary = { totalVisits: 0, todayVisits: 0 };
   constructor(
     private languageService: LanguageService,
     private visitService: VisitTrackerService,
@@ -21,7 +21,7 @@ summary: VisitSummary = { totalVisits: 0, todayVisits: 0 };
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
-   }
+  }
 
   ngOnInit(): void {
     if (this.isBrowser && this.authService.isAuthenticated()) {
@@ -33,7 +33,7 @@ summary: VisitSummary = { totalVisits: 0, todayVisits: 0 };
     this.languageService.getLanguageObservable().subscribe(language => {
       // Update homepage content based on the new language
     });
-  if (!this.visitService.hasVisited()) {
+    if (!this.visitService.hasVisited()) {
       this.visitService.recordVisit().subscribe({
         next: () => {
           this.visitService.markVisited();
@@ -49,7 +49,7 @@ summary: VisitSummary = { totalVisits: 0, todayVisits: 0 };
     }
   }
 
-   private loadSummary(): void {
+  private loadSummary(): void {
     this.visitService.getVisitSummary().subscribe({
       next: (data) => {
         this.summary = data;
@@ -63,8 +63,16 @@ summary: VisitSummary = { totalVisits: 0, todayVisits: 0 };
   images2 = [
     'assets/images/slide/img.png',
     'assets/images/slide/img2.png',
-    'assets/images/slide/img3.png'
+    'assets/images/slide/img3.png',
+    'assets/images/slide/banner_1.png',
+    'assets/images/slide/banner_2.png',
+    'assets/images/slide/banner_3.png',
+    'assets/images/slide/banner_4.png',
+    'assets/images/slide/banner_5.png',
+    'assets/images/slide/banner_6.png',
+    'assets/images/slide/banner_7.png',
+    'assets/images/slide/banner_8.png'
   ];
-  
+
 }
-  
+
