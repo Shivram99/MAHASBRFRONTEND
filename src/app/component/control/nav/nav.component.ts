@@ -20,29 +20,29 @@ export class NavComponent {
     class: string;
     roles: string[];
   }[] = [
-    { label: 'HOME', url: '/', routerLink: '/', class: '', roles: ['ROLE_USER'] },
-    { label: 'ABOUT_US', url: null, routerLink: '/aboutus', class: '', roles: ['ROLE_USER'] },
-    { label: 'SEARCH_BRN', url: null, routerLink: '/search-brn', class: '', roles: ['ROLE_USER'] },
-    { label: 'DASHBOARD', url: null, routerLink: '/dashboard', class: '', roles: ['ROLE_USER'] },
-    { label: 'FAQ', url: null, routerLink: '/faq', class: '', roles: ['ROLE_USER'] },
-    { label: 'CIRCULAR', url: null, routerLink: '/circular', class: '', roles: ['ROLE_USER'] },
-    { label: 'Contact_Us', url: null, routerLink: '/contactus', class: '', roles: ['ROLE_USER'] },
-    { label: 'ReqForm.title', url: null, routerLink: '/requestForm', class: '', roles: ['ROLE_USER'] },
-    {
-      label: 'MENU.DASHBOARD',
-      url: null,
-      routerLink: '/common-post-login/detailsPage',
-      class: '',
-      roles: ['ROLE_ADMIN', 'ROLE_DES_STATE', 'ROLE_REG_AUTH_API', 'ROLE_REG_AUTH_CSV', 'ROLE_DES_REGION', 'ROLE_DES_DISTRICT']
-    },
-    {
-      label: 'CHANGE_PASSWORD',
-      url: null,
-      routerLink: '/common-post-login/changePassword',
-      class: '',
-      roles: ['ROLE_ADMIN', 'ROLE_DES_STATE', 'ROLE_DES_REGION', 'ROLE_DES_DISTRICT', 'ROLE_REG_AUTH_API', 'ROLE_REG_AUTH_CSV']
-    }
-  ];
+      { label: 'HOME', url: '/', routerLink: '/', class: '', roles: ['ROLE_USER'] },
+      { label: 'ABOUT_US', url: null, routerLink: '/aboutus', class: '', roles: ['ROLE_USER'] },
+      { label: 'SEARCH_BRN', url: null, routerLink: '/search-brn', class: '', roles: ['ROLE_USER'] },
+      { label: 'DASHBOARD', url: null, routerLink: '/dashboard', class: '', roles: ['ROLE_USER'] },
+      { label: 'FAQ', url: null, routerLink: '/faq', class: '', roles: ['ROLE_USER'] },
+      { label: 'CIRCULAR', url: null, routerLink: '/circular', class: '', roles: ['ROLE_USER'] },
+      { label: 'Contact_Us', url: null, routerLink: '/contactus', class: '', roles: ['ROLE_USER'] },
+      { label: 'ReqForm.title', url: null, routerLink: '/requestForm', class: '', roles: ['ROLE_USER'] },
+      {
+        label: 'MENU.DASHBOARD',
+        url: null,
+        routerLink: '/common-post-login/detailsPage',
+        class: '',
+        roles: ['ROLE_DES_STATE', 'ROLE_REG_AUTH_API', 'ROLE_REG_AUTH_CSV', 'ROLE_DES_REGION', 'ROLE_DES_DISTRICT']
+      },
+      {
+        label: 'CHANGE_PASSWORD',
+        url: null,
+        routerLink: '/common-post-login/changePassword',
+        class: '',
+        roles: ['ROLE_ADMIN', 'ROLE_DES_STATE', 'ROLE_DES_REGION', 'ROLE_DES_DISTRICT', 'ROLE_REG_AUTH_API', 'ROLE_REG_AUTH_CSV']
+      }
+    ];
 
   filteredNavLinks: {
     label: string;
@@ -52,7 +52,7 @@ export class NavComponent {
     roles: string[];
   }[] = [];
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
     this.isLoggedIn$ = this.authService.getIsLoggedIn();
@@ -74,12 +74,31 @@ export class NavComponent {
     this.filteredNavLinks = this.navLinks
       .filter((link) =>
         (link.label === 'Logout' ? includeLogout : true)
-        && (link.roles.length === 0 || link.roles.some((role) => userRoles.includes(role)))
+        && this.shouldShowLink(link, userRoles)
       )
       .map((link) => link.label === 'HOME' && defaultHomeRoute
         ? { ...link, routerLink: defaultHomeRoute, url: null }
         : link
       );
+  }
+
+  private shouldShowLink(
+    link: { label: string; roles: string[]; routerLink: string | null },
+    userRoles: string[]
+  ): boolean {
+    const roleAllowed = link.roles.length === 0 || link.roles.some((role) => userRoles.includes(role));
+
+    if (!roleAllowed) {
+      return false;
+    }
+
+    // Admin users should not see the common post-login dashboard entry
+    // in the horizontal menu when that dashboard is not part of their flow.
+    if (link.label === 'MENU.DASHBOARD' && userRoles.includes('ROLE_ADMIN')) {
+      return false;
+    }
+
+    return true;
   }
 
   logout() {

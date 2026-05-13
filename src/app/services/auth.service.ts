@@ -19,7 +19,7 @@ export class AuthService {
   private readonly roleHomeRoutes: Array<{ role: string; route: string }> = [
     { role: 'ROLE_DEVELOPER', route: '/developer/developerDashboard' },
     { role: 'ROLE_MODERATOR', route: '/admin/dashboardadmin' },
-    { role: 'ROLE_ADMIN', route: '/common-post-login/detailsPage' },
+    // { role: 'ROLE_ADMIN', route: '/common-post-login/detailsPage' },
     { role: 'ROLE_DES_STATE', route: '/common-post-login/detailsPage' },
     { role: 'ROLE_DES_REGION', route: '/common-post-login/detailsPage' },
     { role: 'ROLE_DES_DISTRICT', route: '/common-post-login/detailsPage' },
@@ -64,7 +64,7 @@ export class AuthService {
       tap(response => {
         // Store JWT token securely
         console.log('Response (pretty):', JSON.stringify(response, null, 2));
-         this.currentUserSubject.next(response.user);
+        this.currentUserSubject.next(response.user);
         this.setSession(response.token);
         sessionStorage.setItem('currentUser', JSON.stringify(response.user));
       }),
@@ -76,7 +76,7 @@ export class AuthService {
   //   if (!this.isBrowser) return;
 
   //   // Remove token from storage
-     // fallback if signOut not implemented
+  // fallback if signOut not implemented
 
 
   //   // Reset state
@@ -88,33 +88,33 @@ export class AuthService {
   // }
 
   logout(): void {
-  this.http.post<{ message?: string }>(`${environment.apiUrl}/api/auth/logout`, {})
-    .subscribe({
-      next: (res) => {
-        console.log(res?.message ?? 'Logged out successfully'); // ✅ safe null check
-         this.clearSession();
-      },
-      error: (err) => {
-        console.error('Backend logout failed:', err);
-      },
-      complete: () => {
-        // Always clear frontend state regardless of backend response
+    this.http.post<{ message?: string }>(`${environment.apiUrl}/api/auth/logout`, {})
+      .subscribe({
+        next: (res) => {
+          console.log(res?.message ?? 'Logged out successfully'); // ✅ safe null check
+          this.clearSession();
+        },
+        error: (err) => {
+          console.error('Backend logout failed:', err);
+        },
+        complete: () => {
+          // Always clear frontend state regardless of backend response
 
-        // Clear JWT & session info
-        this.clearSession();
+          // Clear JWT & session info
+          this.clearSession();
 
-        // Reset BehaviorSubjects
-        this.currentUserSubject.next(null);
-        this.rolesSubject.next(['ROLE_USER']); // ✅ use [] instead of fake ROLE_USER
+          // Reset BehaviorSubjects
+          this.currentUserSubject.next(null);
+          this.rolesSubject.next(['ROLE_USER']); // ✅ use [] instead of fake ROLE_USER
           this.tokenStorage.removeToken();
-        // Remove stored user
-        sessionStorage.removeItem('currentUser');
+          // Remove stored user
+          sessionStorage.removeItem('currentUser');
 
-        // Redirect to login
-        this.router.navigate(['/login']);
-      }
-    });
-}
+          // Redirect to login
+          this.router.navigate(['/login']);
+        }
+      });
+  }
 
 
 
@@ -134,8 +134,8 @@ export class AuthService {
 
   private clearSession(): void {
     if (!this.isBrowser) return;
-      // if you have a signOut() in TokenStorageService
-   
+    // if you have a signOut() in TokenStorageService
+
     this.isLoggedInSubject.next(false);
     this.rolesSubject.next([]); // clear roles
   }
