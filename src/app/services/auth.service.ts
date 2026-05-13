@@ -1,25 +1,23 @@
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { BehaviorSubject, catchError, Observable, switchMap, tap, throwError } from 'rxjs';
-import { environment } from '../../environments/environment';
-
-import { JwtHelperService } from '@auth0/angular-jwt';
-import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
-import { TokenStorageService } from './token-storage.service';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { BehaviorSubject, catchError, finalize, Observable, of, tap, throwError } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { AuthResponse } from '../interface/AuthResponse';
 import { User } from '../interface/user';
+import { TokenStorageService } from './token-storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private helper = new JwtHelperService();
+  private readonly helper = new JwtHelperService();
   private readonly commonPostLoginProfileRoute = '/common-post-login/profile';
   private readonly roleHomeRoutes: Array<{ role: string; route: string }> = [
     { role: 'ROLE_DEVELOPER', route: '/developer/developerDashboard' },
     { role: 'ROLE_MODERATOR', route: '/admin/dashboardadmin' },
-    // { role: 'ROLE_ADMIN', route: '/common-post-login/detailsPage' },
     { role: 'ROLE_DES_STATE', route: '/common-post-login/detailsPage' },
     { role: 'ROLE_DES_REGION', route: '/common-post-login/detailsPage' },
     { role: 'ROLE_DES_DISTRICT', route: '/common-post-login/detailsPage' },
@@ -28,25 +26,26 @@ export class AuthService {
     { role: 'ROLE_USER', route: '/dashboard' }
   ];
 
-  private isLoggedInSubject = new BehaviorSubject<boolean>(false);
-  private rolesSubject = new BehaviorSubject<string[]>([]);
+  private readonly isLoggedInSubject = new BehaviorSubject<boolean>(false);
+  private readonly rolesSubject = new BehaviorSubject<string[]>([]);
+  private readonly currentUserSubject = new BehaviorSubject<User | null>(null);
 
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
-  currentUser$ = this.currentUserSubject.asObservable();
+  readonly currentUser$ = this.currentUserSubject.asObservable();
 
-  private isBrowser: boolean;
+  private readonly isBrowser: boolean;
 
   constructor(
     private http: HttpClient,
     private router: Router,
     private tokenStorage: TokenStorageService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: object
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
 
     if (this.isBrowser) {
       this.isLoggedInSubject.next(this.hasValidToken());
       this.rolesSubject.next(this.getRolesFromToken());
+
       const storedUser = sessionStorage.getItem('currentUser');
       if (storedUser) {
         this.currentUserSubject.next(JSON.parse(storedUser));
@@ -54,76 +53,49 @@ export class AuthService {
     }
   }
 
-  // 🔹 Login
   login(username: string, password: string, recaptchaResponse: string): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${environment.apiUrl}/api/auth/signin`, {
       username,
       password,
       recaptchaResponse
     }).pipe(
-      tap(response => {
-        // Store JWT token securely
-        console.log('Response (pretty):', JSON.stringify(response, null, 2));
+      tap((response) => {
         this.currentUserSubject.next(response.user);
         this.setSession(response.token);
-        sessionStorage.setItem('currentUser', JSON.stringify(response.user));
+        if (this.isBrowser) {
+          sessionStorage.setItem('currentUser', JSON.stringify(response.user));
+        }
       }),
       catchError(this.handleError)
     );
   }
 
-  // logout(): void {
-  //   if (!this.isBrowser) return;
-
-  //   // Remove token from storage
-  // fallback if signOut not implemented
-
-
-  //   // Reset state
-  //   this.clearSession();
-  //   this.rolesSubject.next(['ROLE_USER']);
-  //    this.currentUserSubject.next(null);
-  //   // Navigate to login page
-  //   this.router.navigate(['/login']);
-  // }
-
   logout(): void {
     this.http.post<{ message?: string }>(`${environment.apiUrl}/api/auth/logout`, {})
-      .subscribe({
-        next: (res) => {
-          console.log(res?.message ?? 'Logged out successfully'); // ✅ safe null check
-          this.clearSession();
-        },
-        error: (err) => {
-          console.error('Backend logout failed:', err);
-        },
-        complete: () => {
-          // Always clear frontend state regardless of backend response
-
-          // Clear JWT & session info
-          this.clearSession();
-
-          // Reset BehaviorSubjects
-          this.currentUserSubject.next(null);
-          this.rolesSubject.next(['ROLE_USER']); // ✅ use [] instead of fake ROLE_USER
-          this.tokenStorage.removeToken();
-          // Remove stored user
-          sessionStorage.removeItem('currentUser');
-
-          // Redirect to login
-          this.router.navigate(['/login']);
+      .pipe(
+        catchError((error) => {
+          console.error('Backend logout failed:', error);
+          return of(null);
+        }),
+        finalize(() => {
+          this.completeLogout();
+          void this.router.navigateByUrl('/');
+        })
+      )
+      .subscribe((response) => {
+        if (response?.message) {
+          console.log(response.message);
         }
       });
   }
 
-
-
   private setSession(token: string | undefined): void {
-    if (!this.isBrowser) return;
+    if (!this.isBrowser) {
+      return;
+    }
 
     if (!token || token.trim() === '') {
-      console.error('No JWT provided to setSession!');
-      this.clearSession();
+      this.completeLogout();
       return;
     }
 
@@ -133,14 +105,26 @@ export class AuthService {
   }
 
   private clearSession(): void {
-    if (!this.isBrowser) return;
-    // if you have a signOut() in TokenStorageService
+    if (!this.isBrowser) {
+      return;
+    }
 
     this.isLoggedInSubject.next(false);
-    this.rolesSubject.next([]); // clear roles
+    this.rolesSubject.next([]);
   }
 
+  private completeLogout(): void {
+    if (!this.isBrowser) {
+      return;
+    }
 
+    this.tokenStorage.removeToken();
+    this.clearSession();
+    this.currentUserSubject.next(null);
+    sessionStorage.removeItem('currentUser');
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('roles');
+  }
 
   getToken(): string | null {
     return this.isBrowser ? this.tokenStorage.getToken() : null;
@@ -153,7 +137,6 @@ export class AuthService {
   private hasValidToken(): boolean {
     const token = this.getToken();
 
-    // Check if token exists and looks like a JWT (3 parts separated by ".")
     if (!token || typeof token !== 'string' || token.split('.').length !== 3) {
       return false;
     }
@@ -166,17 +149,15 @@ export class AuthService {
     }
   }
 
-
   private getRolesFromToken(): string[] {
     const token = this.getToken();
 
-    // Check if token exists and looks like a JWT (must have 3 parts)
     if (!token || typeof token !== 'string' || token.split('.').length !== 3) {
       return [];
     }
 
     try {
-      const decoded: any = this.helper.decodeToken(token);
+      const decoded = this.helper.decodeToken(token) as { roles?: string[] } | null;
       return decoded?.roles ?? [];
     } catch (error) {
       console.error('Error decoding token:', error);
@@ -184,13 +165,11 @@ export class AuthService {
     }
   }
 
-
-  // 🔹 Observables
-  getIsLoggedIn() {
+  getIsLoggedIn(): Observable<boolean> {
     return this.isLoggedInSubject.asObservable();
   }
 
-  getUserRolesObservable() {
+  getUserRolesObservable(): Observable<string[]> {
     return this.rolesSubject.asObservable();
   }
 
@@ -203,7 +182,6 @@ export class AuthService {
     return matchedRoute?.route ?? null;
   }
 
-  // 🔹 Error Handling
   getFallbackHomeRoute(roles: string[] = this.getUserRoles()): string | null {
     const commonPostLoginRoles = [
       'ROLE_ADMIN',
@@ -241,7 +219,7 @@ export class AuthService {
     return this.router.navigateByUrl('/unauthorized');
   }
 
-  private handleError(error: HttpErrorResponse) {
+  private handleError(error: HttpErrorResponse): Observable<never> {
     console.error('Auth error:', error);
     return throwError(() => error);
   }
@@ -250,9 +228,10 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  // call this after login success
-  setUser(user: User) {
-    sessionStorage.setItem('currentUser', JSON.stringify(user));
+  setUser(user: User): void {
+    if (this.isBrowser) {
+      sessionStorage.setItem('currentUser', JSON.stringify(user));
+    }
     this.currentUserSubject.next(user);
   }
 }

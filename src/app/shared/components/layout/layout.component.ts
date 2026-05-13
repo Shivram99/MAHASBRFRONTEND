@@ -47,8 +47,6 @@ activeLabel: string = 'Dashboard';
   }
   logout(): void {
     this.authService.logout();
-    
-    this.router.navigate(['/']);
   }
   ngOnInit(): void {
     this.userRoles = this.authService.getUserRoles();

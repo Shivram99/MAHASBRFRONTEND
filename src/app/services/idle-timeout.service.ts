@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { Idle, DEFAULT_INTERRUPTSOURCES } from '@ng-idle/core';
 import { Keepalive } from '@ng-idle/keepalive';
 import { AuthService } from './auth.service';
@@ -15,7 +14,6 @@ export class IdleTimeoutService {
 
   constructor(private idle: Idle, 
               private keepalive: Keepalive, 
-              private router: Router, 
               private authService: AuthService) {
 
     this.idle.setIdle(this.idleTime); // Set idle time to 3 minutes
@@ -61,8 +59,6 @@ export class IdleTimeoutService {
   logout() {
     this.authService.logout();
     this.idle.stop(); // Stop watching for idle state
-     // Clear authentication tokens and handle logout
-    this.router.navigate(['/login']); // Redirect to login page
     console.log("Logged out due to inactivity.");
   }
 }

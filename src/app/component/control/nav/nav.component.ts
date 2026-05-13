@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
@@ -58,19 +57,19 @@ export class NavComponent {
     authOnly?: boolean;
   }[] = [];
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit() {
     this.isLoggedIn$ = this.authService.getIsLoggedIn();
 
-    this.authService.getIsLoggedIn().subscribe((isLoggedIn) => {
-      if (isLoggedIn) {
-        this.authService.getUserRolesObservable().subscribe((userRoles) => {
-          this.filterNavLinks(userRoles, true);
-        });
-      } else {
-        this.filterNavLinks(['ROLE_USER'], false);
-      }
+    combineLatest([
+      this.authService.getIsLoggedIn(),
+      this.authService.getUserRolesObservable()
+    ]).subscribe(([isLoggedIn, userRoles]) => {
+      this.filterNavLinks(
+        isLoggedIn ? userRoles : ['ROLE_USER'],
+        isLoggedIn
+      );
     });
   }
 
