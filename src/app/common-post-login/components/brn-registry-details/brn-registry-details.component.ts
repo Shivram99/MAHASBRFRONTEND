@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { MstRegistryDetailsPage } from '../../../model/mst-registry-details-page'; 
 import { FileUploadService } from '../../../services/file-upload.service'; 
 import { PaginatedResponse } from '../../../interface/paginated-response'; 
@@ -51,20 +52,37 @@ placeholder:string='';
   totalElements: number = 0;
   pageSizeOptions: number[] = [10, 12, 20, 50]; // Options for page size
   sortBy: string = 'siNo'; // Default sorting parameter
+  private readonly isBrowser: boolean;
+
   constructor(
     private fileUploadService: FileUploadService,
     private router: Router,
     private dataService: DataService,
     private route: ActivatedRoute,
-    private authService: AuthService
-  ) {}
+    private authService: AuthService,
+    @Inject(PLATFORM_ID) platformId: object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
+
   ngOnInit(): void {
+    this.userRole = this.authService.getUserRoles();
+
+    if (!this.canLoadProtectedData()) {
+      this.resetDashboardState();
+      return;
+    }
+
     this.loadRegistryDetails(this.currentPage, this.pageSize, this.sortBy);
     this.fetchDistricts();
-    this.userRole = this.authService.getUserRoles();
   }
 
   fetchDistricts(): void {
+    if (!this.canLoadProtectedData()) {
+      this.districts = [];
+      return;
+    }
+
     this.dataService.getAllDistrictsForLoginUser().subscribe({
       next: (districts1) => {
         this.districts = districts1.map((district) => ({
@@ -72,9 +90,8 @@ placeholder:string='';
           name: district.districtName,
         }));
       },
-      error: (error) => {
+      error: () => {
         this.districts = [];
-        console.error('Failed to load login user districts', error);
       }
     });
   }
@@ -115,22 +132,23 @@ placeholder:string='';
   }
   
   goToDetails(brnNo: string) {
-    console.log("brnNo "+brnNo)
-    // this.router.navigate(['dashboard-brn-details', brnNo], { relativeTo: this.route });
-
     this.router.navigate(['common-post-login/dashboard-brn-details', brnNo]);
   }
 
   loadRegistryDetails(page: number, size: number, sortBy: string): void {
+    if (!this.canLoadProtectedData()) {
+      this.resetRegistryPage();
+      return;
+    }
+
     this.fileUploadService.getRegistryDetailsPage(page, size, sortBy).subscribe(
       (response: PaginatedResponse<MstRegistryDetailsPage>) => {
-        // Expecting an array of MstRegistryDetailsPage
         this.registryDetails = response.content;
         this.totalPages = response.totalPages;
         this.totalElements = response.totalElements;
       },
-      (error) => {
-        console.error('Error submitting form', error);
+      () => {
+        this.resetRegistryPage();
       }
     );
   }
@@ -160,12 +178,15 @@ onSortByChange(sortBy: string): void {
  *    Decides which API to call (filtered vs normal)
  */
 private fetchData(): void {
+  if (!this.canLoadProtectedData()) {
+    this.resetRegistryPage();
+    return;
+  }
+
   if (this.selectedDistrictIds.length === 0) {
     this.loadRegistryDetails(this.currentPage, this.pageSize, this.sortBy);
-    console.log("loadRegistryDetails", { page: this.currentPage, size: this.pageSize, sort: this.sortBy });
   } else {
     this.postLoginDashboardData(this.currentPage, this.pageSize, this.sortBy);
-    console.log("postLoginDashboardData", { page: this.currentPage, size: this.pageSize, sort: this.sortBy });
   }
 }
 
@@ -189,6 +210,11 @@ private fetchData(): void {
   }
 
   fetchTalukas(selectedValue: any): void {
+    if (!this.canLoadProtectedData() || !selectedValue || selectedValue.length === 0) {
+      this.talukas = [];
+      return;
+    }
+
     this.dataService.getAllTaluka(selectedValue).subscribe({
       next: (talukas1) => {
         this.talukas = talukas1.map((talukas) => ({
@@ -196,44 +222,67 @@ private fetchData(): void {
           name: talukas.talukaName,
         }));
       },
-      error: (error) => {
+      error: () => {
         this.talukas = [];
-        console.error('Failed to load talukas', error);
       }
     });
   }
 
   postLoginDashboardData(page: number, size: number, sortBy: string){
+  if (!this.canLoadProtectedData()) {
+    this.resetRegistryPage();
+    return;
+  }
+
   this.fileUploadService.postLoginDashboardData(page, size, sortBy,this.selectedDistrictIds,this.selectedTalukaIds,this.filters).subscribe(
     (response: PaginatedResponse<MstRegistryDetailsPage>) => {
-      // Expecting an array of MstRegistryDetailsPage
       this.registryDetails = response.content;
       this.totalPages = response.totalPages;
       this.totalElements = response.totalElements;
     },
-    (error) => {
-      console.error('Error submitting form', error);
+    () => {
+      this.resetRegistryPage();
     }
   );
 }
 
 
 searchBRN() {
+    if (!this.canLoadProtectedData()) {
+      this.resetRegistryPage();
+      return;
+    }
+
     if (this.BNR) {
       const trimmedBRN = this.BNR.trim();
       this.fileUploadService.getBRNDetails(trimmedBRN).subscribe(
         (response: PaginatedResponse<MstRegistryDetailsPage>) => {
-          // Expecting an array of MstRegistryDetailsPage
           this.registryDetails = response.content;
           this.totalPages = response.totalPages;
           this.totalElements = response.totalElements;
         },
-        (error) => {
-          console.error('Error to Find the BRN', error);
+        () => {
+          this.resetRegistryPage();
         }
       );
     }
   }
+
+private canLoadProtectedData(): boolean {
+  return this.isBrowser && this.authService.isAuthenticated();
+}
+
+private resetDashboardState(): void {
+  this.districts = [];
+  this.talukas = [];
+  this.resetRegistryPage();
+}
+
+private resetRegistryPage(): void {
+  this.registryDetails = [];
+  this.totalPages = 0;
+  this.totalElements = 0;
+}
 
 
 goToFirst(): void {

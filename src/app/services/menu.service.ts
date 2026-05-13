@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, map, Observable, of, throwError } from 'rxjs';
 import { MstMenu } from '../model/mst-menu';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { Menu } from '../interface/menu';
 import { ApiResponse } from '../interface/api-response';
 import { MenuDTO } from '../interface/menu-dto';
