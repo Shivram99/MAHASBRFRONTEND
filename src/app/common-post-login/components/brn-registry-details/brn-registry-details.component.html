@@ -1,39 +1,50 @@
-<div class="row">
+<div class="brn-filter-panel">
+  <div class="row g-3 brn-filter-row" [hidden]="!isAllowed()">
+    <div class="col-md-6">
+      <div class="brn-filter-control">
+        <label class="form-label">District</label>
+        <app-multi-select-option [items]="districts" (selectionChange)="onSelectionDistrictChange($event)"
+          [placeholder]="'District'" />
+      </div>
+    </div>
 
-  <div class="col-md-6" [hidden]="!isAllowed()"><app-multi-select-option [items]="districts"
-      (selectionChange)="onSelectionDistrictChange($event)" [placeholder]="'District'" />
+    <div class="col-md-6">
+      <div class="brn-filter-control">
+        <label class="form-label">Taluka</label>
+        <app-multi-select-option [items]="talukas" (selectionChange)="onSelectionTalukaChange($event)"
+          [placeholder]="'Taluka'" />
+      </div>
+    </div>
   </div>
 
+  <div class="row g-3 align-items-end brn-search-row">
+    <div class="col-lg-4 col-md-6">
+      <div class="brn-filter-control">
+        <label for="BNR" class="form-label">BRN :</label>
+        <input type="text" placeholder="Enter BRN number" class="form-control" id="BNR" name="BNR" [(ngModel)]="BNR"
+          (keypress)="allowOnlyNumbers($event)" />
+      </div>
+    </div>
 
-  <div class="col-md-6" [hidden]="!isAllowed()">
-    <app-multi-select-option [items]="talukas" (selectionChange)="onSelectionTalukaChange($event)"
-      [placeholder]="'Taluka'" />
+    <div class="col-md-auto">
+      <button type="button" class="btn btn-primary brn-search-btn" [disabled]="!BNR" (click)="searchBRN()">
+        Search BRN
+      </button>
+    </div>
   </div>
 
-  <div class="col-md-4">
-    <label>BRN :</label>
-    <input type="text" placeholder="Enter BRN number" class="form-control" id="BNR" name="BNR" [(ngModel)]="BNR"
-      (keypress)="allowOnlyNumbers($event)" />
-    <br />
-  </div>
-  <div class="col-md-4" *ngIf="false">
+  <div class="row g-3" *ngIf="false">
+    <div class="col-md-4">
+      <label for="registerDateFrom"> From Date:</label>
+      <input type="date" id="registerDateFrom" name="registerDateFrom" class="form-control"
+        [(ngModel)]="filters.registerDateFrom" (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
+    </div>
 
-    <label for="registerDateFrom"> From Date:</label>
-    <input type="date" id="registerDateFrom" name="registerDateFrom" class="form-control"
-      [(ngModel)]="filters.registerDateFrom" (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
-
-  </div>
-  <div class="col-md-4" *ngIf="false">
-
-    <label for="registerDateTo"> To Date:</label>
-    <input type="date" id="registerDateTo" class="form-control" [(ngModel)]="filters.registerDateTo"
-      (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
-
-  </div>
-  <div class="col-12 ">
-    <button type="button" class="btn btn-primary" [disabled]="!BNR" (click)="searchBRN()">
-      Search BRN
-    </button>
+    <div class="col-md-4">
+      <label for="registerDateTo"> To Date:</label>
+      <input type="date" id="registerDateTo" class="form-control" [(ngModel)]="filters.registerDateTo"
+        (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
+    </div>
   </div>
 </div>
 
