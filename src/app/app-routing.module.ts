@@ -16,21 +16,22 @@ import { CitizenDashboardComponent } from './component/citizen-dashboard/citizen
 import { DashboardDetailsComponent } from './component/dashboard-details/dashboard-details.component';
 import { DuplicatedeatilsComponent } from './component/duplicatedeatils/duplicatedeatils.component';
 import { RequestFormComponent } from './component/request-form/request-form.component';
+import { PublicRouteGuard } from './public-route.guard';
 
 
 
 
 const routes: Routes = [
-  {path:"",component:HomepageComponent},
-  {path:"aboutus",component:AboutusComponent},
-  {path:"search-brn",component:SearchBrnComponent},
-  {path:"faq",component:FaqComponent},
-  {path:"contactus",component:ContactusComponent},
-  {path:"login",component:LoginComponent},
+  {path:"",component:HomepageComponent, canActivate: [PublicRouteGuard]},
+  {path:"aboutus",component:AboutusComponent, canActivate: [PublicRouteGuard]},
+  {path:"search-brn",component:SearchBrnComponent, canActivate: [PublicRouteGuard]},
+  {path:"faq",component:FaqComponent, canActivate: [PublicRouteGuard]},
+  {path:"contactus",component:ContactusComponent, canActivate: [PublicRouteGuard]},
+  {path:"login",component:LoginComponent, canActivate: [PublicRouteGuard]},
   {path:"important-document",component:ImportantDocumentComponent},
-  {path:"circular",component:CircularComponent},
-  {path:"dashboard",component:DashboardComponent},
-  {path:"requestForm",component:RequestFormComponent},
+  {path:"circular",component:CircularComponent, canActivate: [PublicRouteGuard]},
+  {path:"dashboard",component:DashboardComponent, canActivate: [PublicRouteGuard]},
+  {path:"requestForm",component:RequestFormComponent, canActivate: [PublicRouteGuard]},
   {path:"citizen-dashboard",component:CitizenDashboardComponent,children: [
     
     {
