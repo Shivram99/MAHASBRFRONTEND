@@ -2,80 +2,141 @@
   background-color: #f5f9ff;
 }
 
+.toggleBtn {
+  background-color: #2676c3;
+  border: 0;
+  color: #fff;
+}
+
+.toggleBtn:hover {
+  background-color: #1d5f9f;
+  color: #fff;
+}
+
 .filter-panel {
-  background-color: #0d6efd !important;
-  color: #fff !important;
+  background: linear-gradient(180deg, #2676c3 0%, #1f5f9f 100%);
+  border-radius: 12px;
+  box-shadow: 0 12px 24px rgba(20, 53, 92, 0.18);
+}
+
+.filter-label {
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.filter-panel .form-select {
+  border: 0;
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  min-height: 44px;
 }
 
-.mat-mdc-form-field {
-  background-color: white;
-  border-radius: 4px;
+.filter-panel .form-select:disabled {
+  background-color: #dfe8f3;
+  color: #5b6573;
+  cursor: not-allowed;
+  opacity: 1;
 }
 
-.dashboard-container {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
+.filter-note {
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 10px;
+  color: #edf6ff;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  padding: 0.85rem 1rem;
 }
 
 .button-group {
   display: flex;
-  gap: 10px;
-  justify-content: space-between;
+  gap: 0.75rem;
 }
 
-.text-white {
-  color: #fff !important;
+.button-group .btn {
+  flex: 1 1 0;
+  min-height: 44px;
 }
 
-.col-md-4, .col-md-8, .col-md-12 {
-  transition: all 0.3s ease;
+.btn-apply {
+  background-color: #ffcc00;
+  border: 0;
+  color: #2f2a00;
 }
-.mb-3 {
-    margin-bottom: 0.4rem !important;
+
+.btn-apply:hover {
+  background-color: #e5b700;
+  color: #2f2a00;
 }
-.form-select {
-    padding: .3rem 2.25rem .3rem .75rem !important;
+
+.btn-reset {
+  background-color: #0f172a;
+  border: 0;
+  color: #fff;
 }
+
+.btn-reset:hover {
+  background-color: #111827;
+  color: #fff;
+}
+
 .shadow-cust {
-    box-shadow: 0px 0px 7px #ccc;
+  box-shadow: 0 0 7px #ccc;
+  border-radius: 12px;
 }
 
+.loading-spinner {
+  height: 3rem;
+  width: 3rem;
+}
 
+.chart-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.12);
+  padding: 0.75rem;
+}
 
-:host ::ng-deep div[echart] {
-  min-height: 400px;
+.chart-canvas-wrap {
+  min-height: 380px;
+  position: relative;
 }
 
 .kpi-card {
-  background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-  border-top: 4px solid #2676C3;
-  transition: 0.3s ease-in-out;
+  background: #fff;
+  border-radius: 12px;
+  border-top: 4px solid #2676c3;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  height: 100%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .kpi-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
 }
 
 .kpi-value {
-  font-size: 28px;
+  color: #2676c3;
+  font-size: 1.75rem;
   font-weight: 700;
-  color: #2676C3;
-  margin-bottom: 6px;
+  margin-bottom: 0.35rem;
 }
 
 .kpi-label {
-  font-size: 14px;
-  color: #333;
+  color: #334155;
+  font-size: 0.95rem;
   font-weight: 600;
 }
 
 .kpi-icon {
-  font-size: 22px;
-  margin-top: 6px;
+  display: inline-block;
+  font-size: 1.4rem;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 991.98px) {
+  .chart-canvas-wrap {
+    min-height: 320px;
+  }
 }

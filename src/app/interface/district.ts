@@ -1,6 +1,9 @@
 export interface District {
-    censusDistrictCode: number;
-    districtName: string;
-    censusStateCode: number;
-  }
+  districtId?: number;
+  censusDistrictCode: number;
+  districtName: string;
+  censusStateCode: number;
+  divisionCode?: string;
+  isActive?: boolean;
+}
   

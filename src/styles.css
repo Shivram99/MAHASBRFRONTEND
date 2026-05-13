@@ -4,15 +4,30 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: "Times New Roman";
+    src: local("Times New Roman");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "DVOT SurekhMR";
+    src: local("DVOT SurekhMR");
+    font-display: swap;
+}
+
+:root {
+    --app-font-family: "Times New Roman", Times, serif;
+}
+
 html,
 body {
     height: 100%;
+    font-family: var(--app-font-family);
 }
 
 body {
-    --app-font-family: "Times New Roman", Times, serif;
     margin: 0;
-    font-family: var(--app-font-family);
 }
 
 body.lang-en {
@@ -22,6 +37,23 @@ body.lang-en {
 body.lang-mr {
     --app-font-family: "DVOT SurekhMR", "Noto Sans Devanagari", serif;
 }
+
+body * {
+    font-family: inherit;
+}
+
+.mat-typography {
+    font-family: var(--app-font-family) !important;
+}
+
+.mat-mdc-form-field,
+.mat-mdc-input-element,
+.mat-mdc-select,
+.mdc-floating-label,
+.mdc-button__label {
+    font-family: var(--app-font-family) !important;
+}
+
 .table-striped > tbody > tr:nth-of-type(odd) > * {
     background: #D4EBFF;
 }

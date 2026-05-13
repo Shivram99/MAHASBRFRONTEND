@@ -1,5 +1,7 @@
 export interface Talukas {
-    censusTalukaCode: number;
+  talukaId?: number;
+  censusTalukaCode: number;
   talukaName: string;
   censusDistrictCode: number;
+  isActive?: boolean;
 }

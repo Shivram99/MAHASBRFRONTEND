@@ -11,8 +11,9 @@ import { Talukas } from '../interface/talukas';
 import { MstRegistryDetailsPage } from '../model/mst-registry-details-page';
 import { RegistryResponse } from '../model/registry-response';
 import { Division } from '../model/division';
-import { CitizenDashboarFilter } from '../interface/citizen-dashboar-filter';
+import { CitizenDashboardFilterRequest } from '../interface/citizen-dashboar-filter';
 import { CitizenDashboardDataRegDeRegNewReg } from '../interface/citizen-dashboard-data-reg-de-reg-new-reg';
+import { CitizenDashboardRow } from '../interface/citizen-dashboard-row';
 @Injectable({
   providedIn: 'root'
 })
@@ -36,7 +37,7 @@ export class SerachBrnService {
     return this.http.get<District[]>(`${this.apiUrl}/citizenSearch/districts`);
   }
 
-  getTalukasByDistrict(districtId: number): Observable<Talukas[]> {
+  getTalukasByDistrict(districtId: number | string): Observable<Talukas[]> {
     return this.http.get<Talukas[]>(`${this.apiUrl}/citizenSearch/api/talukas/by-district/${districtId}`);
   }
 
@@ -48,12 +49,12 @@ export class SerachBrnService {
     return this.http.get<Division[]>(`${this.apiUrl}/citizenSearch/division`);
   }
 
-  getFilteredDashboardData(payload: CitizenDashboarFilter): Observable<any> {
+  getFilteredDashboardData(payload: CitizenDashboardFilterRequest): Observable<CitizenDashboardRow[]> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
 
-    return this.http.post(`${this.apiUrl}/citizenSearch/dashboardData`, payload, { headers });
+    return this.http.post<CitizenDashboardRow[]>(`${this.apiUrl}/citizenSearch/dashboardData`, payload, { headers });
   }
 
   submitRequest(payload: any): Observable<any> {

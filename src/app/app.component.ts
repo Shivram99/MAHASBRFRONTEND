@@ -3,6 +3,7 @@ import { AuthService } from './services/auth.service';
 import { BehaviorSubject } from 'rxjs';
 import { VisitTrackerService } from './services/sitevisitor/visit-tracker.service';
 import { VisitSummary } from './interface/visit-summary';
+import { LanguageService } from './core/services/language.service';
 
 @Component({
     selector: 'app-root',
@@ -16,9 +17,16 @@ export class AppComponent implements OnInit {
   isLoggedIn: boolean = false;
   private loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   summary: VisitSummary = { totalVisits: 0, todayVisits: 0 };
-  constructor(private authService: AuthService,private visitService: VisitTrackerService) {}
+  constructor(
+    private authService: AuthService,
+    private visitService: VisitTrackerService,
+    private languageService: LanguageService
+  ) {}
 
   ngOnInit() {
+    // Ensure saved language styling, including fonts, is applied at app bootstrap.
+    this.languageService.getCurrentLanguage();
+
     this.authService.getIsLoggedIn().subscribe(isLoggedIn => {
       this.isLoggedIn = isLoggedIn;
     });

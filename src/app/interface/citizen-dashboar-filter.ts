@@ -1,4 +1,4 @@
-export interface CitizenDashboarFilter {
+export interface CitizenDashboardFilterRequest {
   countType: string;
   act: string;
   region: string;
@@ -7,3 +7,5 @@ export interface CitizenDashboarFilter {
   quarter: string;
   nic: string;
 }
+
+export type CitizenDashboarFilter = CitizenDashboardFilterRequest;

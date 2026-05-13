@@ -1,21 +1,73 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  Inject,
-  OnInit,
-  PLATFORM_ID,
-  ViewChild
-} from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { Chart, registerables } from 'chart.js';
+import { Chart, ChartConfiguration, ChartOptions, registerables } from 'chart.js';
+import { finalize } from 'rxjs';
 import { SerachBrnService } from '../../services/serach-brn.service';
 import { RegistryResponse } from '../../model/registry-response';
 import { Division } from '../../model/division';
-import { CitizenDashboarFilter } from '../../interface/citizen-dashboar-filter';
-import * as echarts from 'echarts';
+import { District } from '../../interface/district';
+import { Talukas } from '../../interface/talukas';
+import { CitizenDashboardFilterRequest } from '../../interface/citizen-dashboar-filter';
+import { CitizenDashboardRow } from '../../interface/citizen-dashboard-row';
+import { CitizenDashboardDataRegDeRegNewReg } from '../../interface/citizen-dashboard-data-reg-de-reg-new-reg';
 
 Chart.register(...registerables);
+
+type DashboardCountType = 'NR' | 'TR' | 'DR';
+
+interface DashboardFilterOption {
+  value: string;
+  label: string;
+}
+
+interface DashboardFilterState {
+  countType: DashboardCountType;
+  year: string;
+  ruralUrban: string;
+  state: string;
+  region: string;
+  districtCode: string;
+  tehsilCode: string;
+  act: string;
+  nicClassification: string;
+  deregisteredClosed: string;
+}
+
+interface DashboardCard {
+  label: string;
+  value: number;
+  icon: string;
+}
+
+interface DashboardViewRow extends CitizenDashboardRow {
+  districtCode: string;
+  stateCode: string;
+  stateName: string;
+  tehsilName: string;
+  ruralUrbanLabel: string;
+  nicClassificationLabel: string;
+  deregisteredClosedLabel: string;
+}
+
+const COUNT_TYPE_OPTIONS: ReadonlyArray<{ key: DashboardCountType; label: string }> = [
+  { key: 'NR', label: 'New Registration' },
+  { key: 'TR', label: 'Total Registration' },
+  { key: 'DR', label: 'Deregistration' }
+];
+
+const RURAL_URBAN_OPTIONS: ReadonlyArray<DashboardFilterOption> = [
+  { value: 'Rural', label: 'Rural' },
+  { value: 'Urban', label: 'Urban' }
+];
+
+const DEREGISTERED_CLOSED_OPTIONS: ReadonlyArray<DashboardFilterOption> = [
+  { value: 'Deregistered', label: 'Deregistered' },
+  { value: 'Closed', label: 'Closed' }
+];
+
+const STATE_NAME_BY_CODE: Readonly<Record<string, string>> = {
+  '27': 'Maharashtra'
+};
 
 @Component({
   selector: 'app-dashboard',
@@ -23,924 +75,791 @@ Chart.register(...registerables);
   styleUrls: ['./dashboard.component.css'],
   standalone: false
 })
-export class DashboardComponent implements OnInit, AfterViewInit {
-  // ==============================
-  // 🔹 UI State
-  // ==============================
+export class DashboardComponent implements OnInit {
   menuVisible = false;
   loading = false;
 
-  // ==============================
-  // 🔹 ECharts Elements (Sunburst, etc.)
-  // ==============================
-  @ViewChild('echart', { static: false }) chartEl!: ElementRef<HTMLDivElement>;
-  @ViewChild('sunburstChart', { static: false }) sunburstChartEl!: ElementRef<HTMLDivElement>;
-
-  private chartInstance: echarts.ECharts | null = null;      // For normal ECharts bar with brush (commented usage)
-  private sunburstChart: echarts.ECharts | null = null;      // For Sunburst chart
-
-  // ==============================
-  // 🔹 Data Collections
-  // ==============================
-  districts: any[] = [];
   registries: RegistryResponse[] = [];
-  division: Division[] = [];
-  apiResponse: any[] = [];        // Filtered data used for charts
-  mainapiResponse: any[] = [];    // Raw API data used as base for filtering
+  divisions: Division[] = [];
+  districts: District[] = [];
+  tehsils: Talukas[] = [];
+  nicClassificationOptions: DashboardFilterOption[] = [];
+  dashboardCards: DashboardCard[] = [];
+  apiResponse: DashboardViewRow[] = [];
 
-  // ==============================
-  // 🔹 Type of Data (Count Type)
-  // ==============================
-  typesOfDataLable = [
-    { key: 'NR', value: 'New Registration' },
-    { key: 'TR', value: 'Total Registration' },
-    { key: 'DR', value: 'Deregistration' }
-  ];
+  readonly countTypeOptions = COUNT_TYPE_OPTIONS;
+  readonly ruralUrbanOptions = RURAL_URBAN_OPTIONS;
+  readonly deregisteredClosedOptions = DEREGISTERED_CLOSED_OPTIONS;
 
-  get selectedCountLabel() {
-    return this.typesOfDataLable.find(t => t.key === this.selectedCountType)?.value || '';
-  }
+  filters: DashboardFilterState = this.createDefaultFilters();
 
-  // ==============================
-  // 🔹 Selected filter values (bound to UI dropdowns)
-  // ==============================
-  selectedCountType = 'NR';
-  selectedAct = '';
-  selectedRegion = '';
-  selectedDistrict = '';
-  selectedYear = '';
-  selectedQuarter = '';
-  selectedNic = '';
+  chart1: Chart | null = null;
+  chart2: Chart | null = null;
+  chart3: Chart | null = null;
+  chart5: Chart | null = null;
 
-  // 🔸 Static lists for dropdowns
-  acts = ['Industry Act', 'Factory Act', 'Companies Act'];
-  regions = ['Konkan', 'Vidarbha', 'Marathwada'];
-  years = [
-    '2010', '2011', '2012', '2013', '2014', '2015',
-    '2016', '2017', '2018', '2019', '2020', '2021',
-    '2022', '2023', '2024', '2025', '2026'
-  ];
-  quarters = ['Q1', 'Q2', 'Q3', 'Q4'];
-  nicList = ['Textile', 'Manufacturing', 'IT Services', 'Agriculture'];
+  private rawDashboardRows: CitizenDashboardRow[] = [];
+  private allDashboardRows: DashboardViewRow[] = [];
+  private usedColors = new Set<string>();
 
-  // 🔸 Payload object for API filter
-  payload!: CitizenDashboarFilter;
-
-  // ==============================
-  // 🔹 Chart.js Instances
-  // ==============================
-  chart1: Chart | null = null;   // District & Quarter Wise (stacked)
-  chart2: Chart | null = null;   // Registry vs Year
-  chart3: Chart | null = null;   // District vs Registry
-  chart4: Chart | null = null;   // (Currently commented usage / prepared)
-  chart5: Chart | null = null;   // District & Registry Wise Total Working Persons
-
-  // To avoid repeating random colors
-  usedColors: string[] = [];
-
-  // ==============================
-  // 🔹 Constructor
-  // ==============================
   constructor(
-    private dataService: SerachBrnService,
-    @Inject(PLATFORM_ID) private platformId: any
+    private readonly dataService: SerachBrnService,
+    @Inject(PLATFORM_ID) private readonly platformId: object
   ) {}
 
-  // ==============================
-  // 🔹 Lifecycle Hooks
-  // ==============================
-  ngOnInit(): void {
-    // Load master data
-    this.fetchDistricts();
-    this.loadDivisions();
-    this.loadRegistries();
-
-    // Initial dashboard load with default filters
-    this.citizenDasbhordData();
-
-    // Load KPI cards summary (Totals / New Reg / DeReg / Working Persons)
-    this.fetchCitizenDashboardDataRegDeRegNewReg();
+  get selectedCountLabel(): string {
+    return this.countTypeOptions.find((type) => type.key === this.filters.countType)?.label ?? '';
   }
 
-  ngAfterViewInit(): void {
-    // Charts are initialized after data load (citizenDasbhordData)
+  get stateOptions(): DashboardFilterOption[] {
+    const stateCodes = Array.from(
+      new Set(
+        this.districts
+          .map((district) => this.normalizeValue(district.censusStateCode))
+          .filter((stateCode) => stateCode !== '')
+      )
+    ).sort((left, right) => this.resolveStateName(left).localeCompare(this.resolveStateName(right)));
+
+    return stateCodes.map((stateCode) => ({
+      value: stateCode,
+      label: this.resolveStateName(stateCode)
+    }));
+  }
+
+  get regionOptions(): DashboardFilterOption[] {
+    return this.divisions
+      .filter((division) => division.isActive !== false)
+      .map((division) => ({
+        value: this.normalizeValue(division.divisionName),
+        label: this.normalizeValue(division.divisionName)
+      }))
+      .sort((left, right) => left.label.localeCompare(right.label));
+  }
+
+  get districtOptions(): DashboardFilterOption[] {
+    const selectedDivisionCode = this.getSelectedDivisionCode();
+
+    return this.districts
+      .filter((district) => this.matchesSelectedState(district))
+      .filter((district) =>
+        !selectedDivisionCode || this.normalizeValue(district.divisionCode) === selectedDivisionCode
+      )
+      .map((district) => ({
+        value: this.normalizeValue(district.censusDistrictCode),
+        label: this.normalizeValue(district.districtName)
+      }))
+      .sort((left, right) => left.label.localeCompare(right.label));
+  }
+
+  get tehsilOptions(): DashboardFilterOption[] {
+    return this.tehsils
+      .map((tehsil) => ({
+        value: this.normalizeValue(tehsil.censusTalukaCode),
+        label: this.normalizeValue(tehsil.talukaName)
+      }))
+      .sort((left, right) => left.label.localeCompare(right.label));
+  }
+
+  get actOptions(): DashboardFilterOption[] {
+    return this.registries
+      .filter((registry) => registry.status !== false)
+      .map((registry) => ({
+        value: this.normalizeValue(registry.registryNameEn),
+        label: this.normalizeValue(registry.registryNameEn)
+      }))
+      .sort((left, right) => left.label.localeCompare(right.label));
+  }
+
+  get yearOptions(): DashboardFilterOption[] {
+    const years = Array.from(
+      new Set(
+        this.rawDashboardRows
+          .map((row) => this.normalizeValue(row.year))
+          .filter((year) => year !== '')
+      )
+    ).sort((left, right) => Number(right) - Number(left));
+
+    return years.map((year) => ({ value: year, label: year }));
+  }
+
+  get isRuralUrbanFilterAvailable(): boolean {
+    return this.hasDataForField((row) => row.ruralUrbanLabel);
+  }
+
+  get isTehsilFilterAvailable(): boolean {
+    return this.hasDataForField((row) => row.tehsilName);
+  }
+
+  get isNicClassificationFilterAvailable(): boolean {
+    return (
+      this.nicClassificationOptions.length > 0 &&
+      this.hasDataForField((row) => row.nicClassificationLabel)
+    );
+  }
+
+  get isDeregisteredClosedFilterAvailable(): boolean {
+    return this.hasDataForField((row) => row.deregisteredClosedLabel);
+  }
+
+  get hasBackendDataGaps(): boolean {
+    return (
+      !this.isRuralUrbanFilterAvailable ||
+      !this.isTehsilFilterAvailable ||
+      !this.isNicClassificationFilterAvailable ||
+      !this.isDeregisteredClosedFilterAvailable
+    );
+  }
+
+  ngOnInit(): void {
+    this.loadLookupData();
+    this.loadDashboardData();
+    this.fetchCitizenDashboardSummary();
   }
 
   ngOnDestroy(): void {
-    // Cleanup Chart.js and ECharts instances to avoid memory leaks
     this.destroyAllCharts();
-    this.disposeECharts();
   }
 
-  // ==============================
-  // 🔹 Menu Toggle
-  // ==============================
-  toggleMenu() {
+  toggleMenu(): void {
     this.menuVisible = !this.menuVisible;
-    // Re-fetch data when menu is toggled (if required by your UX)
-    this.citizenDasbhordData();
   }
 
-  // ==============================
-  // 🔹 Filters - Change Count Type
-  // ==============================
-  onCountTypeChange(type: string) {
-    // Prepare payload according to currently selected filters
-    this.payload = {
-      countType: this.selectedCountType,
-      act: this.selectedAct,
-      region: this.selectedRegion,
-      district: this.selectedDistrict,
-      year: this.selectedYear,
-      quarter: this.selectedQuarter,
-      nic: this.selectedNic
-    };
-
-    // Refresh dashboard with new count type
-    this.citizenDasbhordData();
+  onCountTypeChange(): void {
+    this.loadDashboardData();
   }
 
-  // ==============================
-  // 🔹 Filters - Submit Button
-  // ==============================
-  onSubmit(): void {
-    // Prepare payload using current UI selections
-    this.payload = {
-      countType: this.selectedCountType,
-      act: this.selectedAct,
-      region: this.selectedRegion,
-      district: this.selectedDistrict,
-      year: this.selectedYear,
-      quarter: this.selectedQuarter,
-      nic: this.selectedNic
-    };
-
-    // Start with full data from main API response
-    let filteredData = this.mainapiResponse;
-
-    // Mapping between UI filter keys and response object fields
-    const fieldMapping: { [key: string]: string } = {
-      act: 'registryName',
-      region: 'division',
-      district: 'district',
-      year: 'year',
-      quarter: 'quarter',
-      nic: 'nic'
-    };
-
-    // Apply text-based filtering on each field where value is present
-    (Object.keys(this.payload) as (keyof typeof this.payload)[]).forEach(key => {
-      const value = this.payload[key];
-      if (value && value.toString().trim() !== '' && fieldMapping[key]) {
-        const apiField = fieldMapping[key];
-        filteredData = filteredData.filter((item: any) =>
-          item[apiField] &&
-          item[apiField].toString().toLowerCase().includes(value.toString().trim().toLowerCase())
-        );
-      }
-    });
-
-    // Update filtered response
-    this.apiResponse = filteredData;
-
-    // Rebuild chart visualizations based on filters
-    this.updateCharts();
-    // this.renderEchart();
-    this.initSunburstChart();
+  onStateChange(): void {
+    this.resetDistrictAndTehsilIfNeeded();
   }
 
-  // ==============================
-  // 🔹 Filters - Clear Button
-  // ==============================
-  onClear(): void {
-    // Reset all filters to default empty values
-    this.selectedAct = '';
-    this.selectedRegion = '';
-    this.selectedDistrict = '';
-    this.selectedYear = '';
-    this.selectedQuarter = '';
-    this.selectedNic = '';
-
-    // Re-apply filtering on base data (will show everything)
-    this.onSubmit();
+  onRegionChange(): void {
+    this.resetDistrictAndTehsilIfNeeded();
   }
 
-  // ==============================
-  // 🔹 API Calls - Main Dashboard Data
-  // ==============================
-  citizenDasbhordData(): void {
-    this.loading = true;
+  onDistrictChange(): void {
+    this.filters.tehsilCode = '';
+    this.tehsils = [];
 
-    // Initialize payload if not present (first load)
-    if (!this.payload) {
-      this.payload = {
-        countType: this.selectedCountType || 'NR',
-        act: this.selectedAct || '',
-        region: this.selectedRegion || '',
-        district: this.selectedDistrict || '',
-        year: this.selectedYear || '',
-        quarter: this.selectedQuarter || '',
-        nic: this.selectedNic || ''
-      };
+    if (!this.filters.districtCode) {
+      return;
     }
 
-    // Fetch filtered dashboard data from backend
-    this.dataService.getFilteredDashboardData(this.payload).subscribe({
-      next: (response) => {
-        this.apiResponse = response;
-        this.mainapiResponse = response;
-        this.loading = false;
+    this.loadTehsils(this.filters.districtCode);
+  }
 
-        // Small delay to ensure DOM is ready for chart rendering
-        setTimeout(() => {
-          this.updateCharts();
-          // this.renderEchart();
-          // this.updateDashboardCards();
-          this.initSunburstChart();
-        }, 50);
+  onSubmit(): void {
+    this.loadDashboardData();
+  }
+
+  onClear(): void {
+    const currentCountType = this.filters.countType;
+    this.filters = this.createDefaultFilters(currentCountType);
+    this.tehsils = [];
+    this.loadDashboardData();
+  }
+
+  trackByOption(_index: number, option: DashboardFilterOption): string {
+    return option.value;
+  }
+
+  trackByCard(_index: number, card: DashboardCard): string {
+    return card.label;
+  }
+
+  private createDefaultFilters(countType: DashboardCountType = 'NR'): DashboardFilterState {
+    return {
+      countType,
+      year: '',
+      ruralUrban: '',
+      state: '',
+      region: '',
+      districtCode: '',
+      tehsilCode: '',
+      act: '',
+      nicClassification: '',
+      deregisteredClosed: ''
+    };
+  }
+
+  private loadLookupData(): void {
+    this.loadRegistries();
+    this.loadDivisions();
+    this.loadDistricts();
+  }
+
+  private loadRegistries(): void {
+    this.dataService.getAllRegistry().subscribe({
+      next: (response) => {
+        this.registries = this.unwrapCollection<RegistryResponse>(response);
       },
       error: (error) => {
-        console.error('❌ Error fetching dashboard data:', error.message);
-        this.loading = false;
+        console.error('Error loading registries:', error);
+        this.registries = [];
       }
     });
   }
 
-  // ==============================
-  // 🔹 API Calls - Registries
-  // ==============================
-  loadRegistries(): void {
-    this.loading = true;
-    this.dataService.getAllRegistry().subscribe({
-      next: (data) => {
-        this.registries = data;
-        this.loading = false;
-      },
-      error: () => (this.loading = false)
-    });
-  }
-
-  // ==============================
-  // 🔹 API Calls - Divisions
-  // ==============================
-  loadDivisions(): void {
+  private loadDivisions(): void {
     this.dataService.getAllDivisions().subscribe({
-      next: (data: Division[]) => (this.division = data || []),
-      error: (err) => console.error('Error loading divisions:', err)
+      next: (response) => {
+        this.divisions = this.unwrapCollection<Division>(response);
+      },
+      error: (error) => {
+        console.error('Error loading divisions:', error);
+        this.divisions = [];
+      }
     });
   }
 
-  // ==============================
-  // 🔹 API Calls - Districts
-  // ==============================
-  fetchDistricts(): void {
+  private loadDistricts(): void {
     this.dataService.getAllDistricts().subscribe({
-      next: (districtsData) => {
-        if (Array.isArray(districtsData)) {
-          this.districts = districtsData.map((d) => ({
-            censusDistrictCode: d.censusDistrictCode,
-            districtName: d.districtName,
-            censusStateCode: d.censusStateCode
-          }));
-        }
+      next: (response) => {
+        this.districts = this.unwrapCollection<District>(response);
+        this.resetDistrictAndTehsilIfNeeded();
+        this.rebuildDashboardRows();
       },
-      error: (err) => {
-        console.error('Error fetching districts:', err);
+      error: (error) => {
+        console.error('Error loading districts:', error);
         this.districts = [];
       }
     });
   }
 
-  // ==============================
-  // 🔹 Chart.js Creation & Update
-  // ==============================
-  private destroyAllCharts(): void {
-    // Safely destroy all Chart.js instances
-    [this.chart1, this.chart2, this.chart3, this.chart5].forEach(c => c?.destroy());
-    this.chart1 = this.chart2 = this.chart3 = this.chart5 = null;
+  private loadTehsils(districtCode: string): void {
+    const districtId = Number(districtCode);
+    const requestId = Number.isNaN(districtId) ? districtCode : districtId;
+
+    this.dataService.getTalukasByDistrict(requestId).subscribe({
+      next: (response) => {
+        this.tehsils = this.unwrapCollection<Talukas>(response);
+      },
+      error: (error) => {
+        console.error('Error loading tehsils:', error);
+        this.tehsils = [];
+      }
+    });
   }
 
-  updateCharts(): void {
-    // Remove previous chart instances before re-rendering
-    this.destroyAllCharts();
+  private loadDashboardData(): void {
+    const request = this.buildDashboardRequest();
+    this.loading = true;
 
-    if (!this.apiResponse || this.apiResponse.length === 0) {
+    this.dataService.getFilteredDashboardData(request)
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe({
+        next: (response) => {
+          this.rawDashboardRows = this.unwrapCollection<CitizenDashboardRow>(response);
+          this.rebuildDashboardRows();
+        },
+        error: (error) => {
+          console.error('Error fetching dashboard data:', error);
+          this.rawDashboardRows = [];
+          this.allDashboardRows = [];
+          this.apiResponse = [];
+          this.updateCharts();
+        }
+      });
+  }
+
+  private rebuildDashboardRows(): void {
+    this.allDashboardRows = this.rawDashboardRows.map((row) => this.toDashboardViewRow(row));
+    this.syncDynamicFilterOptions();
+    this.applyLocalFilters();
+  }
+
+  private syncDynamicFilterOptions(): void {
+    const nicValues = Array.from(
+      new Set(
+        this.allDashboardRows
+          .map((row) => row.nicClassificationLabel)
+          .filter((value) => value !== '')
+      )
+    ).sort((left, right) => left.localeCompare(right));
+
+    this.nicClassificationOptions = nicValues.map((value) => ({ value, label: value }));
+
+    if (!this.isNicClassificationFilterAvailable) {
+      this.filters.nicClassification = '';
+    }
+    if (!this.isRuralUrbanFilterAvailable) {
+      this.filters.ruralUrban = '';
+    }
+    if (!this.isTehsilFilterAvailable) {
+      this.filters.tehsilCode = '';
+    }
+    if (!this.isDeregisteredClosedFilterAvailable) {
+      this.filters.deregisteredClosed = '';
+    }
+  }
+
+  private buildDashboardRequest(): CitizenDashboardFilterRequest {
+    const selectedDistrict = this.getSelectedDistrict();
+
+    return {
+      countType: this.filters.countType,
+      act: this.filters.act,
+      region: this.filters.region,
+      district: selectedDistrict ? this.normalizeValue(selectedDistrict.districtName) : '',
+      year: this.filters.year,
+      quarter: '',
+      nic: ''
+    };
+  }
+
+  private applyLocalFilters(): void {
+    const selectedDistrict = this.getSelectedDistrict();
+    const selectedDistrictName = selectedDistrict
+      ? this.normalizeValue(selectedDistrict.districtName)
+      : '';
+    const selectedTehsil = this.getSelectedTehsil();
+    const selectedTehsilName = selectedTehsil ? this.normalizeValue(selectedTehsil.talukaName) : '';
+    const selectedStateName = this.filters.state
+      ? this.resolveStateName(this.filters.state)
+      : '';
+
+    this.apiResponse = this.allDashboardRows.filter((row) => {
+      if (this.filters.year && !this.valuesMatch(row.year, this.filters.year)) {
+        return false;
+      }
+      if (this.filters.state && !this.valuesMatch(row.stateName, selectedStateName)) {
+        return false;
+      }
+      if (this.filters.region && !this.valuesMatch(row.division, this.filters.region)) {
+        return false;
+      }
+      if (selectedDistrictName && !this.valuesMatch(row.district, selectedDistrictName)) {
+        return false;
+      }
+      if (this.filters.act && !this.valuesMatch(row.registryName, this.filters.act)) {
+        return false;
+      }
+      if (this.filters.ruralUrban && !this.valuesMatch(row.ruralUrbanLabel, this.filters.ruralUrban)) {
+        return false;
+      }
+      if (selectedTehsilName && !this.valuesMatch(row.tehsilName, selectedTehsilName)) {
+        return false;
+      }
+      if (
+        this.filters.nicClassification &&
+        !this.valuesMatch(row.nicClassificationLabel, this.filters.nicClassification)
+      ) {
+        return false;
+      }
+      if (
+        this.filters.deregisteredClosed &&
+        !this.valuesMatch(row.deregisteredClosedLabel, this.filters.deregisteredClosed)
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+
+    this.scheduleChartRefresh();
+  }
+
+  private fetchCitizenDashboardSummary(): void {
+    this.dataService.getCitizenDashboardDataRegDeRegNewReg().subscribe({
+      next: (response) => {
+        this.updateDashboardSummary(response ?? []);
+      },
+      error: (error) => {
+        console.error('Error loading dashboard summary:', error);
+        this.dashboardCards = [];
+      }
+    });
+  }
+
+  private updateDashboardSummary(summaryRows: CitizenDashboardDataRegDeRegNewReg[]): void {
+    const totalRegistrations = summaryRows.reduce(
+      (sum, row) => sum + (row.totalRegistrations || 0),
+      0
+    );
+    const totalDeregistrations = summaryRows.reduce(
+      (sum, row) => sum + (row.totalDeregistrations || 0),
+      0
+    );
+    const newRegistrationsThisYear = summaryRows.reduce(
+      (sum, row) => sum + (row.newRegistrationsThisYear || 0),
+      0
+    );
+    const totalPersonsWorking = summaryRows.reduce(
+      (sum, row) => sum + (row.totalPersonsWorking || 0),
+      0
+    );
+
+    this.dashboardCards = [
+      { label: 'Total Registrations', value: totalRegistrations, icon: 'bi bi-building-check text-primary' },
+      { label: 'Total Working Persons', value: totalPersonsWorking, icon: 'bi bi-people-fill text-success' },
+      { label: 'Deregistrations', value: totalDeregistrations, icon: 'bi bi-x-octagon-fill text-danger' },
+      { label: 'New Registrations This Year', value: newRegistrationsThisYear, icon: 'bi bi-stars text-warning' }
+    ];
+  }
+
+  private scheduleChartRefresh(): void {
+    if (!isPlatformBrowser(this.platformId)) {
       return;
     }
 
-    // -----------------------
-    // Chart 1 – District & Quarter Wise (Stacked Bar)
-    // -----------------------
-    const groupedByDistrict = this.groupDataByDistrictAndQuarter(this.apiResponse);
-    const districtLabels = Object.keys(groupedByDistrict);
-    const quarters = ['Q1', 'Q2', 'Q3', 'Q4'];
+    setTimeout(() => this.updateCharts(), 0);
+  }
 
-    const districtDatasets = quarters.map((q) => ({
-      label: q,
-      data: districtLabels.map((d) => groupedByDistrict[d][q] || 0),
-      backgroundColor: this.getQuarterColor(q)
-    }));
+  private updateCharts(): void {
+    this.destroyAllCharts();
 
-    this.chart1 = new Chart('chart1', {
-      type: 'bar',
-      data: { labels: districtLabels, datasets: districtDatasets },
-      options: this.getChartOptions(
+    if (!this.apiResponse.length) {
+      return;
+    }
+
+    this.usedColors.clear();
+
+    const groupedByDistrictAndQuarter = this.groupDataByDistrictAndQuarter(this.apiResponse);
+    const districtLabels = Object.keys(groupedByDistrictAndQuarter);
+    const quarterLabels = ['Q1', 'Q2', 'Q3', 'Q4'];
+
+    this.chart1 = new Chart(
+      'chart1',
+      this.createBarChartConfig(
+        districtLabels,
+        quarterLabels.map((quarterLabel) => ({
+          label: quarterLabel,
+          data: districtLabels.map((district) => groupedByDistrictAndQuarter[district][quarterLabel] || 0),
+          backgroundColor: this.getQuarterColor(quarterLabel)
+        })),
         'District and Quarter-wise Registrations',
         'Districts',
         'Total Registrations',
         true
       )
-    });
+    );
 
-    // -----------------------
-    // Chart 2 – Registry vs Year
-    // -----------------------
-    const years = this.getDistinctYears(this.apiResponse);
-    const registries = this.getDistinctRegistryNames(this.apiResponse);
+    const yearLabels = this.getDistinctValues(this.apiResponse, (row) => row.year)
+      .sort((left, right) => Number(left) - Number(right));
+    const registryLabels = this.getDistinctValues(this.apiResponse, (row) => row.registryName)
+      .sort((left, right) => left.localeCompare(right));
 
-    const datasets2 = years.map((year, i) => ({
-      label: year.toString(),
-      data: registries.map((registry) => {
-        const yearData = this.getYearWiseRegistrations(this.apiResponse, registry, years);
-        return yearData[i];
-      }),
-      backgroundColor: this.getColor(i)
-    }));
-
-    this.chart2 = new Chart('chart2', {
-      type: 'bar',
-      data: { labels: registries, datasets: datasets2 },
-      options: this.getChartOptions(
+    this.chart2 = new Chart(
+      'chart2',
+      this.createBarChartConfig(
+        registryLabels,
+        yearLabels.map((yearLabel, index) => ({
+          label: yearLabel,
+          data: registryLabels.map((registryLabel) =>
+            this.apiResponse
+              .filter((row) => this.valuesMatch(row.registryName, registryLabel) && this.valuesMatch(row.year, yearLabel))
+              .reduce((sum, row) => sum + (row.totalRegistrations || 0), 0)
+          ),
+          backgroundColor: this.getPaletteColor(index)
+        })),
         'Registry-wise Registrations per Year',
         'Registry',
         'Total Registrations'
       )
-    });
+    );
 
-    // -----------------------
-    // Chart 3 – District vs Registry
-    // -----------------------
-    const districts = this.getDistinctDistrictNames(this.apiResponse);
-    const registries3 = this.getDistinctRegistryNames(this.apiResponse);
+    const districtNames = this.getDistinctValues(this.apiResponse, (row) => row.district)
+      .sort((left, right) => left.localeCompare(right));
 
-    const datasets3 = registries3.map((registry, i) => ({
-      label: registry,
-      data: districts.map((district) =>
-        this.getRegistrationsByDistrictAndRegistry(this.apiResponse, district, registry)
-      ),
-      backgroundColor: this.getColor(i)
-    }));
-
-    this.chart3 = new Chart('chart3', {
-      type: 'bar',
-      data: { labels: districts, datasets: datasets3 },
-      options: this.getChartOptions(
+    this.chart3 = new Chart(
+      'chart3',
+      this.createBarChartConfig(
+        districtNames,
+        registryLabels.map((registryLabel, index) => ({
+          label: registryLabel,
+          data: districtNames.map((districtName) =>
+            this.apiResponse
+              .filter(
+                (row) =>
+                  this.valuesMatch(row.district, districtName) &&
+                  this.valuesMatch(row.registryName, registryLabel)
+              )
+              .reduce((sum, row) => sum + (row.totalRegistrations || 0), 0)
+          ),
+          backgroundColor: this.getPaletteColor(index)
+        })),
         'District-wise Registrations per Registry',
         'District',
         'Total Registrations'
       )
-    });
+    );
 
-    // -----------------------
-    // Chart 4 – Year-wise Trends (Prepared / Commented)
-    // -----------------------
-    // const groupedByYear = this.groupDataByYear(this.apiResponse);
-    // const yearLabels = Object.keys(groupedByYear).sort();
-    // const yearlyRegistrations = yearLabels.map((y) => groupedByYear[y].totalRegistrations);
-    // const yearlyDeRegs = yearLabels.map((y) => groupedByYear[y].totalDeRegistrations || 0);
+    const groupedByDistrictAndRegistry = this.groupDataByDistrictAndRegistry(this.apiResponse);
+    const totalWorkingDistrictLabels = Object.keys(groupedByDistrictAndRegistry);
+    const totalWorkingRegistryLabels = Array.from(
+      totalWorkingDistrictLabels.reduce((registryNames, district) => {
+        Object.keys(groupedByDistrictAndRegistry[district]).forEach((registryName) =>
+          registryNames.add(registryName)
+        );
+        return registryNames;
+      }, new Set<string>())
+    );
 
-    // this.chart4 = new Chart('chart4', {
-    //   type: 'bar',
-    //   data: {
-    //     labels: yearLabels,
-    //     datasets: [
-    //       { label: 'New Registrations', data: yearlyRegistrations, backgroundColor: '#17a2b8' },
-    //       { label: 'Deregistrations', data: yearlyDeRegs, backgroundColor: '#6f42c1' }
-    //     ]
-    //   },
-    //   options: this.getChartOptions(
-    //     'Year-wise Registration Trends',
-    //     'Years',
-    //     'Registrations'
-    //   )
-    // });
-
-    // -----------------------
-    // Chart 5 – District & Registry Wise Total Working Persons
-    // -----------------------
-    const groupedData = this.groupDataByDistrictAndRegistry(this.apiResponse);
-    const districtLabels1 = Object.keys(groupedData);
-    const registryNamesSet = new Set<string>();
-
-    districtLabels1.forEach(district => {
-      Object.keys(groupedData[district]).forEach(reg => registryNamesSet.add(reg));
-    });
-
-    const registryNames = Array.from(registryNamesSet);
-
-    const datasets5 = registryNames.map(reg => ({
-      label: reg,
-      data: districtLabels1.map(d => groupedData[d][reg] || 0),
-      backgroundColor: this.getRandomColor()
-    }));
-
-    this.chart5 = new Chart('chart5', {
-      type: 'bar',
-      data: { labels: districtLabels1, datasets: datasets5 },
-      options: this.getChartOptions(
-        'District & Registry Wise Total Working Persons',
+    this.chart5 = new Chart(
+      'chart5',
+      this.createBarChartConfig(
+        totalWorkingDistrictLabels,
+        totalWorkingRegistryLabels.map((registryLabel) => ({
+          label: registryLabel,
+          data: totalWorkingDistrictLabels.map(
+            (districtLabel) => groupedByDistrictAndRegistry[districtLabel][registryLabel] || 0
+          ),
+          backgroundColor: this.getRandomColor()
+        })),
+        'District and Registry-wise Total Working Persons',
         'Districts',
         'Total Working Persons'
       )
-    });
-  }
-
-  // ==============================
-  // 🔹 Chart.js Helpers
-  // ==============================
-  private groupDataByDistrictAndQuarter(data: any[]): Record<string, Record<string, number>> {
-    // Aggregates data by District and Quarter → sum of totalRegistrations
-    const grouped: Record<string, Record<string, number>> = {};
-    data.forEach((item) => {
-      const district = item.district || 'Unknown';
-      const quarter = item.quarter || 'NA';
-      if (!grouped[district]) grouped[district] = {};
-      grouped[district][quarter] = (grouped[district][quarter] || 0) + (item.totalRegistrations || 0);
-    });
-    return grouped;
-  }
-
-  private groupDataByYear(
-    data: any[]
-  ): Record<string, { totalRegistrations: number; totalDeRegistrations: number }> {
-    // Aggregates data by Year → sum of registrations & deregistrations
-    const grouped: Record<string, { totalRegistrations: number; totalDeRegistrations: number }> = {};
-    data.forEach((item) => {
-      const year = item.year || 'Unknown';
-      if (!grouped[year]) {
-        grouped[year] = { totalRegistrations: 0, totalDeRegistrations: 0 };
-      }
-      grouped[year].totalRegistrations += item.totalRegistrations;
-      grouped[year].totalDeRegistrations += item.totalDeRegistrations || 0;
-    });
-    return grouped;
-  }
-
-  getDistinctYears(data: any[]): string[] {
-    // Unique years sorted ascending
-    return Array.from(new Set(data.map((item) => item.year))).sort();
-  }
-
-  getDistinctRegistryNames(data: any[]): string[] {
-    // Unique registry names sorted alphabetically
-    return Array.from(new Set(data.map((item) => item.registryName))).sort();
-  }
-
-  getDistinctDistrictNames(data: any[]): string[] {
-    // Unique district names sorted alphabetically
-    return Array.from(new Set(data.map((item) => item.district))).sort();
-  }
-
-  getYearWiseRegistrations(data: any[], registryName: string, years: string[]): number[] {
-    // For given registry, returns array of registrations for each year
-    return years.map((year) =>
-      data
-        .filter((item) => item.registryName === registryName && item.year === year)
-        .reduce((sum, item) => sum + (item.totalRegistrations || 0), 0)
     );
   }
 
-  getRegistrationsByDistrictAndRegistry(data: any[], district: string, registry: string): number {
-    // Sum of totalRegistrations for given district + registry combination
-    return data
-      .filter((item) => item.district === district && item.registryName === registry)
-      .reduce((sum, item) => sum + (item.totalRegistrations || 0), 0);
+  private createBarChartConfig(
+    labels: string[],
+    datasets: ChartConfiguration<'bar'>['data']['datasets'],
+    title: string,
+    xAxisLabel: string,
+    yAxisLabel: string,
+    stacked = false
+  ): ChartConfiguration<'bar'> {
+    return {
+      type: 'bar',
+      data: {
+        labels,
+        datasets
+      },
+      options: this.getChartOptions(title, xAxisLabel, yAxisLabel, stacked)
+    };
   }
 
-  groupDataByDistrictAndRegistry(data: any[]) {
-    // Aggregates Total Persons Working by District and Registry
-    const result: any = {};
-
-    data.forEach(item => {
-      const district = item.district || 'Unknown';
-      const registry = item.registryName || 'Unknown Registry';
-      const working = item.totalpersonsworking || 0;
-
-      if (!result[district]) {
-        result[district] = {};
+  private getChartOptions(
+    title: string,
+    xAxisLabel: string,
+    yAxisLabel: string,
+    stacked = false
+  ): ChartOptions<'bar'> {
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: title,
+          font: {
+            size: 16,
+            weight: 'bold'
+          }
+        },
+        legend: {
+          position: 'bottom'
+        }
+      },
+      scales: {
+        x: {
+          stacked,
+          title: {
+            display: true,
+            text: xAxisLabel
+          }
+        },
+        y: {
+          stacked,
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: yAxisLabel
+          }
+        }
       }
-      if (!result[district][registry]) {
-        result[district][registry] = 0;
-      }
-      result[district][registry] += working;
-    });
-
-    return result;
+    };
   }
 
-  getColor(index: number): string {
-    // Fixed color palette for consistent coloring across charts
-    const colors = ['#28a745', '#dc3545', '#007bff', '#ffc107', '#6f42c1', '#fd7e14', '#20c997'];
-    return colors[index % colors.length];
+  private groupDataByDistrictAndQuarter(
+    rows: DashboardViewRow[]
+  ): Record<string, Record<string, number>> {
+    return rows.reduce<Record<string, Record<string, number>>>((result, row) => {
+      const district = row.district || 'Unknown';
+      const quarter = row.quarter || 'NA';
+
+      result[district] ??= {};
+      result[district][quarter] = (result[district][quarter] || 0) + (row.totalRegistrations || 0);
+
+      return result;
+    }, {});
   }
 
-  getQuarterColor(quarter: string): string {
-    // Specific colors per quarter (align with MIS / reporting standards)
+  private groupDataByDistrictAndRegistry(
+    rows: DashboardViewRow[]
+  ): Record<string, Record<string, number>> {
+    return rows.reduce<Record<string, Record<string, number>>>((result, row) => {
+      const district = row.district || 'Unknown';
+      const registry = row.registryName || 'Unknown Registry';
+
+      result[district] ??= {};
+      result[district][registry] =
+        (result[district][registry] || 0) + (row.totalpersonsworking || 0);
+
+      return result;
+    }, {});
+  }
+
+  private getDistinctValues(
+    rows: DashboardViewRow[],
+    selector: (row: DashboardViewRow) => string
+  ): string[] {
+    return Array.from(
+      new Set(
+        rows
+          .map((row) => this.normalizeValue(selector(row)))
+          .filter((value) => value !== '')
+      )
+    );
+  }
+
+  private getQuarterColor(quarter: string): string {
     const colors: Record<string, string> = {
       Q1: '#4472C4',
       Q2: '#ED7D31',
       Q3: '#A5A5A5',
       Q4: '#FFC000'
     };
-    return colors[quarter] || '#6c757d';
+
+    return colors[quarter] || '#6C757D';
   }
 
-  getChartOptions(title: string, xLabel: string, yLabel: string, stacked: boolean = false): any {
-    // Common chart options for all bar charts (responsive, titles, axes labels)
-    return {
-      responsive: true,
-      plugins: {
-        title: { display: true, text: title, font: { size: 16, weight: 'bold' } },
-        legend: { position: 'bottom' }
-      },
-      scales: {
-        x: { stacked, title: { display: true, text: xLabel } },
-        y: { stacked, beginAtZero: true, title: { display: true, text: yLabel } }
-      }
-    };
+  private getPaletteColor(index: number): string {
+    const palette = ['#28A745', '#DC3545', '#007BFF', '#FFC107', '#6F42C1', '#FD7E14', '#20C997'];
+    return palette[index % palette.length];
   }
 
-  getRandomColor(): string {
-    // Generates a semi-random RGBA color and ensures uniqueness in the session
-    let color: string;
+  private getRandomColor(): string {
+    let color = '';
+
     do {
-      color = `rgba(${Math.floor(Math.random() * 255)},
-                    ${Math.floor(Math.random() * 255)},
-                    ${Math.floor(Math.random() * 255)},
-                    0.7)`;
-    } while (this.usedColors.includes(color));
-    this.usedColors.push(color);
+      color = `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.7)`;
+    } while (this.usedColors.has(color));
+
+    this.usedColors.add(color);
     return color;
   }
 
-  // ==============================
-  // 🔹 ECharts – Common Cleanup
-  // ==============================
-  private disposeECharts(): void {
-    // Dispose ECharts instances safely
-    if (this.chartInstance) {
-      this.chartInstance.dispose();
-      this.chartInstance = null;
-    }
-    if (this.sunburstChart) {
-      this.sunburstChart.dispose();
-      this.sunburstChart = null;
-    }
+  private destroyAllCharts(): void {
+    [this.chart1, this.chart2, this.chart3, this.chart5].forEach((chart) => chart?.destroy());
+    this.chart1 = null;
+    this.chart2 = null;
+    this.chart3 = null;
+    this.chart5 = null;
   }
 
-  // ==============================
-  // 🔹 ECharts – Brush + Stacked Bar (COMMENTED)
-  // ==============================
-  // private renderEchart(): void {
-  //   if (!isPlatformBrowser(this.platformId)) return;
-  //   if (!this.chartEl?.nativeElement) return;
-  //
-  //   if (!this.apiResponse || this.apiResponse.length === 0) {
-  //     if (this.chartInstance) this.chartInstance.clear();
-  //     return;
-  //   }
-  //
-  //   const grouped = this.groupDataByDistrictAndQuarter(this.apiResponse);
-  //   const districtLabels = Object.keys(grouped);
-  //   const quarters = ['Q1', 'Q2', 'Q3', 'Q4'];
-  //
-  //   const emphasisStyle = {
-  //     itemStyle: {
-  //       shadowBlur: 10,
-  //       shadowColor: 'rgba(0,0,0,0.3)'
-  //     }
-  //   };
-  //
-  //   const series = quarters.map(q => ({
-  //     name: q,
-  //     type: 'bar' as const,
-  //     stack: 'stack',
-  //     emphasis: emphasisStyle,
-  //     data: districtLabels.map(d => grouped[d]?.[q] || 0)
-  //   }));
-  //
-  //   if (this.chartInstance) {
-  //     this.chartInstance.dispose();
-  //   }
-  //
-  //   this.chartInstance = echarts.init(this.chartEl.nativeElement);
-  //
-  //   const option: echarts.EChartsOption = {
-  //     legend: {
-  //       data: quarters,
-  //       left: '10%'
-  //     },
-  //     title: {
-  //       text: 'District vs Quarter – Interactive View',
-  //       left: 'center'
-  //     },
-  //     brush: {
-  //       toolbox: ['rect', 'polygon', 'lineX', 'lineY', 'keep', 'clear'],
-  //       xAxisIndex: 0
-  //     },
-  //     toolbox: {
-  //       feature: {
-  //         magicType: {
-  //           type: ['stack']
-  //         },
-  //         dataView: {}
-  //       }
-  //     },
-  //     tooltip: {
-  //       trigger: 'axis'
-  //     },
-  //     xAxis: {
-  //       data: districtLabels,
-  //       name: 'District',
-  //       axisLine: { onZero: true },
-  //       splitLine: { show: false },
-  //       splitArea: { show: false },
-  //       axisLabel: { rotate: 30 }
-  //     },
-  //     yAxis: {
-  //       type: 'value',
-  //       name: 'Total Registrations'
-  //     },
-  //     grid: {
-  //       bottom: 100,
-  //       left: 60,
-  //       right: 30,
-  //       containLabel: true
-  //     },
-  //     series
-  //   };
-  //
-  //   this.chartInstance.setOption(option);
-  //
-  //   this.chartInstance.on('brushSelected', (params: any) => {
-  //     const brushed: string[] = [];
-  //     const brushComponent = params.batch[0];
-  //
-  //     brushComponent.selected.forEach((sel: any, sIdx: number) => {
-  //       const rawIndices = sel.dataIndex;
-  //       brushed.push(`[${quarters[sIdx]}] → ${rawIndices.join(', ')}`);
-  //     });
-  //
-  //     this.chartInstance?.setOption({
-  //       title: {
-  //         backgroundColor: '#333',
-  //         text: 'SELECTED DATA INDICES:\n' + brushed.join('\n'),
-  //         bottom: 0,
-  //         right: '10%',
-  //         width: 180,
-  //         textStyle: {
-  //           fontSize: 11,
-  //           color: '#fff'
-  //         }
-  //       }
-  //     });
-  //   });
-  //
-  //   window.addEventListener('resize', () => this.chartInstance?.resize());
-  // }
+  private toDashboardViewRow(row: CitizenDashboardRow): DashboardViewRow {
+    const districtName = this.normalizeValue(row.district);
+    const district = this.findDistrictByName(districtName);
+    const stateCode = district ? this.normalizeValue(district.censusStateCode) : '';
 
-  // ==============================
-  // 🔹 ECharts – Sunburst (Quarter → Division → District → Registry)
-  // ==============================
-  initSunburstChart(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-    if (!this.sunburstChartEl?.nativeElement) {
-      console.error('Sunburst chart element missing!');
-      return;
-    }
-
-    if (!this.apiResponse || this.apiResponse.length === 0) {
-      if (this.sunburstChart) this.sunburstChart.clear();
-      return;
-    }
-
-    const el = this.sunburstChartEl.nativeElement;
-
-    if (this.sunburstChart) {
-      this.sunburstChart.dispose();
-    }
-
-    this.sunburstChart = echarts.init(el);
-
-    // Build hierarchical data structure for sunburst
-    const sunburstData = this.buildSunburstData(this.apiResponse || []);
-
-    const option: echarts.EChartsOption = {
-      title: {
-        text: 'Quarter → Division → District → Registry',
-        subtext: 'Size: Registrations | Tooltip: Working Persons',
-        right: 5,
-        bottom: 10,
-        textStyle: { fontSize: 14, fontWeight: 'bold' },
-        subtextStyle: { fontSize: 11 }
-      },
-      tooltip: {
-        trigger: 'item',
-        formatter: (info: any) => {
-          const d = info.data;
-          return `
-            <div style="font-size:12px; line-height:16px; min-width:200px;">
-              <strong>${d?.name}</strong><br/>
-              Quarter: ${d.quarter || '-'}<br/>
-              Division: ${d.division || '-'}<br/>
-              District: ${d.district || '-'}<br/><br/>
-              📦 Registrations: <b>${info.value ?? 0}</b><br/>
-              👷 Working Persons: <b>${d.totalpersonsworking ?? 0}</b>
-            </div>
-          `;
-        }
-      },
-      series: [
-        {
-          type: 'sunburst',
-          data: sunburstData,
-          radius: ['10%', '90%'],
-          sort: undefined,
-          emphasis: { focus: 'ancestor' },
-          label: {
-            rotate: 'radial',
-            overflow: 'break',
-            minAngle: 4,
-            formatter: (params: any) => params.data?.name
-          },
-          levels: [
-            {},
-            {
-              // Quarter level
-              r0: '0%',
-              r: '30%',
-              label: { fontSize: 11, fontWeight: 'bold' },
-              itemStyle: { borderWidth: 2 }
-            },
-            {
-              // Division level
-              r0: '30%',
-              r: '60%',
-              label: { fontSize: 10 }
-            },
-            {
-              // District level
-              r0: '60%',
-              r: '75%',
-              label: { fontSize: 9 },
-              itemStyle: { borderWidth: 1.5 }
-            },
-            {
-              // Registry level (outer ring)
-              r0: '75%',
-              r: '90%',
-              label: {
-                position: 'outside',
-                silent: true,
-                fontSize: 9
-              },
-              itemStyle: { borderWidth: 2 }
-            }
-          ]
-        }
-      ]
+    return {
+      ...row,
+      districtCode: district ? this.normalizeValue(district.censusDistrictCode) : '',
+      stateCode,
+      stateName: this.resolveStateName(stateCode),
+      tehsilName: this.pickFirstAvailableString(row, ['tehsilName', 'tehsil', 'talukaName', 'taluka']),
+      ruralUrbanLabel: this.pickFirstAvailableString(row, ['ruralUrban', 'ruralUrbanLabel', 'locationType', 'areaType']),
+      nicClassificationLabel: this.pickFirstAvailableString(row, ['nicClassification', 'nicClassificationLabel', 'nicClass', 'nic']),
+      deregisteredClosedLabel: this.pickFirstAvailableString(row, ['deregisteredClosed', 'deregisteredClosedLabel', 'status', 'registrationStatus'])
     };
-
-    this.sunburstChart.setOption(option);
-    window.addEventListener('resize', () => this.sunburstChart?.resize());
   }
 
-  private buildSunburstData(data: any[]): any[] {
-    // Builds nested structure: Quarter → Division → District → Registry
-    const grouped: any = {};
+  private findDistrictByName(districtName: string): District | undefined {
+    const normalizedTarget = this.normalizeKey(districtName);
 
-    data.forEach(item => {
-      const quarter = item.quarter || 'NA';
-      const division = item.division || 'Unknown Division';
-      const district = item.district || 'Unknown District';
-      const registry = item.registryName || 'Unknown Registry';
+    return this.districts.find(
+      (district) => this.normalizeKey(district.districtName) === normalizedTarget
+    );
+  }
 
-      if (!grouped[quarter]) grouped[quarter] = {};
-      if (!grouped[quarter][division]) grouped[quarter][division] = {};
-      if (!grouped[quarter][division][district]) grouped[quarter][division][district] = {};
-      if (!grouped[quarter][division][district][registry]) {
-        grouped[quarter][division][district][registry] = {
-          totalRegistrations: 0,
-          totalpersonsworking: 0,
-          quarter,
-          division,
-          district,
-          registry
-        };
+  private getSelectedDistrict(): District | undefined {
+    return this.districts.find(
+      (district) => this.normalizeValue(district.censusDistrictCode) === this.filters.districtCode
+    );
+  }
+
+  private getSelectedTehsil(): Talukas | undefined {
+    return this.tehsils.find(
+      (tehsil) => this.normalizeValue(tehsil.censusTalukaCode) === this.filters.tehsilCode
+    );
+  }
+
+  private getSelectedDivisionCode(): string {
+    const selectedDivision = this.divisions.find(
+      (division) => this.valuesMatch(division.divisionName, this.filters.region)
+    );
+
+    return selectedDivision ? this.normalizeValue(selectedDivision.divisionCode) : '';
+  }
+
+  private resetDistrictAndTehsilIfNeeded(): void {
+    const availableDistrictCodes = new Set(this.districtOptions.map((option) => option.value));
+
+    if (!availableDistrictCodes.has(this.filters.districtCode)) {
+      this.filters.districtCode = '';
+      this.filters.tehsilCode = '';
+      this.tehsils = [];
+    }
+  }
+
+  private matchesSelectedState(district: District): boolean {
+    return (
+      !this.filters.state ||
+      this.normalizeValue(district.censusStateCode) === this.filters.state
+    );
+  }
+
+  private resolveStateName(stateCode: string): string {
+    return STATE_NAME_BY_CODE[stateCode] ?? stateCode;
+  }
+
+  private hasDataForField(selector: (row: DashboardViewRow) => string): boolean {
+    return this.allDashboardRows.some((row) => selector(row) !== '');
+  }
+
+  private pickFirstAvailableString(
+    row: CitizenDashboardRow,
+    candidateKeys: readonly string[]
+  ): string {
+    for (const candidateKey of candidateKeys) {
+      const value = row[candidateKey];
+      const normalizedValue = this.normalizeValue(value);
+      if (normalizedValue) {
+        return normalizedValue;
       }
+    }
 
-      grouped[quarter][division][district][registry].totalRegistrations += item.totalRegistrations;
-      grouped[quarter][division][district][registry].totalpersonsworking += item.totalpersonsworking;
-    });
-
-    return Object.keys(grouped).map(quarter => {
-      let quarterTotReg = 0;
-      let quarterTotWork = 0;
-
-      const divisionChildren = Object.keys(grouped[quarter]).map(division => {
-        let divTotReg = 0;
-        let divTotWork = 0;
-
-        const districtChildren = Object.keys(grouped[quarter][division]).map(district => {
-          let distTotReg = 0;
-          let distTotWork = 0;
-
-          const registryChildren = Object.keys(grouped[quarter][division][district]).map(registry => {
-            const val = grouped[quarter][division][district][registry];
-            distTotReg += val.totalRegistrations;
-            distTotWork += val.totalpersonsworking;
-
-            return {
-              name: registry,
-              value: val.totalRegistrations,
-              totalpersonsworking: val.totalpersonsworking,
-              quarter,
-              division,
-              district,
-              registry
-            };
-          });
-
-          divTotReg += distTotReg;
-          divTotWork += distTotWork;
-
-          return {
-            name: district,
-            value: distTotReg,
-            totalpersonsworking: distTotWork,
-            children: registryChildren,
-            quarter,
-            division
-          };
-        });
-
-        quarterTotReg += divTotReg;
-        quarterTotWork += divTotWork;
-
-        return {
-          name: division,
-          value: divTotReg,
-          totalpersonsworking: divTotWork,
-          children: districtChildren,
-          quarter
-        };
-      });
-
-      return {
-        name: quarter,
-        value: quarterTotReg,
-        totalpersonsworking: quarterTotWork,
-        children: divisionChildren
-      };
-    });
+    return '';
   }
 
-  // ==============================
-  // 🔹 Dashboard KPI Cards
-  // ==============================
-  dashboardCards: any[] = [];
+  private valuesMatch(left: unknown, right: unknown): boolean {
+    return this.normalizeKey(left) === this.normalizeKey(right);
+  }
 
-  fetchCitizenDashboardDataRegDeRegNewReg() {
-    // Fetch totals for registrations, deregistrations, working persons, etc.
-    this.loading = true;
-    this.dataService.getCitizenDashboardDataRegDeRegNewReg().subscribe({
-      next: (res) => {
-        this.loading = false;
-        // Update KPI cards with aggregated values
-        this.updateDashboardSummary(res);
-      },
-      error: (err) => {
-        console.error('Dashboard API Error:', err);
-        this.loading = false;
+  private normalizeValue(value: unknown): string {
+    return typeof value === 'string' || typeof value === 'number'
+      ? String(value).trim()
+      : '';
+  }
+
+  private normalizeKey(value: unknown): string {
+    return this.normalizeValue(value).toLowerCase();
+  }
+
+  private unwrapCollection<T>(response: unknown): T[] {
+    if (Array.isArray(response)) {
+      return response as T[];
+    }
+
+    if (response && typeof response === 'object') {
+      const wrappedResponse = response as { value?: unknown };
+      if (Array.isArray(wrappedResponse.value)) {
+        return wrappedResponse.value as T[];
       }
-    });
-  }
+    }
 
-  updateDashboardSummary(response: any[]) {
-    // Calculate totals from response array
-    const totalRegistrations = response.reduce((s, i) => s + (i.totalRegistrations || 0), 0);
-    const totalDeregistrations = response.reduce((s, i) => s + (i.totalDeregistrations || 0), 0);
-    const newRegistrationsThisYear = response.reduce((s, i) => s + (i.newRegistrationsThisYear || 0), 0);
-    const totalPersonsWorking = response.reduce((s, i) => s + (i.totalPersonsWorking || 0), 0);
-
-    const activeRegistrations = totalRegistrations - totalDeregistrations; // (currently not displayed, but computed)
-
-    // Set KPI Cards Data (used in template HTML)
-    this.dashboardCards = [
-      { label: 'Total Registrations', value: totalRegistrations, icon: 'bi bi-building-check text-primary' },
-      { label: 'Total working persion', value: totalPersonsWorking, icon: 'bi bi-people-fill text-success' },
-      { label: 'Deregistrations', value: totalDeregistrations, icon: 'bi bi-x-octagon-fill text-danger' },
-      { label: 'New Registrations This Year', value: newRegistrationsThisYear, icon: 'bi bi-stars text-warning' }
-    ];
+    return [];
   }
 }
