@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, HostListener, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Chart, ChartConfiguration, ChartOptions, registerables } from 'chart.js';
 import { finalize, Subject, takeUntil } from 'rxjs';
@@ -119,6 +119,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private dashboardSummaryRows: CitizenDashboardDataRegDeRegNewReg[] = [];
   private currentLanguage: DashboardLanguage = 'en';
   private readonly destroy$ = new Subject<void>();
+  private chartRefreshTimer: number | null = null;
   private usedColors = new Set<string>();
 
   constructor(
@@ -252,11 +253,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.clearChartRefreshTimer();
     this.destroyAllCharts();
   }
 
   toggleMenu(): void {
     this.menuVisible = !this.menuVisible;
+    this.scheduleChartRefresh(180);
+  }
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    this.scheduleChartRefresh(180);
   }
 
   onCountTypeChange(): void {
@@ -550,12 +558,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
     ];
   }
 
-  private scheduleChartRefresh(): void {
-    if (!isPlatformBrowser(this.platformId)) {
+  private scheduleChartRefresh(delay = 0): void {
+    if (!isPlatformBrowser(this.platformId) || !this.apiResponse.length) {
       return;
     }
 
-    setTimeout(() => this.updateCharts(), 0);
+    const browserWindow = this.document.defaultView;
+    if (!browserWindow) {
+      return;
+    }
+
+    this.clearChartRefreshTimer();
+
+    this.chartRefreshTimer = browserWindow.setTimeout(() => {
+      this.chartRefreshTimer = null;
+      this.updateCharts();
+    }, delay);
   }
 
   private updateCharts(): void {
@@ -682,71 +700,122 @@ export class DashboardComponent implements OnInit, OnDestroy {
         labels,
         datasets
       },
-      options: this.getChartOptions(title, xAxisLabel, yAxisLabel, stacked)
+      options: this.getChartOptions(labels, title, xAxisLabel, yAxisLabel, stacked)
     };
   }
 
   private getChartOptions(
+    labels: string[],
     title: string,
     xAxisLabel: string,
     yAxisLabel: string,
     stacked = false
   ): ChartOptions<'bar'> {
     const fontFamily = this.getChartFontFamily();
+    const compactViewport = this.isCompactViewport();
+    const tabletViewport = this.isTabletViewport();
+    const axisTickLineLength = compactViewport ? 10 : tabletViewport ? 14 : 18;
 
     return {
+      animation: false,
       responsive: true,
+      resizeDelay: 150,
       maintainAspectRatio: false,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      layout: {
+        padding: {
+          top: 8,
+          right: compactViewport ? 4 : 12,
+          bottom: compactViewport ? 4 : 8,
+          left: compactViewport ? 4 : 8
+        }
+      },
       plugins: {
         title: {
           display: true,
           text: title,
           font: {
             family: fontFamily,
-            size: 16,
+            size: compactViewport ? 13 : 16,
             weight: 'bold'
+          },
+          padding: {
+            bottom: compactViewport ? 12 : 16
           }
         },
         legend: {
-          position: 'bottom',
+          position: compactViewport ? 'top' : 'bottom',
+          maxHeight: compactViewport ? 72 : 96,
           labels: {
+            boxWidth: compactViewport ? 10 : 14,
+            padding: compactViewport ? 12 : 16,
             font: {
-              family: fontFamily
-            }
+              family: fontFamily,
+              size: compactViewport ? 10 : 12
+            },
+            usePointStyle: true
           }
         }
       },
       scales: {
         x: {
           stacked,
+          grid: {
+            display: !compactViewport
+          },
           ticks: {
+            autoSkip: compactViewport,
+            autoSkipPadding: compactViewport ? 10 : 14,
             font: {
-              family: fontFamily
-            }
+              family: fontFamily,
+              size: compactViewport ? 10 : 11
+            },
+            maxRotation: compactViewport ? 0 : 35,
+            minRotation: 0,
+            padding: 8,
+            callback: (_value, index) =>
+              this.formatAxisTickLabel(labels[index] ?? '', axisTickLineLength)
           },
           title: {
             display: true,
             text: xAxisLabel,
             font: {
               family: fontFamily,
+              size: compactViewport ? 10 : 12,
               weight: 'bold'
+            },
+            padding: {
+              top: compactViewport ? 10 : 14
             }
           }
         },
         y: {
           stacked,
           beginAtZero: true,
+          grace: '8%',
+          grid: {
+            color: 'rgba(148, 163, 184, 0.22)'
+          },
           ticks: {
             font: {
-              family: fontFamily
-            }
+              family: fontFamily,
+              size: compactViewport ? 10 : 11
+            },
+            padding: 8
           },
           title: {
             display: true,
             text: yAxisLabel,
             font: {
               family: fontFamily,
+              size: compactViewport ? 10 : 12,
               weight: 'bold'
+            },
+            padding: {
+              bottom: compactViewport ? 8 : 10
             }
           }
         }
@@ -815,6 +884,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.currentLanguage = this.normalizeLanguage(language);
         this.rebuildDashboardRows();
         this.updateDashboardSummary(this.dashboardSummaryRows);
+        this.scheduleChartRefresh(100);
       });
   }
 
@@ -907,6 +977,93 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .trim();
 
     return cssFontFamily || fallbackFontFamily;
+  }
+
+  private isCompactViewport(): boolean {
+    return this.getViewportWidth() < 768;
+  }
+
+  private isTabletViewport(): boolean {
+    const viewportWidth = this.getViewportWidth();
+    return viewportWidth >= 768 && viewportWidth < 1200;
+  }
+
+  private getViewportWidth(): number {
+    if (!isPlatformBrowser(this.platformId)) {
+      return 1280;
+    }
+
+    return this.document.defaultView?.innerWidth ?? 1280;
+  }
+
+  private formatAxisTickLabel(label: string, maxCharactersPerLine: number): string | string[] {
+    const normalizedLabel = this.normalizeValue(label);
+    if (!normalizedLabel || normalizedLabel.length <= maxCharactersPerLine) {
+      return normalizedLabel;
+    }
+
+    const words = normalizedLabel.split(/\s+/).filter(Boolean);
+    if (words.length <= 1) {
+      return `${normalizedLabel.slice(0, Math.max(1, maxCharactersPerLine - 3))}...`;
+      return `${normalizedLabel.slice(0, Math.max(1, maxCharactersPerLine - 1))}…`;
+    }
+
+    const lines: string[] = [];
+    let currentLine = '';
+
+    for (const word of words) {
+      const nextLine = currentLine ? `${currentLine} ${word}` : word;
+
+      if (nextLine.length <= maxCharactersPerLine) {
+        currentLine = nextLine;
+        continue;
+      }
+
+      if (currentLine) {
+        lines.push(currentLine);
+      }
+
+      currentLine = word;
+
+      if (lines.length === 1) {
+        break;
+      }
+    }
+
+    if (currentLine) {
+      lines.push(currentLine);
+    }
+
+    if (lines.length === 1) {
+      return `${lines[0].slice(0, Math.max(1, maxCharactersPerLine - 3))}...`;
+      return `${lines[0].slice(0, Math.max(1, maxCharactersPerLine - 1))}…`;
+    }
+
+    const firstLine = lines[0];
+    const remainingLabel = normalizedLabel.slice(firstLine.length).trim();
+    const secondLineValue = remainingLabel.length > maxCharactersPerLine
+      ? `${remainingLabel.slice(0, Math.max(1, maxCharactersPerLine - 3))}...`
+      : remainingLabel;
+
+    return [firstLine, secondLineValue];
+    const secondLine = remainingLabel.length > maxCharactersPerLine
+      ? `${remainingLabel.slice(0, Math.max(1, maxCharactersPerLine - 1))}…`
+      : remainingLabel;
+
+    return [firstLine, secondLine];
+  }
+
+  private clearChartRefreshTimer(): void {
+    if (this.chartRefreshTimer === null) {
+      return;
+    }
+
+    const browserWindow = this.document.defaultView;
+    if (browserWindow) {
+      browserWindow.clearTimeout(this.chartRefreshTimer);
+    }
+
+    this.chartRefreshTimer = null;
   }
 
   private getPaletteColor(index: number): string {

@@ -1,9 +1,9 @@
 <div class="bglightblue py-3">
-  <div class="container bg-white shadow rounded p-3">
-    <div class="d-md-flex justify-content-between border-b-org p-3">
-      <h1>{{ 'dashboard.title' | translate }}</h1>
+  <div class="container dashboard-shell bg-white shadow rounded p-3 p-lg-4">
+    <div class="dashboard-header d-flex flex-column flex-lg-row justify-content-between align-items-lg-start border-b-org pb-3">
+      <h1 class="dashboard-page-title">{{ 'dashboard.title' | translate }}</h1>
 
-      <nav aria-label="breadcrumb">
+      <nav class="dashboard-breadcrumb" aria-label="breadcrumb">
         <ol class="breadcrumb mb-0">
           <li class="breadcrumb-item"><a routerLink="/">{{ 'HOME' | translate }}</a></li>
           <li class="breadcrumb-item active">{{ 'dashboard.title' | translate }}</li>
@@ -12,16 +12,16 @@
     </div>
 
     <button
-      class="btn mt-3 toggleBtn"
+      class="btn mt-3 dashboard-toggle toggleBtn"
       type="button"
       (click)="toggleMenu()"
     >
       {{ toggleMenuLabelKey | translate }}
     </button>
 
-    <div class="row mt-3">
-      <div class="col-xl-4 col-lg-5" *ngIf="menuVisible">
-        <div class="filter-panel p-4">
+    <div class="row g-4 mt-1 dashboard-grid">
+      <div class="col-xl-4 col-lg-5 dashboard-sidebar-col" *ngIf="menuVisible">
+        <div class="filter-panel dashboard-sidebar p-4">
           <form novalidate>
             <div class="mb-4">
               <label class="form-label filter-label text-white">{{ 'dashboard.filters.count_type' | translate }}</label>
@@ -230,22 +230,24 @@
         </div>
       </div>
 
-      <div [ngClass]="menuVisible ? 'col-xl-8 col-lg-7' : 'col-12'" class="p-2 shadow-cust">
-        <div class="text-center p-2">
-          <h2 class="mb-4 fw-bold">{{ selectedCountLabel }} - {{ 'dashboard.overview_title' | translate }}</h2>
+      <div [ngClass]="menuVisible ? 'col-xl-8 col-lg-7' : 'col-12'" class="dashboard-main-col">
+        <div class="dashboard-main-panel shadow-cust h-100 p-3 p-lg-4">
+          <div class="dashboard-main-header">
+            <h2 class="dashboard-main-title">{{ selectedCountLabel }} - {{ 'dashboard.overview_title' | translate }}</h2>
+          </div>
 
-          <div *ngIf="loading" class="text-center py-5">
+          <div *ngIf="loading" class="dashboard-feedback text-center py-5">
             <div class="spinner-border text-primary loading-spinner"></div>
             <p class="mt-3 fw-bold text-primary">{{ 'dashboard.loading' | translate }}</p>
           </div>
 
-          <div *ngIf="!loading && apiResponse.length === 0" class="text-center py-5">
+          <div *ngIf="!loading && apiResponse.length === 0" class="dashboard-feedback text-center py-5">
             <h4 class="text-danger fw-bold">{{ 'dashboard.no_data_title' | translate }}</h4>
             <p>{{ 'dashboard.no_data_message' | translate }}</p>
           </div>
 
           <div *ngIf="!loading && apiResponse.length > 0">
-            <div class="row mt-3 text-center">
+            <div class="row g-3 dashboard-kpis text-center">
               <div class="col-md-6 col-xl-3 mb-3" *ngFor="let card of dashboardCards; trackBy: trackByCard">
                 <div class="kpi-card p-3">
                   <div class="kpi-value">{{ card.value | number }}</div>
@@ -255,42 +257,46 @@
               </div>
             </div>
 
-            <div class="row">
-              <div class="col-12 mb-4">
+            <div class="row g-4 dashboard-chart-stack">
+              <div class="col-12">
                 <div class="chart-card">
-                  <div class="chart-canvas-wrap">
-                    <canvas id="chart1"></canvas>
+                  <div class="chart-scroll">
+                    <div class="chart-canvas-wrap">
+                      <canvas id="chart1"></canvas>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <div *ngIf="!loading && apiResponse.length > 0">
-      <div class="row mt-5">
-        <div class="col-12 mb-4">
-          <div class="chart-card">
-            <div class="chart-canvas-wrap">
-              <canvas id="chart2"></canvas>
-            </div>
-          </div>
-        </div>
+              <div class="col-12">
+                <div class="chart-card">
+                  <div class="chart-scroll">
+                    <div class="chart-canvas-wrap">
+                      <canvas id="chart2"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-        <div class="col-12 mb-4">
-          <div class="chart-card">
-            <div class="chart-canvas-wrap">
-              <canvas id="chart3"></canvas>
-            </div>
-          </div>
-        </div>
+              <div class="col-12">
+                <div class="chart-card">
+                  <div class="chart-scroll">
+                    <div class="chart-canvas-wrap">
+                      <canvas id="chart3"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-        <div class="col-12 mb-4">
-          <div class="chart-card">
-            <div class="chart-canvas-wrap">
-              <canvas id="chart5"></canvas>
+              <div class="col-12">
+                <div class="chart-card">
+                  <div class="chart-scroll">
+                    <div class="chart-canvas-wrap">
+                      <canvas id="chart5"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
