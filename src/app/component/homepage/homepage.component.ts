@@ -71,7 +71,8 @@ export class HomepageComponent implements OnInit {
     'assets/images/slide/banner_5.png',
     'assets/images/slide/banner_6.png',
     'assets/images/slide/banner_7.png',
-    'assets/images/slide/banner_8.png'
+    'assets/images/slide/banner_8.png',
+    'assets/images/slide/banner_9.png'
   ];
 
 }
