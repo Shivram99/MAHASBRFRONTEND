@@ -1,5 +1,5 @@
 <div class="bglightblue py-3">
-  <div class="container dashboard-shell bg-white shadow rounded p-3 p-lg-4">
+  <div class="container content dashboard-shell p-3 p-lg-4">
     <div class="dashboard-header d-flex flex-column flex-lg-row justify-content-between align-items-lg-start border-b-org pb-3">
       <h1 class="dashboard-page-title">{{ 'dashboard.title' | translate }}</h1>
 
@@ -12,7 +12,7 @@
     </div>
 
     <button
-      class="btn mt-3 dashboard-toggle toggleBtn"
+      class="btn btn-primary mt-3 dashboard-toggle"
       type="button"
       (click)="toggleMenu()"
     >
@@ -24,9 +24,9 @@
         <div class="filter-panel dashboard-sidebar p-4">
           <form novalidate>
             <div class="mb-4">
-              <label class="form-label filter-label text-white">{{ 'dashboard.filters.count_type' | translate }}</label>
+              <label class="form-label filter-label">{{ 'dashboard.filters.count_type' | translate }}</label>
 
-              <div class="form-check text-white" *ngFor="let type of countTypeOptions">
+              <div class="form-check" *ngFor="let type of countTypeOptions">
                 <input
                   class="form-check-input"
                   type="radio"
@@ -37,13 +37,13 @@
                   (ngModelChange)="onCountTypeChange()"
                 />
                 <label class="form-check-label" [for]="type.key">
-                  {{ type.key }} : {{ type.labelKey | translate }}
+                  {{ type.labelKey | translate }}
                 </label>
               </div>
             </div>
 
             <div class="mb-3">
-              <label class="form-label filter-label text-white">{{ 'dashboard.filters.year' | translate }}</label>
+              <label class="form-label filter-label">{{ 'dashboard.filters.year' | translate }}</label>
               <select class="form-select" [(ngModel)]="filters.year" name="year">
                 <option value="">{{ 'dashboard.filters.year_placeholder' | translate }}</option>
                 <option
@@ -56,7 +56,7 @@
             </div>
 
             <div class="mb-3">
-              <label class="form-label filter-label text-white">{{ 'dashboard.filters.rural_urban' | translate }}</label>
+              <label class="form-label filter-label">{{ 'dashboard.filters.rural_urban' | translate }}</label>
               <select
                 class="form-select"
                 [(ngModel)]="filters.ruralUrban"
@@ -80,7 +80,7 @@
             </div>
 
             <div class="mb-3">
-              <label class="form-label filter-label text-white">{{ 'dashboard.filters.state' | translate }}</label>
+              <label class="form-label filter-label">{{ 'dashboard.filters.state' | translate }}</label>
               <select
                 class="form-select"
                 [(ngModel)]="filters.state"
@@ -98,7 +98,7 @@
             </div>
 
             <div class="mb-3">
-              <label class="form-label filter-label text-white">{{ 'dashboard.filters.region' | translate }}</label>
+              <label class="form-label filter-label">{{ 'dashboard.filters.region' | translate }}</label>
               <select
                 class="form-select"
                 [(ngModel)]="filters.region"
@@ -116,7 +116,7 @@
             </div>
 
             <div class="mb-3">
-              <label class="form-label filter-label text-white">{{ 'dashboard.filters.district' | translate }}</label>
+              <label class="form-label filter-label">{{ 'dashboard.filters.district' | translate }}</label>
               <select
                 class="form-select"
                 [(ngModel)]="filters.districtCode"
@@ -134,7 +134,7 @@
             </div>
 
             <div class="mb-3">
-              <label class="form-label filter-label text-white">{{ 'dashboard.filters.tehsil' | translate }}</label>
+              <label class="form-label filter-label">{{ 'dashboard.filters.tehsil' | translate }}</label>
               <select
                 class="form-select"
                 [(ngModel)]="filters.tehsilCode"
@@ -158,7 +158,7 @@
             </div>
 
             <div class="mb-3">
-              <label class="form-label filter-label text-white">{{ 'dashboard.filters.acts_registering_authority' | translate }}</label>
+              <label class="form-label filter-label">{{ 'dashboard.filters.acts_registering_authority' | translate }}</label>
               <select class="form-select" [(ngModel)]="filters.act" name="act">
                 <option value="">{{ 'dashboard.filters.acts_registering_authority_placeholder' | translate }}</option>
                 <option
@@ -171,7 +171,7 @@
             </div>
 
             <div class="mb-3">
-              <label class="form-label filter-label text-white">{{ 'dashboard.filters.industry_nic_classification' | translate }}</label>
+              <label class="form-label filter-label">{{ 'dashboard.filters.industry_nic_classification' | translate }}</label>
               <select
                 class="form-select"
                 [(ngModel)]="filters.nicClassification"
@@ -195,7 +195,7 @@
             </div>
 
             <div class="mb-4">
-              <label class="form-label filter-label text-white">{{ 'dashboard.filters.deregistered_closed' | translate }}</label>
+              <label class="form-label filter-label">{{ 'dashboard.filters.deregistered_closed' | translate }}</label>
               <select
                 class="form-select"
                 [(ngModel)]="filters.deregisteredClosed"

@@ -82,8 +82,44 @@ const STATE_NAME_BY_CODE: Readonly<Record<string, string>> = {
   '27': 'Maharashtra'
 };
 
+const DISTRICT_TRANSLATION_ALIASES: Readonly<Record<string, string>> = {
+  ahmednager: 'ahmednagar',
+  ahmadnagar: 'ahmednagar',
+  gondiya: 'gondia',
+  mumbai: 'mumbai',
+  mumbai_district: 'mumbai',
+  raigarh: 'raigad',
+  raighar: 'raigad',
+  raygad: 'raigad',
+  mumbai_city_district: 'mumbai_city',
+  mumbai_city_dist: 'mumbai_city',
+  greater_mumbai: 'mumbai_city',
+  mumbai_suburban_district: 'mumbai_suburban',
+  mumbai_suburban_dist: 'mumbai_suburban',
+  mumbai_suburban_mumbai: 'mumbai_suburban',
+  mumbai_suburb: 'mumbai_suburban',
+  mumbai_suburbs: 'mumbai_suburban',
+  suburban_mumbai: 'mumbai_suburban'
+};
+
 const ENGLISH_FONT_FAMILY = '"Times New Roman", Times, serif';
 const MARATHI_FONT_FAMILY = '"DVOT SurekhMR", "Noto Sans Devanagari", serif';
+const DASHBOARD_UPPERCASE_TOKENS = new Set([
+  'API',
+  'BRN',
+  'CSV',
+  'DES',
+  'DR',
+  'ID',
+  'MSME',
+  'NIC',
+  'NR',
+  'Q1',
+  'Q2',
+  'Q3',
+  'Q4',
+  'TR'
+]);
 
 @Component({
   selector: 'app-dashboard',
@@ -132,7 +168,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   get selectedCountLabel(): string {
     const selectedCountType = this.countTypeOptions.find((type) => type.key === this.filters.countType);
-    return selectedCountType ? this.translate.instant(selectedCountType.labelKey) : '';
+    return selectedCountType
+      ? this.formatDashboardText(this.translate.instant(selectedCountType.labelKey))
+      : '';
   }
 
   get toggleMenuLabelKey(): string {
@@ -187,7 +225,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return this.tehsils
       .map((tehsil) => ({
         value: this.normalizeValue(tehsil.censusTalukaCode),
-        label: this.normalizeValue(tehsil.talukaName)
+        label: this.formatDashboardText(this.normalizeValue(tehsil.talukaName))
       }))
       .sort((left, right) => left.label.localeCompare(right.label));
   }
@@ -420,7 +458,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
       )
     ).sort((left, right) => left.localeCompare(right));
 
-    this.nicClassificationOptions = nicValues.map((value) => ({ value, label: value }));
+    this.nicClassificationOptions = nicValues.map((value) => ({
+      value,
+      label: this.formatDashboardText(value)
+    }));
 
     if (!this.isNicClassificationFilterAvailable) {
       this.filters.nicClassification = '';
@@ -536,22 +577,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     this.dashboardCards = [
       {
-        label: this.translate.instant('dashboard.cards.total_registrations'),
+        label: this.formatDashboardText(this.translate.instant('dashboard.cards.total_registrations')),
         value: totalRegistrations,
         icon: 'bi bi-building-check text-primary'
       },
       {
-        label: this.translate.instant('dashboard.cards.total_working_persons'),
+        label: this.formatDashboardText(this.translate.instant('dashboard.cards.total_working_persons')),
         value: totalPersonsWorking,
         icon: 'bi bi-people-fill text-success'
       },
       {
-        label: this.translate.instant('dashboard.cards.deregistrations'),
+        label: this.formatDashboardText(this.translate.instant('dashboard.cards.deregistrations')),
         value: totalDeregistrations,
         icon: 'bi bi-x-octagon-fill text-danger'
       },
       {
-        label: this.translate.instant('dashboard.cards.new_registrations_this_year'),
+        label: this.formatDashboardText(this.translate.instant('dashboard.cards.new_registrations_this_year')),
         value: newRegistrationsThisYear,
         icon: 'bi bi-stars text-warning'
       }
@@ -600,9 +641,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
           data: districtKeys.map((district) => groupedByDistrictAndQuarter[district][quarterLabel] || 0),
           backgroundColor: this.getQuarterColor(quarterLabel)
         })),
-        this.translate.instant('dashboard.charts.district_quarter_registrations_title'),
-        this.translate.instant('dashboard.charts.districts_axis'),
-        this.translate.instant('dashboard.charts.total_registrations_axis'),
+        this.formatDashboardText(this.translate.instant('dashboard.charts.district_quarter_registrations_title')),
+        this.formatDashboardText(this.translate.instant('dashboard.charts.districts_axis')),
+        this.formatDashboardText(this.translate.instant('dashboard.charts.total_registrations_axis')),
         true
       )
     );
@@ -625,9 +666,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
           ),
           backgroundColor: this.getPaletteColor(index)
         })),
-        this.translate.instant('dashboard.charts.registry_year_registrations_title'),
-        this.translate.instant('dashboard.charts.registry_axis'),
-        this.translate.instant('dashboard.charts.total_registrations_axis')
+        this.formatDashboardText(this.translate.instant('dashboard.charts.registry_year_registrations_title')),
+        this.formatDashboardText(this.translate.instant('dashboard.charts.registry_axis')),
+        this.formatDashboardText(this.translate.instant('dashboard.charts.total_registrations_axis'))
       )
     );
 
@@ -651,9 +692,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
           ),
           backgroundColor: this.getPaletteColor(index)
         })),
-        this.translate.instant('dashboard.charts.district_registry_registrations_title'),
-        this.translate.instant('dashboard.charts.district_axis'),
-        this.translate.instant('dashboard.charts.total_registrations_axis')
+        this.formatDashboardText(this.translate.instant('dashboard.charts.district_registry_registrations_title')),
+        this.formatDashboardText(this.translate.instant('dashboard.charts.district_axis')),
+        this.formatDashboardText(this.translate.instant('dashboard.charts.total_registrations_axis'))
       )
     );
 
@@ -679,9 +720,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
           ),
           backgroundColor: this.getRandomColor()
         })),
-        this.translate.instant('dashboard.charts.district_registry_working_persons_title'),
-        this.translate.instant('dashboard.charts.districts_axis'),
-        this.translate.instant('dashboard.charts.total_working_persons_axis')
+        this.formatDashboardText(this.translate.instant('dashboard.charts.district_registry_working_persons_title')),
+        this.formatDashboardText(this.translate.instant('dashboard.charts.districts_axis')),
+        this.formatDashboardText(this.translate.instant('dashboard.charts.total_working_persons_axis'))
       )
     );
   }
@@ -715,6 +756,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const compactViewport = this.isCompactViewport();
     const tabletViewport = this.isTabletViewport();
     const axisTickLineLength = compactViewport ? 10 : tabletViewport ? 14 : 18;
+    const headingColor = '#2676C3';
+    const bodyTextColor = '#555555';
+    const chartGridColor = 'rgba(38, 118, 195, 0.14)';
 
     return {
       animation: false,
@@ -735,6 +779,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       },
       plugins: {
         title: {
+          color: headingColor,
           display: true,
           text: title,
           font: {
@@ -751,6 +796,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           maxHeight: compactViewport ? 72 : 96,
           labels: {
             boxWidth: compactViewport ? 10 : 14,
+            color: bodyTextColor,
             padding: compactViewport ? 12 : 16,
             font: {
               family: fontFamily,
@@ -764,11 +810,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
         x: {
           stacked,
           grid: {
+            color: chartGridColor,
             display: !compactViewport
           },
           ticks: {
             autoSkip: compactViewport,
             autoSkipPadding: compactViewport ? 10 : 14,
+            color: bodyTextColor,
             font: {
               family: fontFamily,
               size: compactViewport ? 10 : 11
@@ -780,6 +828,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
               this.formatAxisTickLabel(labels[index] ?? '', axisTickLineLength)
           },
           title: {
+            color: headingColor,
             display: true,
             text: xAxisLabel,
             font: {
@@ -797,9 +846,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
           beginAtZero: true,
           grace: '8%',
           grid: {
-            color: 'rgba(148, 163, 184, 0.22)'
+            color: chartGridColor
           },
           ticks: {
+            color: bodyTextColor,
             font: {
               family: fontFamily,
               size: compactViewport ? 10 : 11
@@ -807,6 +857,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             padding: 8
           },
           title: {
+            color: headingColor,
             display: true,
             text: yAxisLabel,
             font: {
@@ -893,7 +944,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private getQuarterLabel(quarter: string): string {
-    return this.translate.instant(`dashboard.quarters.${quarter.toLowerCase()}`);
+    return this.formatDashboardText(
+      this.translate.instant(`dashboard.quarters.${quarter.toLowerCase()}`)
+    );
   }
 
   private localizeStateName(stateName: string): string {
@@ -901,7 +954,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private localizeDistrictName(districtName: string): string {
-    return this.translateMappedValue('map.district', districtName);
+    const normalizedDistrictName = this.normalizeValue(districtName);
+    if (!normalizedDistrictName) {
+      return '';
+    }
+
+    const translationKey = `map.district.${this.getDistrictLookupKey(normalizedDistrictName)}`;
+    const translatedValue = this.translate.instant(translationKey);
+
+    return this.formatDashboardText(
+      translatedValue !== translationKey ? translatedValue : normalizedDistrictName
+    );
   }
 
   private localizeRegionName(regionName: string): string {
@@ -917,7 +980,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const translationKey = `${namespace}.${this.toTranslationKeySegment(normalizedValue)}`;
     const translatedValue = this.translate.instant(translationKey);
 
-    return translatedValue !== translationKey ? translatedValue : normalizedValue;
+    return this.formatDashboardText(
+      translatedValue !== translationKey ? translatedValue : normalizedValue
+    );
   }
 
   private toTranslationKeySegment(value: string): string {
@@ -936,12 +1001,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
       return marathiName || englishName;
     }
 
-    return englishName || marathiName;
+    return this.formatDashboardText(englishName || marathiName);
   }
 
   private getRegistryDisplayName(registryName: string): string {
     const matchingRegistry = this.findRegistryByAnyName(registryName);
-    return matchingRegistry ? this.getLocalizedRegistryName(matchingRegistry) : registryName;
+    return this.formatDashboardText(
+      matchingRegistry ? this.getLocalizedRegistryName(matchingRegistry) : registryName
+    );
   }
 
   private findRegistryByAnyName(registryName: string): RegistryResponse | undefined {
@@ -997,7 +1064,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private formatAxisTickLabel(label: string, maxCharactersPerLine: number): string | string[] {
-    const normalizedLabel = this.normalizeValue(label);
+    const normalizedLabel = this.formatDashboardText(this.normalizeValue(label));
     if (!normalizedLabel || normalizedLabel.length <= maxCharactersPerLine) {
       return normalizedLabel;
     }
@@ -1110,11 +1177,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private findDistrictByName(districtName: string): District | undefined {
-    const normalizedTarget = this.normalizeKey(districtName);
+    const normalizedTarget = this.getDistrictLookupKey(districtName);
 
     return this.districts.find(
-      (district) => this.normalizeKey(district.districtName) === normalizedTarget
+      (district) => this.getDistrictLookupKey(district.districtName) === normalizedTarget
     );
+  }
+
+  private getDistrictLookupKey(districtName: string): string {
+    const normalizedDistrictKey = this.toTranslationKeySegment(districtName);
+    return DISTRICT_TRANSLATION_ALIASES[normalizedDistrictKey] ?? normalizedDistrictKey;
   }
 
   private getSelectedDistrict(): District | undefined {
@@ -1170,11 +1242,28 @@ export class DashboardComponent implements OnInit, OnDestroy {
       const value = row[candidateKey];
       const normalizedValue = this.normalizeValue(value);
       if (normalizedValue) {
-        return normalizedValue;
+        return this.formatDashboardText(normalizedValue);
       }
     }
 
     return '';
+  }
+
+  private formatDashboardText(value: string): string {
+    const normalizedValue = this.normalizeValue(value);
+    if (!normalizedValue || this.currentLanguage !== 'en') {
+      return normalizedValue;
+    }
+
+    return normalizedValue.replace(/[A-Za-z0-9]+(?:['&][A-Za-z0-9]+)*/g, (token) => {
+      const uppercaseToken = token.toUpperCase();
+      if (DASHBOARD_UPPERCASE_TOKENS.has(uppercaseToken)) {
+        return uppercaseToken;
+      }
+
+      const lowercaseToken = token.toLowerCase();
+      return `${lowercaseToken.charAt(0).toUpperCase()}${lowercaseToken.slice(1)}`;
+    });
   }
 
   private valuesMatch(left: unknown, right: unknown): boolean {
