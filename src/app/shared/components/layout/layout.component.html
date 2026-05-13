@@ -6,7 +6,8 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a [routerLink]="['/']">{{ 'HOME' | translate }}</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ activeLabel | uppercase | translate }}</li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ activeLabel | uppercase | translate }}
+                        </li>
                     </ol>
                 </nav>
             </div>
@@ -22,97 +23,88 @@
                             <img [src]="item.icon" /> {{ item.label | translate }} 
                         </button> -->
 
-                         <ng-container *ngFor="let m of menus">
+                        <ng-container *ngFor="let m of menus">
 
-    <!-- PARENT LEVEL -->
-    <button
-      class="nav-link parent-link d-flex align-items-center"
-      type="button"
-      (click)="toggleMenu(m)"
-      [ngClass]="{ 'active-parent': activeParent?.id === m.id }">
+                            <!-- PARENT LEVEL -->
+                            <button class="nav-link parent-link d-flex align-items-center" type="button"
+                                (click)="toggleMenu(m)" [ngClass]="{ 'active-parent': activeParent?.id === m.id }">
 
-      <i class="{{ m.icon }} menu-icon"></i>
-      <span>{{ m.nameEn }}</span>
+                                <i class="{{ m.icon }} menu-icon"></i>
+                                <span>{{ m.nameEn }}</span>
 
-      <i *ngIf="m.children?.length"
-         class="bi ms-auto"
-         [ngClass]="{
+                                <i *ngIf="m.children?.length" class="bi ms-auto" [ngClass]="{
            'bi-chevron-down': activeParent?.id === m.id,
            'bi-chevron-right': activeParent?.id !== m.id
          }"></i>
-    </button>
+                            </button>
 
-    <!-- CHILD LEVEL -->
-    <div *ngIf="activeParent?.id === m.id && m.children?.length"
-         class="submenu-container">
+                            <!-- CHILD LEVEL -->
+                            <div *ngIf="activeParent?.id === m.id && m.children?.length" class="submenu-container">
 
-      <ng-container *ngFor="let child of m.children">
+                                <ng-container *ngFor="let child of m.children">
 
-        <!-- CHILD MENU BUTTON -->
-        <button
-          class="nav-link child-link d-flex align-items-center"
-          type="button"
-          (click)="toggleChild(child)"
-          [ngClass]="{ 'active-child': activeChild?.id === child.id }">
+                                    <!-- CHILD MENU BUTTON -->
+                                    <button class="nav-link child-link d-flex align-items-center" type="button"
+                                        (click)="toggleChild(child)"
+                                        [ngClass]="{ 'active-child': activeChild?.id === child.id }">
 
-          <i class="{{ child.icon }} child-icon"></i>
-          <span>{{ child.nameEn }}</span>
+                                        <i class="{{ child.icon }} child-icon"></i>
+                                        <span>{{ child.nameEn }}</span>
 
-          <i *ngIf="child.children?.length"
-             class="bi ms-auto"
-             [ngClass]="{
+                                        <i *ngIf="child.children?.length" class="bi ms-auto" [ngClass]="{
                'bi-chevron-down': activeChild?.id === child.id,
                'bi-chevron-right': activeChild?.id !== child.id
              }"></i>
-        </button>
+                                    </button>
 
-        <!-- SUB-CHILD LEVEL -->
-        <div *ngIf="activeChild?.id === child.id && child.children?.length"
-             class="subchild-container">
+                                    <!-- SUB-CHILD LEVEL -->
+                                    <div *ngIf="activeChild?.id === child.id && child.children?.length"
+                                        class="subchild-container">
 
-          <a
-            *ngFor="let sub of child.children"
-            class="nav-link subchild-link d-flex align-items-center"
-            [routerLink]="sub.route"
-            routerLinkActive="active-subchild">
+                                        <a *ngFor="let sub of child.children"
+                                            class="nav-link subchild-link d-flex align-items-center"
+                                            [routerLink]="sub.route" routerLinkActive="active-subchild">
 
-            <i class="{{ sub.icon }} subchild-icon"></i>
-            <span>{{ sub.nameEn }}</span>
-          </a>
-        </div>
+                                            <i class="{{ sub.icon }} subchild-icon"></i>
+                                            <span>{{ sub.nameEn }}</span>
+                                        </a>
+                                    </div>
 
-      </ng-container>
+                                </ng-container>
 
-    </div>
+                            </div>
 
-  </ng-container>
+                        </ng-container>
                     </div>
 
-                    
 
-                    <div class="cust-butns d-flex align-items-center">
-                        <!-- Logout Button -->
-                        <button class="btn btn-warning btn-sm me-2" (click)="logout()">
-                            {{ 'BUTTON.LOGOUT' | translate }}
-                        </button>
 
-                        <!-- Admin Dropdown -->
-                        <div class="dropdown" id="adminDropdown">
-                            <button class="btn btn-primary btn-sm dropdown-toggle d-flex align-items-center"
-                                type="button" data-bs-toggle="dropdown">
-                                <img [src]="progfileIcon" style="width: 19px; margin-right: 5px;" />   {{ user?.userProfile?.fullName || 'Admin' }}
+                    <div class="content-panel">
+                        <div class="cust-butns">
+                            <div class="dropdown" id="adminDropdown">
+                                <button class="btn btn-primary btn-sm dropdown-toggle d-flex align-items-center"
+                                    type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <img [src]="progfileIcon" style="width: 19px; margin-right: 5px;" alt="Profile" />
+                                    {{ user?.userProfile?.fullName || 'Admin' }}
+                                </button>
+
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item" [routerLink]="['profile']">
+                                            {{ 'MENU.PROFILE' | translate}}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <button class="btn btn-warning btn-sm me-2" type="button" (click)="logout()">
+                                {{ 'BUTTON.LOGOUT' | translate }}
                             </button>
-
-                            
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" [routerLink]="['profile']">{{ 'MENU.PROFILE' | translate}}</a></li>
-                            </ul> 
                         </div>
-                        
-                    </div>
 
-                    <div class="tab-content tab-content-set " id="v-pills-tabContent">
-                        <router-outlet></router-outlet>
+                        <div class="tab-content tab-content-set" id="v-pills-tabContent">
+                            <router-outlet></router-outlet>
+                        </div>
                     </div>
                 </div>
             </div>

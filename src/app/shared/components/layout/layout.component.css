@@ -38,16 +38,23 @@ text-align: left;
     margin-right: 10px ;
 }
 .cust-butns {
-    z-index: 99;
-    position: absolute;
-    right: 1%;
-} 
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+.content-panel {
+    flex: 1;
+    min-width: 0;
+}
 .tab-content-set {
-    margin-top: 3%;
+    margin-top: 0;
 }
 #adminDropdown:hover .dropdown-menu {
   display: block;
-  margin-top: 0; /* remove gap */
+  margin-top: 0;
   min-width: 134px !important;
 }
 .content {
@@ -72,6 +79,18 @@ background: #004056;
 @media screen and (max-width:767px){
     .bglightblue {
     padding: 0;
+}
+.dashboardTabs {
+    flex-direction: column;
+}
+.dashboardTabs #v-pills-tab {
+    width: 100%;
+    min-height: auto;
+    margin-bottom: 16px;
+}
+.cust-butns {
+    justify-content: flex-end;
+    gap: 10px;
 }
 }
 
