@@ -2,14 +2,17 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { PLATFORM_ID } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { DashboardComponent } from './dashboard.component';
 import { SerachBrnService } from '../../services/serach-brn.service';
+import { LanguageService } from '../../core/services/language.service';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
   let fixture: ComponentFixture<DashboardComponent>;
   let searchBrnServiceSpy: jasmine.SpyObj<SerachBrnService>;
+  let languageServiceSpy: jasmine.SpyObj<LanguageService>;
 
   beforeEach(async () => {
     searchBrnServiceSpy = jasmine.createSpyObj<SerachBrnService>('SerachBrnService', [
@@ -28,11 +31,20 @@ describe('DashboardComponent', () => {
     searchBrnServiceSpy.getFilteredDashboardData.and.returnValue(of([]));
     searchBrnServiceSpy.getCitizenDashboardDataRegDeRegNewReg.and.returnValue(of([]));
 
+    languageServiceSpy = jasmine.createSpyObj<LanguageService>('LanguageService', [
+      'getCurrentLanguage',
+      'getLanguageObservable'
+    ]);
+
+    languageServiceSpy.getCurrentLanguage.and.returnValue('en');
+    languageServiceSpy.getLanguageObservable.and.returnValue(of('en'));
+
     await TestBed.configureTestingModule({
       declarations: [DashboardComponent],
-      imports: [FormsModule],
+      imports: [FormsModule, TranslateModule.forRoot()],
       providers: [
         { provide: SerachBrnService, useValue: searchBrnServiceSpy },
+        { provide: LanguageService, useValue: languageServiceSpy },
         { provide: PLATFORM_ID, useValue: 'browser' }
       ]
     })

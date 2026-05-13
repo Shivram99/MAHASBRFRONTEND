@@ -292,5 +292,90 @@
       "instagram": "इंस्टाग्राम",
       "youtube": "यूट्यूब"
     }
+  },
+  "dashboard": {
+    "title": "डॅशबोर्ड",
+    "toggle_open_filters": "फिल्टर्स उघडा",
+    "toggle_close_filters": "फिल्टर्स बंद करा",
+    "overview_title": "डॅशबोर्ड आढावा",
+    "loading": "माहिती लोड होत आहे...",
+    "no_data_title": "माहिती उपलब्ध नाही",
+    "no_data_message": "कृपया फिल्टर्स बदला आणि पुन्हा प्रयत्न करा.",
+    "backend_note": "लाइव्ह डॅशबोर्ड API सध्या गणना प्रकार, वर्ष, राज्य, विभाग, जिल्हा आणि नोंदणी प्राधिकरण यांनाच समर्थन देते. ग्रामीण/शहरी, तहसील, उद्योग/NIC वर्गीकरण आणि नोंदणी रद्द/बंद हे पर्याय बॅकएंडमध्ये ही माहिती उपलब्ध झाल्यावर सक्रिय होतील.",
+    "buttons": {
+      "apply": "लागू करा",
+      "clear": "साफ करा"
+    },
+    "filters": {
+      "count_type": "गणना प्रकार",
+      "year": "वर्ष",
+      "year_placeholder": "-- वर्ष निवडा --",
+      "rural_urban": "ग्रामीण/शहरी",
+      "rural_urban_placeholder": "-- ग्रामीण/शहरी निवडा --",
+      "state": "राज्य",
+      "state_placeholder": "-- राज्य निवडा --",
+      "region": "विभाग",
+      "region_placeholder": "-- विभाग निवडा --",
+      "district": "जिल्हा",
+      "district_placeholder": "-- जिल्हा निवडा --",
+      "tehsil": "तहसील",
+      "tehsil_placeholder": "-- तहसील निवडा --",
+      "acts_registering_authority": "अधिनियम/नोंदणी प्राधिकरण",
+      "acts_registering_authority_placeholder": "-- अधिनियम/नोंदणी प्राधिकरण निवडा --",
+      "industry_nic_classification": "उद्योग/NIC वर्गीकरण",
+      "industry_nic_classification_placeholder": "-- उद्योग/NIC वर्गीकरण निवडा --",
+      "deregistered_closed": "नोंदणी रद्द/बंद",
+      "deregistered_closed_placeholder": "-- नोंदणी रद्द/बंद निवडा --",
+      "backend_pending": "-- बॅकएंड माहिती प्रलंबित --"
+    },
+    "count_types": {
+      "nr": "नवीन नोंदणी",
+      "tr": "एकूण नोंदणी",
+      "dr": "नोंदणी रद्द"
+    },
+    "options": {
+      "rural": "ग्रामीण",
+      "urban": "शहरी",
+      "deregistered": "नोंदणी रद्द",
+      "closed": "बंद"
+    },
+    "cards": {
+      "total_registrations": "एकूण नोंदण्या",
+      "total_working_persons": "एकूण कार्यरत व्यक्ती",
+      "deregistrations": "नोंदणी रद्दीकरणे",
+      "new_registrations_this_year": "चालू वर्षातील नवीन नोंदण्या"
+    },
+    "charts": {
+      "district_quarter_registrations_title": "जिल्हानिहाय व तिमाहीनिहाय नोंदण्या",
+      "districts_axis": "जिल्हे",
+      "district_axis": "जिल्हा",
+      "registry_axis": "नोंदणी प्राधिकरण",
+      "total_registrations_axis": "एकूण नोंदण्या",
+      "total_working_persons_axis": "एकूण कार्यरत व्यक्ती",
+      "registry_year_registrations_title": "नोंदणी प्राधिकरणनिहाय वार्षिक नोंदण्या",
+      "district_registry_registrations_title": "नोंदणी प्राधिकरणानुसार जिल्हानिहाय नोंदण्या",
+      "district_registry_working_persons_title": "जिल्हा आणि नोंदणी प्राधिकरणानुसार एकूण कार्यरत व्यक्ती"
+    },
+    "quarters": {
+      "q1": "Q1",
+      "q2": "Q2",
+      "q3": "Q3",
+      "q4": "Q4"
+    },
+    "regions": {
+      "map": {
+        "konkan": "कोकण",
+        "nashik": "नाशिक",
+        "pune": "पुणे",
+        "aurangabad": "औरंगाबाद",
+        "chhatrapati_sambhajinagar": "छत्रपती संभाजीनगर",
+        "amravati": "अमरावती",
+        "nagpur": "नागपूर"
+      }
+    },
+    "fallback": {
+      "unknown_district": "अज्ञात",
+      "unknown_registry": "अज्ञात नोंदणी प्राधिकरण"
+    }
   }
 }

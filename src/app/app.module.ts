@@ -121,10 +121,9 @@ import { RequestFormComponent } from './component/request-form/request-form.comp
 })
 export class AppModule {
 
-    constructor(translate: TranslateService) {
+  constructor(translate: TranslateService) {
     translate.addLangs(['en', 'mr']); // list your langs
     translate.setDefaultLang('en');
-    translate.use('en');  // initial language
   }
  }
 

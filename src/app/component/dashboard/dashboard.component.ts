@@ -1,7 +1,8 @@
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Component, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Chart, ChartConfiguration, ChartOptions, registerables } from 'chart.js';
-import { finalize } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import { SerachBrnService } from '../../services/serach-brn.service';
 import { RegistryResponse } from '../../model/registry-response';
 import { Division } from '../../model/division';
@@ -10,14 +11,26 @@ import { Talukas } from '../../interface/talukas';
 import { CitizenDashboardFilterRequest } from '../../interface/citizen-dashboar-filter';
 import { CitizenDashboardRow } from '../../interface/citizen-dashboard-row';
 import { CitizenDashboardDataRegDeRegNewReg } from '../../interface/citizen-dashboard-data-reg-de-reg-new-reg';
+import { LanguageService } from '../../core/services/language.service';
 
 Chart.register(...registerables);
 
 type DashboardCountType = 'NR' | 'TR' | 'DR';
+type DashboardLanguage = 'en' | 'mr';
 
 interface DashboardFilterOption {
   value: string;
   label: string;
+}
+
+interface DashboardCountOption {
+  key: DashboardCountType;
+  labelKey: string;
+}
+
+interface DashboardStaticOption {
+  value: string;
+  labelKey: string;
 }
 
 interface DashboardFilterState {
@@ -49,25 +62,28 @@ interface DashboardViewRow extends CitizenDashboardRow {
   deregisteredClosedLabel: string;
 }
 
-const COUNT_TYPE_OPTIONS: ReadonlyArray<{ key: DashboardCountType; label: string }> = [
-  { key: 'NR', label: 'New Registration' },
-  { key: 'TR', label: 'Total Registration' },
-  { key: 'DR', label: 'Deregistration' }
+const COUNT_TYPE_OPTIONS: ReadonlyArray<DashboardCountOption> = [
+  { key: 'NR', labelKey: 'dashboard.count_types.nr' },
+  { key: 'TR', labelKey: 'dashboard.count_types.tr' },
+  { key: 'DR', labelKey: 'dashboard.count_types.dr' }
 ];
 
-const RURAL_URBAN_OPTIONS: ReadonlyArray<DashboardFilterOption> = [
-  { value: 'Rural', label: 'Rural' },
-  { value: 'Urban', label: 'Urban' }
+const RURAL_URBAN_OPTIONS: ReadonlyArray<DashboardStaticOption> = [
+  { value: 'Rural', labelKey: 'dashboard.options.rural' },
+  { value: 'Urban', labelKey: 'dashboard.options.urban' }
 ];
 
-const DEREGISTERED_CLOSED_OPTIONS: ReadonlyArray<DashboardFilterOption> = [
-  { value: 'Deregistered', label: 'Deregistered' },
-  { value: 'Closed', label: 'Closed' }
+const DEREGISTERED_CLOSED_OPTIONS: ReadonlyArray<DashboardStaticOption> = [
+  { value: 'Deregistered', labelKey: 'dashboard.options.deregistered' },
+  { value: 'Closed', labelKey: 'dashboard.options.closed' }
 ];
 
 const STATE_NAME_BY_CODE: Readonly<Record<string, string>> = {
   '27': 'Maharashtra'
 };
+
+const ENGLISH_FONT_FAMILY = '"Times New Roman", Times, serif';
+const MARATHI_FONT_FAMILY = '"DVOT SurekhMR", "Noto Sans Devanagari", serif';
 
 @Component({
   selector: 'app-dashboard',
@@ -75,7 +91,7 @@ const STATE_NAME_BY_CODE: Readonly<Record<string, string>> = {
   styleUrls: ['./dashboard.component.css'],
   standalone: false
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   menuVisible = false;
   loading = false;
 
@@ -100,15 +116,26 @@ export class DashboardComponent implements OnInit {
 
   private rawDashboardRows: CitizenDashboardRow[] = [];
   private allDashboardRows: DashboardViewRow[] = [];
+  private dashboardSummaryRows: CitizenDashboardDataRegDeRegNewReg[] = [];
+  private currentLanguage: DashboardLanguage = 'en';
+  private readonly destroy$ = new Subject<void>();
   private usedColors = new Set<string>();
 
   constructor(
     private readonly dataService: SerachBrnService,
+    private readonly translate: TranslateService,
+    private readonly languageService: LanguageService,
+    @Inject(DOCUMENT) private readonly document: Document,
     @Inject(PLATFORM_ID) private readonly platformId: object
   ) {}
 
   get selectedCountLabel(): string {
-    return this.countTypeOptions.find((type) => type.key === this.filters.countType)?.label ?? '';
+    const selectedCountType = this.countTypeOptions.find((type) => type.key === this.filters.countType);
+    return selectedCountType ? this.translate.instant(selectedCountType.labelKey) : '';
+  }
+
+  get toggleMenuLabelKey(): string {
+    return this.menuVisible ? 'dashboard.toggle_close_filters' : 'dashboard.toggle_open_filters';
   }
 
   get stateOptions(): DashboardFilterOption[] {
@@ -118,11 +145,15 @@ export class DashboardComponent implements OnInit {
           .map((district) => this.normalizeValue(district.censusStateCode))
           .filter((stateCode) => stateCode !== '')
       )
-    ).sort((left, right) => this.resolveStateName(left).localeCompare(this.resolveStateName(right)));
+    ).sort((left, right) =>
+      this.localizeStateName(this.resolveStateName(left)).localeCompare(
+        this.localizeStateName(this.resolveStateName(right))
+      )
+    );
 
     return stateCodes.map((stateCode) => ({
       value: stateCode,
-      label: this.resolveStateName(stateCode)
+      label: this.localizeStateName(this.resolveStateName(stateCode))
     }));
   }
 
@@ -131,7 +162,7 @@ export class DashboardComponent implements OnInit {
       .filter((division) => division.isActive !== false)
       .map((division) => ({
         value: this.normalizeValue(division.divisionName),
-        label: this.normalizeValue(division.divisionName)
+        label: this.localizeRegionName(this.normalizeValue(division.divisionName))
       }))
       .sort((left, right) => left.label.localeCompare(right.label));
   }
@@ -146,7 +177,7 @@ export class DashboardComponent implements OnInit {
       )
       .map((district) => ({
         value: this.normalizeValue(district.censusDistrictCode),
-        label: this.normalizeValue(district.districtName)
+        label: this.localizeDistrictName(this.normalizeValue(district.districtName))
       }))
       .sort((left, right) => left.label.localeCompare(right.label));
   }
@@ -164,8 +195,8 @@ export class DashboardComponent implements OnInit {
     return this.registries
       .filter((registry) => registry.status !== false)
       .map((registry) => ({
-        value: this.normalizeValue(registry.registryNameEn),
-        label: this.normalizeValue(registry.registryNameEn)
+        value: this.normalizeValue(registry.registryNameEn) || this.normalizeValue(registry.registryNameMr),
+        label: this.getLocalizedRegistryName(registry)
       }))
       .sort((left, right) => left.label.localeCompare(right.label));
   }
@@ -211,12 +242,16 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.currentLanguage = this.normalizeLanguage(this.languageService.getCurrentLanguage());
+    this.observeLanguageChanges();
     this.loadLookupData();
     this.loadDashboardData();
     this.fetchCitizenDashboardSummary();
   }
 
   ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.destroyAllCharts();
   }
 
@@ -258,7 +293,7 @@ export class DashboardComponent implements OnInit {
     this.loadDashboardData();
   }
 
-  trackByOption(_index: number, option: DashboardFilterOption): string {
+  trackByOption(_index: number, option: { value: string }): string {
     return option.value;
   }
 
@@ -291,6 +326,7 @@ export class DashboardComponent implements OnInit {
     this.dataService.getAllRegistry().subscribe({
       next: (response) => {
         this.registries = this.unwrapCollection<RegistryResponse>(response);
+        this.rebuildDashboardRows();
       },
       error: (error) => {
         console.error('Error loading registries:', error);
@@ -461,10 +497,12 @@ export class DashboardComponent implements OnInit {
   private fetchCitizenDashboardSummary(): void {
     this.dataService.getCitizenDashboardDataRegDeRegNewReg().subscribe({
       next: (response) => {
-        this.updateDashboardSummary(response ?? []);
+        this.dashboardSummaryRows = response ?? [];
+        this.updateDashboardSummary(this.dashboardSummaryRows);
       },
       error: (error) => {
         console.error('Error loading dashboard summary:', error);
+        this.dashboardSummaryRows = [];
         this.dashboardCards = [];
       }
     });
@@ -489,10 +527,26 @@ export class DashboardComponent implements OnInit {
     );
 
     this.dashboardCards = [
-      { label: 'Total Registrations', value: totalRegistrations, icon: 'bi bi-building-check text-primary' },
-      { label: 'Total Working Persons', value: totalPersonsWorking, icon: 'bi bi-people-fill text-success' },
-      { label: 'Deregistrations', value: totalDeregistrations, icon: 'bi bi-x-octagon-fill text-danger' },
-      { label: 'New Registrations This Year', value: newRegistrationsThisYear, icon: 'bi bi-stars text-warning' }
+      {
+        label: this.translate.instant('dashboard.cards.total_registrations'),
+        value: totalRegistrations,
+        icon: 'bi bi-building-check text-primary'
+      },
+      {
+        label: this.translate.instant('dashboard.cards.total_working_persons'),
+        value: totalPersonsWorking,
+        icon: 'bi bi-people-fill text-success'
+      },
+      {
+        label: this.translate.instant('dashboard.cards.deregistrations'),
+        value: totalDeregistrations,
+        icon: 'bi bi-x-octagon-fill text-danger'
+      },
+      {
+        label: this.translate.instant('dashboard.cards.new_registrations_this_year'),
+        value: newRegistrationsThisYear,
+        icon: 'bi bi-stars text-warning'
+      }
     ];
   }
 
@@ -512,9 +566,11 @@ export class DashboardComponent implements OnInit {
     }
 
     this.usedColors.clear();
+    Chart.defaults.font.family = this.getChartFontFamily();
 
     const groupedByDistrictAndQuarter = this.groupDataByDistrictAndQuarter(this.apiResponse);
-    const districtLabels = Object.keys(groupedByDistrictAndQuarter);
+    const districtKeys = Object.keys(groupedByDistrictAndQuarter);
+    const districtLabels = districtKeys.map((district) => this.localizeDistrictName(district));
     const quarterLabels = ['Q1', 'Q2', 'Q3', 'Q4'];
 
     this.chart1 = new Chart(
@@ -522,38 +578,38 @@ export class DashboardComponent implements OnInit {
       this.createBarChartConfig(
         districtLabels,
         quarterLabels.map((quarterLabel) => ({
-          label: quarterLabel,
-          data: districtLabels.map((district) => groupedByDistrictAndQuarter[district][quarterLabel] || 0),
+          label: this.getQuarterLabel(quarterLabel),
+          data: districtKeys.map((district) => groupedByDistrictAndQuarter[district][quarterLabel] || 0),
           backgroundColor: this.getQuarterColor(quarterLabel)
         })),
-        'District and Quarter-wise Registrations',
-        'Districts',
-        'Total Registrations',
+        this.translate.instant('dashboard.charts.district_quarter_registrations_title'),
+        this.translate.instant('dashboard.charts.districts_axis'),
+        this.translate.instant('dashboard.charts.total_registrations_axis'),
         true
       )
     );
 
     const yearLabels = this.getDistinctValues(this.apiResponse, (row) => row.year)
       .sort((left, right) => Number(left) - Number(right));
-    const registryLabels = this.getDistinctValues(this.apiResponse, (row) => row.registryName)
+    const registryKeys = this.getDistinctValues(this.apiResponse, (row) => row.registryName)
       .sort((left, right) => left.localeCompare(right));
 
     this.chart2 = new Chart(
       'chart2',
       this.createBarChartConfig(
-        registryLabels,
+        registryKeys.map((registryKey) => this.getRegistryDisplayName(registryKey)),
         yearLabels.map((yearLabel, index) => ({
           label: yearLabel,
-          data: registryLabels.map((registryLabel) =>
+          data: registryKeys.map((registryLabel) =>
             this.apiResponse
               .filter((row) => this.valuesMatch(row.registryName, registryLabel) && this.valuesMatch(row.year, yearLabel))
               .reduce((sum, row) => sum + (row.totalRegistrations || 0), 0)
           ),
           backgroundColor: this.getPaletteColor(index)
         })),
-        'Registry-wise Registrations per Year',
-        'Registry',
-        'Total Registrations'
+        this.translate.instant('dashboard.charts.registry_year_registrations_title'),
+        this.translate.instant('dashboard.charts.registry_axis'),
+        this.translate.instant('dashboard.charts.total_registrations_axis')
       )
     );
 
@@ -563,9 +619,9 @@ export class DashboardComponent implements OnInit {
     this.chart3 = new Chart(
       'chart3',
       this.createBarChartConfig(
-        districtNames,
-        registryLabels.map((registryLabel, index) => ({
-          label: registryLabel,
+        districtNames.map((districtName) => this.localizeDistrictName(districtName)),
+        registryKeys.map((registryLabel, index) => ({
+          label: this.getRegistryDisplayName(registryLabel),
           data: districtNames.map((districtName) =>
             this.apiResponse
               .filter(
@@ -577,16 +633,16 @@ export class DashboardComponent implements OnInit {
           ),
           backgroundColor: this.getPaletteColor(index)
         })),
-        'District-wise Registrations per Registry',
-        'District',
-        'Total Registrations'
+        this.translate.instant('dashboard.charts.district_registry_registrations_title'),
+        this.translate.instant('dashboard.charts.district_axis'),
+        this.translate.instant('dashboard.charts.total_registrations_axis')
       )
     );
 
     const groupedByDistrictAndRegistry = this.groupDataByDistrictAndRegistry(this.apiResponse);
-    const totalWorkingDistrictLabels = Object.keys(groupedByDistrictAndRegistry);
-    const totalWorkingRegistryLabels = Array.from(
-      totalWorkingDistrictLabels.reduce((registryNames, district) => {
+    const totalWorkingDistrictKeys = Object.keys(groupedByDistrictAndRegistry);
+    const totalWorkingRegistryKeys = Array.from(
+      totalWorkingDistrictKeys.reduce((registryNames, district) => {
         Object.keys(groupedByDistrictAndRegistry[district]).forEach((registryName) =>
           registryNames.add(registryName)
         );
@@ -597,17 +653,17 @@ export class DashboardComponent implements OnInit {
     this.chart5 = new Chart(
       'chart5',
       this.createBarChartConfig(
-        totalWorkingDistrictLabels,
-        totalWorkingRegistryLabels.map((registryLabel) => ({
-          label: registryLabel,
-          data: totalWorkingDistrictLabels.map(
+        totalWorkingDistrictKeys.map((districtKey) => this.localizeDistrictName(districtKey)),
+        totalWorkingRegistryKeys.map((registryLabel) => ({
+          label: this.getRegistryDisplayName(registryLabel),
+          data: totalWorkingDistrictKeys.map(
             (districtLabel) => groupedByDistrictAndRegistry[districtLabel][registryLabel] || 0
           ),
           backgroundColor: this.getRandomColor()
         })),
-        'District and Registry-wise Total Working Persons',
-        'Districts',
-        'Total Working Persons'
+        this.translate.instant('dashboard.charts.district_registry_working_persons_title'),
+        this.translate.instant('dashboard.charts.districts_axis'),
+        this.translate.instant('dashboard.charts.total_working_persons_axis')
       )
     );
   }
@@ -636,6 +692,8 @@ export class DashboardComponent implements OnInit {
     yAxisLabel: string,
     stacked = false
   ): ChartOptions<'bar'> {
+    const fontFamily = this.getChartFontFamily();
+
     return {
       responsive: true,
       maintainAspectRatio: false,
@@ -644,28 +702,52 @@ export class DashboardComponent implements OnInit {
           display: true,
           text: title,
           font: {
+            family: fontFamily,
             size: 16,
             weight: 'bold'
           }
         },
         legend: {
-          position: 'bottom'
+          position: 'bottom',
+          labels: {
+            font: {
+              family: fontFamily
+            }
+          }
         }
       },
       scales: {
         x: {
           stacked,
+          ticks: {
+            font: {
+              family: fontFamily
+            }
+          },
           title: {
             display: true,
-            text: xAxisLabel
+            text: xAxisLabel,
+            font: {
+              family: fontFamily,
+              weight: 'bold'
+            }
           }
         },
         y: {
           stacked,
           beginAtZero: true,
+          ticks: {
+            font: {
+              family: fontFamily
+            }
+          },
           title: {
             display: true,
-            text: yAxisLabel
+            text: yAxisLabel,
+            font: {
+              family: fontFamily,
+              weight: 'bold'
+            }
           }
         }
       }
@@ -676,7 +758,7 @@ export class DashboardComponent implements OnInit {
     rows: DashboardViewRow[]
   ): Record<string, Record<string, number>> {
     return rows.reduce<Record<string, Record<string, number>>>((result, row) => {
-      const district = row.district || 'Unknown';
+      const district = row.district || this.translate.instant('dashboard.fallback.unknown_district');
       const quarter = row.quarter || 'NA';
 
       result[district] ??= {};
@@ -690,8 +772,8 @@ export class DashboardComponent implements OnInit {
     rows: DashboardViewRow[]
   ): Record<string, Record<string, number>> {
     return rows.reduce<Record<string, Record<string, number>>>((result, row) => {
-      const district = row.district || 'Unknown';
-      const registry = row.registryName || 'Unknown Registry';
+      const district = row.district || this.translate.instant('dashboard.fallback.unknown_district');
+      const registry = row.registryName || this.translate.instant('dashboard.fallback.unknown_registry');
 
       result[district] ??= {};
       result[district][registry] =
@@ -725,6 +807,108 @@ export class DashboardComponent implements OnInit {
     return colors[quarter] || '#6C757D';
   }
 
+  private observeLanguageChanges(): void {
+    this.languageService
+      .getLanguageObservable()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((language) => {
+        this.currentLanguage = this.normalizeLanguage(language);
+        this.rebuildDashboardRows();
+        this.updateDashboardSummary(this.dashboardSummaryRows);
+      });
+  }
+
+  private normalizeLanguage(language: string): DashboardLanguage {
+    return language === 'mr' ? 'mr' : 'en';
+  }
+
+  private getQuarterLabel(quarter: string): string {
+    return this.translate.instant(`dashboard.quarters.${quarter.toLowerCase()}`);
+  }
+
+  private localizeStateName(stateName: string): string {
+    return this.translateMappedValue('map.state', stateName);
+  }
+
+  private localizeDistrictName(districtName: string): string {
+    return this.translateMappedValue('map.district', districtName);
+  }
+
+  private localizeRegionName(regionName: string): string {
+    return this.translateMappedValue('dashboard.regions.map', regionName);
+  }
+
+  private translateMappedValue(namespace: string, value: string): string {
+    const normalizedValue = this.normalizeValue(value);
+    if (!normalizedValue) {
+      return '';
+    }
+
+    const translationKey = `${namespace}.${this.toTranslationKeySegment(normalizedValue)}`;
+    const translatedValue = this.translate.instant(translationKey);
+
+    return translatedValue !== translationKey ? translatedValue : normalizedValue;
+  }
+
+  private toTranslationKeySegment(value: string): string {
+    return this.normalizeKey(value)
+      .replace(/&/g, ' and ')
+      .replace(/\//g, ' ')
+      .replace(/[^a-z0-9]+/g, '_')
+      .replace(/^_+|_+$/g, '');
+  }
+
+  private getLocalizedRegistryName(registry: RegistryResponse): string {
+    const englishName = this.normalizeValue(registry.registryNameEn);
+    const marathiName = this.normalizeValue(registry.registryNameMr);
+
+    if (this.currentLanguage === 'mr') {
+      return marathiName || englishName;
+    }
+
+    return englishName || marathiName;
+  }
+
+  private getRegistryDisplayName(registryName: string): string {
+    const matchingRegistry = this.findRegistryByAnyName(registryName);
+    return matchingRegistry ? this.getLocalizedRegistryName(matchingRegistry) : registryName;
+  }
+
+  private findRegistryByAnyName(registryName: string): RegistryResponse | undefined {
+    const normalizedRegistryName = this.normalizeKey(registryName);
+
+    return this.registries.find((registry) =>
+      [registry.registryNameEn, registry.registryNameMr].some(
+        (name) => this.normalizeKey(name) === normalizedRegistryName
+      )
+    );
+  }
+
+  private resolveCanonicalRegistryName(registryName: string): string {
+    const matchingRegistry = this.findRegistryByAnyName(registryName);
+    if (!matchingRegistry) {
+      return registryName;
+    }
+
+    return this.normalizeValue(matchingRegistry.registryNameEn) || this.normalizeValue(matchingRegistry.registryNameMr);
+  }
+
+  private getChartFontFamily(): string {
+    const fallbackFontFamily =
+      this.currentLanguage === 'mr' ? MARATHI_FONT_FAMILY : ENGLISH_FONT_FAMILY;
+
+    if (!isPlatformBrowser(this.platformId)) {
+      return fallbackFontFamily;
+    }
+
+    const cssFontFamily = this.document.defaultView
+      ?.getComputedStyle(this.document.documentElement)
+      .getPropertyValue('--app-font-family')
+      .trim();
+
+    return cssFontFamily || fallbackFontFamily;
+  }
+
   private getPaletteColor(index: number): string {
     const palette = ['#28A745', '#DC3545', '#007BFF', '#FFC107', '#6F42C1', '#FD7E14', '#20C997'];
     return palette[index % palette.length];
@@ -753,9 +937,11 @@ export class DashboardComponent implements OnInit {
     const districtName = this.normalizeValue(row.district);
     const district = this.findDistrictByName(districtName);
     const stateCode = district ? this.normalizeValue(district.censusStateCode) : '';
+    const canonicalRegistryName = this.resolveCanonicalRegistryName(this.normalizeValue(row.registryName));
 
     return {
       ...row,
+      registryName: canonicalRegistryName,
       districtCode: district ? this.normalizeValue(district.censusDistrictCode) : '',
       stateCode,
       stateName: this.resolveStateName(stateCode),

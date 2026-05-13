@@ -10,6 +10,7 @@ import { DashboardBarChartComponent } from '../component/dashboard-bar-chart/das
 import { DashboarddataComponent } from '../component/dashboarddata/dashboarddata/dashboarddata.component';
 import { ChartfilterComponent } from '../component/chartfilter/chartfilter.component';
 import { DashboardTabComponent } from '../component/dashboard-tab/dashboard-tab.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 console.log("properly loaded 1")
 @NgModule({
@@ -22,6 +23,7 @@ console.log("properly loaded 1")
     CommonModule,
     AdminRoutingModule,
     FormsModule,
+    TranslateModule,
   ]
 })
 export class AdminModule { }

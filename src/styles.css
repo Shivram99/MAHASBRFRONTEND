@@ -17,7 +17,11 @@
 }
 
 :root {
-    --app-font-family: "Times New Roman", Times, serif;
+    --font-family-en: "Times New Roman", Times, serif;
+    --font-family-mr: "DVOT SurekhMR", "Noto Sans Devanagari", serif;
+    --app-font-family: var(--font-family-en);
+    --bs-body-font-family: var(--app-font-family);
+    --bs-font-sans-serif: var(--app-font-family);
 }
 
 html,
@@ -28,18 +32,24 @@ body {
 
 body {
     margin: 0;
+    font-family: var(--app-font-family) !important;
 }
 
 body.lang-en {
-    --app-font-family: "Times New Roman", Times, serif;
+    --app-font-family: var(--font-family-en);
 }
 
 body.lang-mr {
-    --app-font-family: "DVOT SurekhMR", "Noto Sans Devanagari", serif;
+    --app-font-family: var(--font-family-mr);
 }
 
-body * {
-    font-family: inherit;
+button,
+input,
+optgroup,
+select,
+textarea {
+    font: inherit;
+    font-family: var(--app-font-family) !important;
 }
 
 .mat-typography {
@@ -49,8 +59,15 @@ body * {
 .mat-mdc-form-field,
 .mat-mdc-input-element,
 .mat-mdc-select,
+.mat-mdc-option,
+.mat-mdc-menu-item,
+.mat-mdc-tab-link,
+.mat-mdc-tab-label-content,
+.mat-mdc-paginator,
 .mdc-floating-label,
-.mdc-button__label {
+.mdc-button__label,
+.mdc-list-item__primary-text,
+.mdc-list-item__secondary-text {
     font-family: var(--app-font-family) !important;
 }
 
