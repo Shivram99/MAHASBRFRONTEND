@@ -98,16 +98,10 @@ export class LoginComponent implements OnInit, AfterViewInit {
       this.loginForm.value.password,
       this.loginForm.value.recaptchaResponse
     ).subscribe({
-      next: () => {
+      next: async () => {
         grecaptcha.reset();
         this.menuService.loadMyMenus();
-        const homeRoute = this.authService.getDefaultHomeRoute();
-
-        if (homeRoute) {
-          this.router.navigateByUrl(homeRoute);
-        } else {
-          this.router.navigate(['/unauthorized']);
-        }
+        await this.authService.navigateToPostLoginHome();
         this.idleTimeoutService.reset();
       },
       error: (err: HttpErrorResponse) => {

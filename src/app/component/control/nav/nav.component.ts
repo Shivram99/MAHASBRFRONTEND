@@ -69,7 +69,7 @@ export class NavComponent {
   }
 
   filterNavLinks(userRoles: string[], includeLogout: boolean): void {
-    const defaultHomeRoute = includeLogout ? this.authService.getDefaultHomeRoute(userRoles) : null;
+    const defaultHomeRoute = includeLogout ? this.authService.getResolvedHomeRoute(userRoles) : null;
 
     this.filteredNavLinks = this.navLinks
       .filter((link) =>

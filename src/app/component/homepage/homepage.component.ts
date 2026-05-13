@@ -4,7 +4,6 @@ import { VisitTrackerService } from '../../services/sitevisitor/visit-tracker.se
 import { VisitSummary } from '../../interface/visit-summary';
 import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-homepage',
@@ -19,7 +18,6 @@ summary: VisitSummary = { totalVisits: 0, todayVisits: 0 };
     private languageService: LanguageService,
     private visitService: VisitTrackerService,
     private authService: AuthService,
-    private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -27,12 +25,8 @@ summary: VisitSummary = { totalVisits: 0, todayVisits: 0 };
 
   ngOnInit(): void {
     if (this.isBrowser && this.authService.isAuthenticated()) {
-      const homeRoute = this.authService.getDefaultHomeRoute();
-
-      if (homeRoute && homeRoute !== '/') {
-        this.router.navigateByUrl(homeRoute);
-        return;
-      }
+      void this.authService.navigateToPostLoginHome();
+      return;
     }
 
     // Subscribe to language changes

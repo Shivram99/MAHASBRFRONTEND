@@ -15,6 +15,7 @@ import { User } from '../interface/user';
 })
 export class AuthService {
   private helper = new JwtHelperService();
+  private readonly commonPostLoginProfileRoute = '/common-post-login/profile';
   private readonly roleHomeRoutes: Array<{ role: string; route: string }> = [
     { role: 'ROLE_DEVELOPER', route: '/developer/developerDashboard' },
     { role: 'ROLE_MODERATOR', route: '/admin/dashboardadmin' },
@@ -203,6 +204,43 @@ export class AuthService {
   }
 
   // 🔹 Error Handling
+  getFallbackHomeRoute(roles: string[] = this.getUserRoles()): string | null {
+    const commonPostLoginRoles = [
+      'ROLE_ADMIN',
+      'ROLE_DES_STATE',
+      'ROLE_DES_REGION',
+      'ROLE_DES_DISTRICT',
+      'ROLE_REG_AUTH_API',
+      'ROLE_REG_AUTH_CSV'
+    ];
+
+    return roles.some((role) => commonPostLoginRoles.includes(role))
+      ? this.commonPostLoginProfileRoute
+      : null;
+  }
+
+  getResolvedHomeRoute(roles: string[] = this.getUserRoles()): string | null {
+    return this.getDefaultHomeRoute(roles) ?? this.getFallbackHomeRoute(roles);
+  }
+
+  async navigateToPostLoginHome(roles: string[] = this.getUserRoles()): Promise<boolean> {
+    const defaultHomeRoute = this.getDefaultHomeRoute(roles);
+
+    if (defaultHomeRoute) {
+      const navigated = await this.router.navigateByUrl(defaultHomeRoute);
+      if (navigated) {
+        return true;
+      }
+    }
+
+    const fallbackHomeRoute = this.getFallbackHomeRoute(roles);
+    if (fallbackHomeRoute) {
+      return this.router.navigateByUrl(fallbackHomeRoute);
+    }
+
+    return this.router.navigateByUrl('/unauthorized');
+  }
+
   private handleError(error: HttpErrorResponse) {
     console.error('Auth error:', error);
     return throwError(() => error);
