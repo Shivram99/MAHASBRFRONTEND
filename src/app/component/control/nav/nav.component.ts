@@ -19,28 +19,32 @@ export class NavComponent {
     routerLink: string | null;
     class: string;
     roles: string[];
+    publicOnly?: boolean;
+    authOnly?: boolean;
   }[] = [
-      { label: 'HOME', url: '/', routerLink: '/', class: '', roles: ['ROLE_USER'] },
-      { label: 'ABOUT_US', url: null, routerLink: '/aboutus', class: '', roles: ['ROLE_USER'] },
-      { label: 'SEARCH_BRN', url: null, routerLink: '/search-brn', class: '', roles: ['ROLE_USER'] },
-      { label: 'DASHBOARD', url: null, routerLink: '/dashboard', class: '', roles: ['ROLE_USER'] },
-      { label: 'FAQ', url: null, routerLink: '/faq', class: '', roles: ['ROLE_USER'] },
-      { label: 'CIRCULAR', url: null, routerLink: '/circular', class: '', roles: ['ROLE_USER'] },
-      { label: 'Contact_Us', url: null, routerLink: '/contactus', class: '', roles: ['ROLE_USER'] },
-      { label: 'ReqForm.title', url: null, routerLink: '/requestForm', class: '', roles: ['ROLE_USER'] },
+      { label: 'HOME', url: '/', routerLink: '/', class: '', roles: ['ROLE_USER'], publicOnly: true },
+      { label: 'ABOUT_US', url: null, routerLink: '/aboutus', class: '', roles: ['ROLE_USER'], publicOnly: true },
+      { label: 'SEARCH_BRN', url: null, routerLink: '/search-brn', class: '', roles: ['ROLE_USER'], publicOnly: true },
+      { label: 'DASHBOARD', url: null, routerLink: '/dashboard', class: '', roles: ['ROLE_USER'], publicOnly: true },
+      { label: 'FAQ', url: null, routerLink: '/faq', class: '', roles: ['ROLE_USER'], publicOnly: true },
+      { label: 'CIRCULAR', url: null, routerLink: '/circular', class: '', roles: ['ROLE_USER'], publicOnly: true },
+      { label: 'Contact_Us', url: null, routerLink: '/contactus', class: '', roles: ['ROLE_USER'], publicOnly: true },
+      { label: 'ReqForm.title', url: null, routerLink: '/requestForm', class: '', roles: ['ROLE_USER'], publicOnly: true },
       {
         label: 'MENU.DASHBOARD',
         url: null,
         routerLink: '/common-post-login/detailsPage',
         class: '',
-        roles: ['ROLE_DES_STATE', 'ROLE_REG_AUTH_API', 'ROLE_REG_AUTH_CSV', 'ROLE_DES_REGION', 'ROLE_DES_DISTRICT']
+        roles: ['ROLE_DES_STATE', 'ROLE_REG_AUTH_API', 'ROLE_REG_AUTH_CSV', 'ROLE_DES_REGION', 'ROLE_DES_DISTRICT'],
+        authOnly: true
       },
       {
         label: 'CHANGE_PASSWORD',
         url: null,
         routerLink: '/common-post-login/changePassword',
         class: '',
-        roles: ['ROLE_ADMIN', 'ROLE_DES_STATE', 'ROLE_DES_REGION', 'ROLE_DES_DISTRICT', 'ROLE_REG_AUTH_API', 'ROLE_REG_AUTH_CSV']
+        roles: ['ROLE_ADMIN', 'ROLE_DES_STATE', 'ROLE_DES_REGION', 'ROLE_DES_DISTRICT', 'ROLE_REG_AUTH_API', 'ROLE_REG_AUTH_CSV'],
+        authOnly: true
       }
     ];
 
@@ -50,6 +54,8 @@ export class NavComponent {
     routerLink: string | null;
     class: string;
     roles: string[];
+    publicOnly?: boolean;
+    authOnly?: boolean;
   }[] = [];
 
   constructor(private authService: AuthService, private router: Router) { }
@@ -68,13 +74,12 @@ export class NavComponent {
     });
   }
 
-  filterNavLinks(userRoles: string[], includeLogout: boolean): void {
-    const defaultHomeRoute = includeLogout ? this.authService.getResolvedHomeRoute(userRoles) : null;
+  filterNavLinks(userRoles: string[], isAuthenticated: boolean): void {
+    const defaultHomeRoute = isAuthenticated ? this.authService.getResolvedHomeRoute(userRoles) : null;
 
     this.filteredNavLinks = this.navLinks
       .filter((link) =>
-        (link.label === 'Logout' ? includeLogout : true)
-        && this.shouldShowLink(link, userRoles)
+        this.shouldShowLink(link, userRoles, isAuthenticated)
       )
       .map((link) => link.label === 'HOME' && defaultHomeRoute
         ? { ...link, routerLink: defaultHomeRoute, url: null }
@@ -83,9 +88,18 @@ export class NavComponent {
   }
 
   private shouldShowLink(
-    link: { label: string; roles: string[]; routerLink: string | null },
-    userRoles: string[]
+    link: { label: string; roles: string[]; routerLink: string | null; publicOnly?: boolean; authOnly?: boolean },
+    userRoles: string[],
+    isAuthenticated: boolean
   ): boolean {
+    if (link.publicOnly && isAuthenticated) {
+      return false;
+    }
+
+    if (link.authOnly && !isAuthenticated) {
+      return false;
+    }
+
     const roleAllowed = link.roles.length === 0 || link.roles.some((role) => userRoles.includes(role));
 
     if (!roleAllowed) {
