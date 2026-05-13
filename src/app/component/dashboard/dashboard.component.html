@@ -1,6 +1,7 @@
 <div class="bglightblue py-3">
   <div class="container content dashboard-shell p-3 p-lg-4">
-    <div class="dashboard-header d-flex flex-column flex-lg-row justify-content-between align-items-lg-start border-b-org pb-3">
+    <div
+      class="dashboard-header d-flex flex-column flex-lg-row justify-content-between align-items-lg-start border-b-org pb-3">
       <h1 class="dashboard-page-title">{{ 'dashboard.title' | translate }}</h1>
 
       <nav class="dashboard-breadcrumb" aria-label="breadcrumb">
@@ -11,11 +12,7 @@
       </nav>
     </div>
 
-    <button
-      class="btn btn-primary mt-3 dashboard-toggle"
-      type="button"
-      (click)="toggleMenu()"
-    >
+    <button class="btn btn-primary mt-3 dashboard-toggle" type="button" (click)="toggleMenu()">
       {{ toggleMenuLabelKey | translate }}
     </button>
 
@@ -27,15 +24,8 @@
               <label class="form-label filter-label">{{ 'dashboard.filters.count_type' | translate }}</label>
 
               <div class="form-check" *ngFor="let type of countTypeOptions">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  [id]="type.key"
-                  name="countType"
-                  [(ngModel)]="filters.countType"
-                  [value]="type.key"
-                  (ngModelChange)="onCountTypeChange()"
-                />
+                <input class="form-check-input" type="radio" [id]="type.key" name="countType"
+                  [(ngModel)]="filters.countType" [value]="type.key" (ngModelChange)="onCountTypeChange()" />
                 <label class="form-check-label" [for]="type.key">
                   {{ type.labelKey | translate }}
                 </label>
@@ -46,10 +36,7 @@
               <label class="form-label filter-label">{{ 'dashboard.filters.year' | translate }}</label>
               <select class="form-select" [(ngModel)]="filters.year" name="year">
                 <option value="">{{ 'dashboard.filters.year_placeholder' | translate }}</option>
-                <option
-                  *ngFor="let option of yearOptions; trackBy: trackByOption"
-                  [value]="option.value"
-                >
+                <option *ngFor="let option of yearOptions; trackBy: trackByOption" [value]="option.value">
                   {{ option.label }}
                 </option>
               </select>
@@ -57,23 +44,16 @@
 
             <div class="mb-3">
               <label class="form-label filter-label">{{ 'dashboard.filters.rural_urban' | translate }}</label>
-              <select
-                class="form-select"
-                [(ngModel)]="filters.ruralUrban"
-                name="ruralUrban"
-                [disabled]="!isRuralUrbanFilterAvailable"
-              >
+              <select class="form-select" [(ngModel)]="filters.ruralUrban" name="ruralUrban"
+                [disabled]="!isRuralUrbanFilterAvailable">
                 <option value="">
                   {{
-                    isRuralUrbanFilterAvailable
-                      ? ('dashboard.filters.rural_urban_placeholder' | translate)
-                      : ('dashboard.filters.backend_pending' | translate)
+                  isRuralUrbanFilterAvailable
+                  ? ('dashboard.filters.rural_urban_placeholder' | translate)
+                  : ('dashboard.filters.backend_pending' | translate)
                   }}
                 </option>
-                <option
-                  *ngFor="let option of ruralUrbanOptions; trackBy: trackByOption"
-                  [value]="option.value"
-                >
+                <option *ngFor="let option of ruralUrbanOptions; trackBy: trackByOption" [value]="option.value">
                   {{ option.labelKey | translate }}
                 </option>
               </select>
@@ -81,17 +61,9 @@
 
             <div class="mb-3">
               <label class="form-label filter-label">{{ 'dashboard.filters.state' | translate }}</label>
-              <select
-                class="form-select"
-                [(ngModel)]="filters.state"
-                name="state"
-                (ngModelChange)="onStateChange()"
-              >
+              <select class="form-select" [(ngModel)]="filters.state" name="state" (ngModelChange)="onStateChange()">
                 <option value="">{{ 'dashboard.filters.state_placeholder' | translate }}</option>
-                <option
-                  *ngFor="let option of stateOptions; trackBy: trackByOption"
-                  [value]="option.value"
-                >
+                <option *ngFor="let option of stateOptions; trackBy: trackByOption" [value]="option.value">
                   {{ option.label }}
                 </option>
               </select>
@@ -99,17 +71,9 @@
 
             <div class="mb-3">
               <label class="form-label filter-label">{{ 'dashboard.filters.region' | translate }}</label>
-              <select
-                class="form-select"
-                [(ngModel)]="filters.region"
-                name="region"
-                (ngModelChange)="onRegionChange()"
-              >
+              <select class="form-select" [(ngModel)]="filters.region" name="region" (ngModelChange)="onRegionChange()">
                 <option value="">{{ 'dashboard.filters.region_placeholder' | translate }}</option>
-                <option
-                  *ngFor="let option of regionOptions; trackBy: trackByOption"
-                  [value]="option.value"
-                >
+                <option *ngFor="let option of regionOptions; trackBy: trackByOption" [value]="option.value">
                   {{ option.label }}
                 </option>
               </select>
@@ -117,17 +81,10 @@
 
             <div class="mb-3">
               <label class="form-label filter-label">{{ 'dashboard.filters.district' | translate }}</label>
-              <select
-                class="form-select"
-                [(ngModel)]="filters.districtCode"
-                name="district"
-                (ngModelChange)="onDistrictChange()"
-              >
+              <select class="form-select" [(ngModel)]="filters.districtCode" name="district"
+                (ngModelChange)="onDistrictChange()">
                 <option value="">{{ 'dashboard.filters.district_placeholder' | translate }}</option>
-                <option
-                  *ngFor="let option of districtOptions; trackBy: trackByOption"
-                  [value]="option.value"
-                >
+                <option *ngFor="let option of districtOptions; trackBy: trackByOption" [value]="option.value">
                   {{ option.label }}
                 </option>
               </select>
@@ -135,60 +92,45 @@
 
             <div class="mb-3">
               <label class="form-label filter-label">{{ 'dashboard.filters.tehsil' | translate }}</label>
-              <select
-                class="form-select"
-                [(ngModel)]="filters.tehsilCode"
-                name="tehsil"
-                [disabled]="!isTehsilFilterAvailable || !filters.districtCode"
-              >
+              <select class="form-select" [(ngModel)]="filters.tehsilCode" name="tehsil"
+                [disabled]="!isTehsilFilterAvailable || !filters.districtCode">
                 <option value="">
                   {{
-                    isTehsilFilterAvailable
-                      ? ('dashboard.filters.tehsil_placeholder' | translate)
-                      : ('dashboard.filters.backend_pending' | translate)
+                  isTehsilFilterAvailable
+                  ? ('dashboard.filters.tehsil_placeholder' | translate)
+                  : ('dashboard.filters.backend_pending' | translate)
                   }}
                 </option>
-                <option
-                  *ngFor="let option of tehsilOptions; trackBy: trackByOption"
-                  [value]="option.value"
-                >
+                <option *ngFor="let option of tehsilOptions; trackBy: trackByOption" [value]="option.value">
                   {{ option.label }}
                 </option>
               </select>
             </div>
 
             <div class="mb-3">
-              <label class="form-label filter-label">{{ 'dashboard.filters.acts_registering_authority' | translate }}</label>
+              <label class="form-label filter-label">{{ 'dashboard.filters.acts_registering_authority' | translate
+                }}</label>
               <select class="form-select" [(ngModel)]="filters.act" name="act">
                 <option value="">{{ 'dashboard.filters.acts_registering_authority_placeholder' | translate }}</option>
-                <option
-                  *ngFor="let option of actOptions; trackBy: trackByOption"
-                  [value]="option.value"
-                >
+                <option *ngFor="let option of actOptions; trackBy: trackByOption" [value]="option.value">
                   {{ option.label }}
                 </option>
               </select>
             </div>
 
             <div class="mb-3">
-              <label class="form-label filter-label">{{ 'dashboard.filters.industry_nic_classification' | translate }}</label>
-              <select
-                class="form-select"
-                [(ngModel)]="filters.nicClassification"
-                name="nicClassification"
-                [disabled]="!isNicClassificationFilterAvailable"
-              >
+              <label class="form-label filter-label">{{ 'dashboard.filters.industry_nic_classification' | translate
+                }}</label>
+              <select class="form-select" [(ngModel)]="filters.nicClassification" name="nicClassification"
+                [disabled]="!isNicClassificationFilterAvailable">
                 <option value="">
                   {{
-                    isNicClassificationFilterAvailable
-                      ? ('dashboard.filters.industry_nic_classification_placeholder' | translate)
-                      : ('dashboard.filters.backend_pending' | translate)
+                  isNicClassificationFilterAvailable
+                  ? ('dashboard.filters.industry_nic_classification_placeholder' | translate)
+                  : ('dashboard.filters.backend_pending' | translate)
                   }}
                 </option>
-                <option
-                  *ngFor="let option of nicClassificationOptions; trackBy: trackByOption"
-                  [value]="option.value"
-                >
+                <option *ngFor="let option of nicClassificationOptions; trackBy: trackByOption" [value]="option.value">
                   {{ option.label }}
                 </option>
               </select>
@@ -196,35 +138,30 @@
 
             <div class="mb-4">
               <label class="form-label filter-label">{{ 'dashboard.filters.deregistered_closed' | translate }}</label>
-              <select
-                class="form-select"
-                [(ngModel)]="filters.deregisteredClosed"
-                name="deregisteredClosed"
-                [disabled]="!isDeregisteredClosedFilterAvailable"
-              >
+              <select class="form-select" [(ngModel)]="filters.deregisteredClosed" name="deregisteredClosed"
+                [disabled]="!isDeregisteredClosedFilterAvailable">
                 <option value="">
                   {{
-                    isDeregisteredClosedFilterAvailable
-                      ? ('dashboard.filters.deregistered_closed_placeholder' | translate)
-                      : ('dashboard.filters.backend_pending' | translate)
+                  isDeregisteredClosedFilterAvailable
+                  ? ('dashboard.filters.deregistered_closed_placeholder' | translate)
+                  : ('dashboard.filters.backend_pending' | translate)
                   }}
                 </option>
-                <option
-                  *ngFor="let option of deregisteredClosedOptions; trackBy: trackByOption"
-                  [value]="option.value"
-                >
+                <option *ngFor="let option of deregisteredClosedOptions; trackBy: trackByOption" [value]="option.value">
                   {{ option.labelKey | translate }}
                 </option>
               </select>
             </div>
 
-            <div class="filter-note mb-4" *ngIf="hasBackendDataGaps">
+            <!--  <div class="filter-note mb-4" *ngIf="hasBackendDataGaps">
               {{ 'dashboard.backend_note' | translate }}
-            </div>
+            </div> -->
 
             <div class="button-group">
-              <button type="button" class="btn btn-apply fw-bold" (click)="onSubmit()">{{ 'dashboard.buttons.apply' | translate }}</button>
-              <button type="button" class="btn btn-reset fw-bold" (click)="onClear()">{{ 'dashboard.buttons.clear' | translate }}</button>
+              <button type="button" class="btn btn-apply fw-bold" (click)="onSubmit()">{{ 'dashboard.buttons.apply' |
+                translate }}</button>
+              <button type="button" class="btn btn-reset fw-bold" (click)="onClear()">{{ 'dashboard.buttons.clear' |
+                translate }}</button>
             </div>
           </form>
         </div>
@@ -233,7 +170,8 @@
       <div [ngClass]="menuVisible ? 'col-xl-8 col-lg-7' : 'col-12'" class="dashboard-main-col">
         <div class="dashboard-main-panel shadow-cust h-100 p-3 p-lg-4">
           <div class="dashboard-main-header">
-            <h2 class="dashboard-main-title">{{ selectedCountLabel }} - {{ 'dashboard.overview_title' | translate }}</h2>
+            <h2 class="dashboard-main-title">{{ selectedCountLabel }} - {{ 'dashboard.overview_title' | translate }}
+            </h2>
           </div>
 
           <div *ngIf="loading" class="dashboard-feedback text-center py-5">
