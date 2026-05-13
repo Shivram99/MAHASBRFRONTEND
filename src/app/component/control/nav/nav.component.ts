@@ -22,7 +22,7 @@ export class NavComponent {
     publicOnly?: boolean;
     authOnly?: boolean;
   }[] = [
-      { label: 'HOME', url: '/', routerLink: '/', class: '', roles: ['ROLE_USER'], publicOnly: true },
+      { label: 'HOME', url: null, routerLink: '/', class: '', roles: ['ROLE_USER'], publicOnly: true },
       { label: 'ABOUT_US', url: null, routerLink: '/aboutus', class: '', roles: ['ROLE_USER'], publicOnly: true },
       { label: 'SEARCH_BRN', url: null, routerLink: '/search-brn', class: '', roles: ['ROLE_USER'], publicOnly: true },
       { label: 'DASHBOARD', url: null, routerLink: '/dashboard', class: '', roles: ['ROLE_USER'], publicOnly: true },

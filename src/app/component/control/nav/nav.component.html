@@ -2,7 +2,7 @@
 <nav class="mx-auto d-flex pt-2">
   <!-- Loop navigation links -->
   <a *ngFor="let link of filteredNavLinks"
-     [attr.href]="link.url || null"
+     [attr.href]="link.url && !link.routerLink ? link.url : null"
      [routerLink]="link.routerLink || null"
      [ngClass]="link.class">
     {{ link.label | translate }}
