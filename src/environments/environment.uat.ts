@@ -2,7 +2,7 @@ import { AppEnvironment } from './environment.model';
 
 export const environment: AppEnvironment = {
   production: false,
-  environmentName: 'local',
-  apiUrl: 'http://localhost:8085/MAHASBR',
-  enableDebugLogs: true
+  environmentName: 'uat',
+  apiUrl: 'http://13.204.181.90:8085/MAHASBR',
+  enableDebugLogs: false
 };

@@ -56,6 +56,12 @@
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.production.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",
@@ -70,16 +76,23 @@
               ],
               "outputHashing": "all"
             },
-            "development": {
+            "local": {
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
+              "namedChunks": true
+            },
+            "uat": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.development.ts"
+                  "with": "src/environments/environment.uat.ts"
                 }
-              ]
+              ],
+              "optimization": true,
+              "extractLicenses": true,
+              "sourceMap": false,
+              "outputHashing": "all"
             }
           },
           "defaultConfiguration": "production"
@@ -90,11 +103,14 @@
             "production": {
               "buildTarget": "MahaSbrFrontend:build:production"
             },
-            "development": {
-              "buildTarget": "MahaSbrFrontend:build:development"
+            "local": {
+              "buildTarget": "MahaSbrFrontend:build:local"
+            },
+            "uat": {
+              "buildTarget": "MahaSbrFrontend:build:uat"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "local"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",

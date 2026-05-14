@@ -3,6 +3,10 @@
     background: linear-gradient(0deg, rgba(255, 255, 255, 1) 0%, rgba(215, 230, 245, 1) 100%);
 }
 
+.headerRow {
+    min-height: 50px;
+}
+
 .logo h1 {
     font-weight: 800;
     font-size: 1.6rem;
@@ -32,8 +36,58 @@ h1 {
     height: 50px;
 }
 
+.headerMeta {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+}
+
+.env-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 88px;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-transform: uppercase;
+    border: 1px solid transparent;
+    box-shadow: 0 6px 16px rgba(17, 24, 39, 0.08);
+}
+
+.env-badge--local {
+    background: #ecfdf3;
+    color: #166534;
+    border-color: #bbf7d0;
+}
+
+.env-badge--uat {
+    background: #fff7ed;
+    color: #9a3412;
+    border-color: #fed7aa;
+}
+
+.env-badge--production {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border-color: #bfdbfe;
+}
+
 @media screen and (max-width:767px) {
+    .headerRow {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+
     .logo h1 {
         width: auto;
+    }
+
+    .headerMeta {
+        width: 100%;
+        justify-content: flex-start;
     }
 }

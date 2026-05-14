@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '../../core/services/language.service'; 
 import { AuthService } from '../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
     selector: 'app-header',
@@ -12,6 +13,8 @@ import { AuthService } from '../../services/auth.service';
 export class HeaderComponent  implements OnInit{
   isChecked: boolean = true;
   isLoggedIn: boolean = false;
+  readonly environmentLabel = environment.environmentName.toUpperCase();
+  readonly environmentClass = `env-badge--${environment.environmentName}`;
 
   ngOnInit(): void {
 

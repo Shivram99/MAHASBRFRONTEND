@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { MstSubMenu } from '../model/mst-sub-menu';
 import { Observable } from 'rxjs';
 import { MstMenu } from '../model/mst-menu';

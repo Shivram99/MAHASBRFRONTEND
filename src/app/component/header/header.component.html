@@ -2,20 +2,19 @@
 
 <div class="logoSection py-3">
   <div class="container mx-auto">
-   <div class="d-flex justify-content-between">
-  <div class="logo d-flex">
-      <img [src]=mh_logo class="img-fluid" />
-      <h1>
+    <div class="headerRow d-flex justify-content-between align-items-start gap-3">
+      <div class="logo d-flex">
+        <img [src]=mh_logo class="img-fluid" />
+        <h1>
           {{ 'Sitetitle' | translate }}
           <span>{{ 'subtitle' | translate }}</span>
-      </h1>
+        </h1>
+      </div>
+      <!-- <div class="headerMeta">
+        <span class="env-badge" [ngClass]="environmentClass">{{ environmentLabel }}</span>
+      </div> -->
+    </div>
+    <div class="clearfix"></div>
+    <app-nav></app-nav>
   </div>
-  <div>
-  <!-- <a *ngIf="!isLoggedIn"class="btn btn-primary " routerLink="/login">Login</a>--></div> 
 </div>
-<div class="clearfix"></div>
-  <app-nav></app-nav>
- 
-</div>
-</div>
-

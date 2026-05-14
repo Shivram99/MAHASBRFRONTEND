@@ -7,7 +7,7 @@ import { fileRequiredValidator } from '../../../model/file-validator';
 import { ErrorHandlerService } from '../../../services/errorHandler/error-handler.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MarathiInputService } from '../../../services/marathi-input.service';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 @Component({
   selector: 'app-add-circular',
   standalone: false,

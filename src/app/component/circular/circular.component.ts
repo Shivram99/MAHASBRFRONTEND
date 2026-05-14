@@ -3,7 +3,7 @@ import { CircularService } from '../../services/Circular/circular.service';
 import { ErrorHandlerService } from '../../services/errorHandler/error-handler.service';
 import { Circular } from '../../interface/circular';
 import Swal from 'sweetalert2';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Modal } from 'bootstrap';
 @Component({
