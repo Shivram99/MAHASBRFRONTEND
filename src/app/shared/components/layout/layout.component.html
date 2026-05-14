@@ -27,7 +27,7 @@
 
                             <!-- PARENT LEVEL -->
                             <button class="nav-link parent-link d-flex align-items-center" type="button"
-                                (click)="toggleMenu(m)" [ngClass]="{ 'active-parent': activeParent?.id === m.id }">
+                                (click)="toggleMenu(m)" [ngClass]="{ 'active-parent active': isMenuActive(m) }">
 
                                 <i class="{{ m.icon }} menu-icon"></i>
                                 <span>{{ m.nameEn }}</span>
@@ -46,7 +46,7 @@
                                     <!-- CHILD MENU BUTTON -->
                                     <button class="nav-link child-link d-flex align-items-center" type="button"
                                         (click)="toggleChild(child)"
-                                        [ngClass]="{ 'active-child': activeChild?.id === child.id }">
+                                        [ngClass]="{ 'active-child active': isMenuActive(child) }">
 
                                         <i class="{{ child.icon }} child-icon"></i>
                                         <span>{{ child.nameEn }}</span>
@@ -63,7 +63,7 @@
 
                                         <a *ngFor="let sub of child.children"
                                             class="nav-link subchild-link d-flex align-items-center"
-                                            [routerLink]="sub.route" routerLinkActive="active-subchild">
+                                            [routerLink]="sub.route" routerLinkActive="active-subchild active">
 
                                             <i class="{{ sub.icon }} subchild-icon"></i>
                                             <span>{{ sub.nameEn }}</span>

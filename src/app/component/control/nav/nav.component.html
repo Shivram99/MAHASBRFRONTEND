@@ -1,22 +1,9 @@
 <!-- src/app/nav/nav.component.html -->
 <nav class="mx-auto d-flex pt-2">
-  <!-- Loop navigation links -->
   <a *ngFor="let link of filteredNavLinks"
      [attr.href]="link.url && !link.routerLink ? link.url : null"
      [routerLink]="link.routerLink || null"
-     [ngClass]="link.class">
+     [ngClass]="[link.class, isActiveLink(link.routerLink) ? 'active-link' : '']">
     {{ link.label | translate }}
   </a>
-
-  <!-- Logout (only if logged in) -->
-   <!-- <a *ngIf="isLoggedIn$ | async"
-     href="#"
-     class="nav-item nav-link"
-     (click)="logout()">
-    {{ 'logoutTitle' | translate }}
-  </a>  -->
 </nav>
-
-
-
-  

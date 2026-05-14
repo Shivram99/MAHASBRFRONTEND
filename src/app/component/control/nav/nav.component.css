@@ -7,6 +7,11 @@ nav a:visited {
     outline: none;
 }
 nav a:hover { cursor: pointer; border-bottom: 2px solid #ff8903;}
+nav a.active-link {
+    color: #004056;
+    border-bottom-color: #ff8903;
+    font-weight: 700;
+}
 @media screen and (max-width:767px){
     .d-flex {
     display: block ! IMPORTANT;

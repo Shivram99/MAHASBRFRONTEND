@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import { Observable, combineLatest } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
@@ -11,6 +13,7 @@ import { AuthService } from '../../../services/auth.service';
 export class NavComponent {
   isLoggedIn$!: Observable<boolean>;
   isLoggedIn = true;
+  currentUrl = '/';
 
   navLinks: {
     label: string;
@@ -57,10 +60,11 @@ export class NavComponent {
     authOnly?: boolean;
   }[] = [];
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
     this.isLoggedIn$ = this.authService.getIsLoggedIn();
+    this.currentUrl = this.normalizeUrl(this.router.url);
 
     combineLatest([
       this.authService.getIsLoggedIn(),
@@ -71,6 +75,12 @@ export class NavComponent {
         isLoggedIn
       );
     });
+
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event) => {
+        this.currentUrl = this.normalizeUrl((event as NavigationEnd).urlAfterRedirects);
+      });
   }
 
   filterNavLinks(userRoles: string[], isAuthenticated: boolean): void {
@@ -116,5 +126,30 @@ export class NavComponent {
 
   logout() {
     this.authService.logout();
+  }
+
+  isActiveLink(routerLink: string | null): boolean {
+    if (!routerLink) {
+      return false;
+    }
+
+    const normalizedLink = this.normalizeUrl(routerLink);
+
+    if (normalizedLink === '/') {
+      return this.currentUrl === '/';
+    }
+
+    return this.currentUrl === normalizedLink || this.currentUrl.startsWith(`${normalizedLink}/`);
+  }
+
+  private normalizeUrl(url: string): string {
+    const [pathWithoutQuery] = url.split(/[?#]/);
+    const normalizedPath = pathWithoutQuery || '/';
+
+    if (normalizedPath.length > 1 && normalizedPath.endsWith('/')) {
+      return normalizedPath.slice(0, -1);
+    }
+
+    return normalizedPath;
   }
 }
