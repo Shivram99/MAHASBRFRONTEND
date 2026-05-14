@@ -1,20 +1,15 @@
 <div class="footerLogo p-5">
-
-    <div class="container mx-auto">
-     
- 
-
-      <div class="owl-carousel footer-logos">
-        <div class="item" *ngFor="let logo of footerLogo">
-          <a [href]="logo.url" class="block" target="_blank">
-            <img [src]="logo.src" alt="Footer Logo">
-          </a>
-        </div>
-      </div>
-      
-
-
-
-</div>
-
+  <div class="container mx-auto">
+    <div class="footer-logo-grid">
+      <a
+        *ngFor="let logo of footerLogo; trackBy: trackByLogo"
+        [href]="logo.url"
+        class="footer-logo-link"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img [src]="logo.src" alt="Footer Logo" loading="lazy" decoding="async">
+      </a>
+    </div>
+  </div>
 </div>

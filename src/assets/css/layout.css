@@ -1,6 +1,4 @@
 
-@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
-
 :root {
     --darkblue: #004056;
     --themeblue: #2676C3;
@@ -28,17 +26,12 @@ body {
 
 }
 
-.footerLogo .owl-carousel .owl-item img {
-    width: 200px !important; 
-  }
-  .linkorg {
+.linkorg {
     color: #f88203;
     text-decoration: none;
 }
 
 .darkblue a { text-decoration: none;}
-
-  .footerLogo .owl-carousel a { display: block; text-align: center;}
 
   .navbar {
     margin-bottom: 0;

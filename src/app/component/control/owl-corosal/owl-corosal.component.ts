@@ -8,9 +8,7 @@ import { Component } from '@angular/core';
     standalone: false
 })
 export class OwlCorosalComponent {
-
-
-  footerLogo = [
+  readonly footerLogo = [
     { src: 'assets/images/footerlogo/gov.jpg', url: 'https://www.maharashtra.gov.in/' },
     { src: 'assets/images/footerlogo/digital_india.jpg', url: 'https://www.digitalindia.gov.in/' },
     { src: 'assets/images/footerlogo/india_gov.jpg', url: 'https://www.india.gov.in/' },
@@ -18,6 +16,7 @@ export class OwlCorosalComponent {
     { src: 'assets/images/footerlogo/nic.jpg', url: 'https://www.nic.in/' }
   ];
 
-
- 
+  trackByLogo(_index: number, logo: { src: string; url: string }): string {
+    return logo.url;
+  }
 }

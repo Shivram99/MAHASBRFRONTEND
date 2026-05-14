@@ -14,7 +14,14 @@
       class="carousel-item"
       [class.active]="isFirst"
     >
-      <img [src]="image" alt="banner image" class="d-block" />
+      <img
+        [src]="image"
+        alt="banner image"
+        class="d-block"
+        [attr.loading]="isFirst ? 'eager' : 'lazy'"
+        [attr.fetchpriority]="isFirst ? 'high' : 'low'"
+        decoding="async"
+      />
     </div>
   </div>
 
