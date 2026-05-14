@@ -1,13 +1,18 @@
 import { isPlatformBrowser } from '@angular/common';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpErrorResponse } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { BehaviorSubject, catchError, finalize, Observable, of, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, finalize, map, Observable, of, shareReplay, tap, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { SKIP_AUTH_REDIRECT } from '../auth-interceptor.interceptor';
 import { AuthResponse } from '../interface/AuthResponse';
+import { ApiResponse } from '../interface/api-response';
+import { MenuDTO } from '../interface/menu-dto';
 import { User } from '../interface/user';
 import { TokenStorageService } from './token-storage.service';
+
+export type SessionValidationState = 'valid' | 'invalid' | 'unavailable';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +38,7 @@ export class AuthService {
   readonly currentUser$ = this.currentUserSubject.asObservable();
 
   private readonly isBrowser: boolean;
+  private sessionValidationRequest$: Observable<SessionValidationState> | null = null;
 
   constructor(
     private http: HttpClient,
@@ -43,12 +49,15 @@ export class AuthService {
     this.isBrowser = isPlatformBrowser(this.platformId);
 
     if (this.isBrowser) {
-      this.isLoggedInSubject.next(this.hasValidToken());
-      this.rolesSubject.next(this.getRolesFromToken());
+      if (this.hasValidToken()) {
+        this.syncSessionState();
 
-      const storedUser = sessionStorage.getItem('currentUser');
-      if (storedUser) {
-        this.currentUserSubject.next(JSON.parse(storedUser));
+        const storedUser = sessionStorage.getItem('currentUser');
+        if (storedUser) {
+          this.currentUserSubject.next(JSON.parse(storedUser));
+        }
+      } else {
+        this.completeLogout();
       }
     }
   }
@@ -89,41 +98,19 @@ export class AuthService {
       });
   }
 
-  private setSession(token: string | undefined): void {
-    if (!this.isBrowser) {
+  handleInvalidSession(redirectTo: 'login' | 'home' | null = 'login'): void {
+    this.completeLogout();
+
+    if (!this.isBrowser || redirectTo === null) {
       return;
     }
 
-    if (!token || token.trim() === '') {
-      this.completeLogout();
+    if (redirectTo === 'home') {
+      void this.router.navigateByUrl('/');
       return;
     }
 
-    this.tokenStorage.saveToken(token);
-    this.isLoggedInSubject.next(true);
-    this.rolesSubject.next(this.getRolesFromToken());
-  }
-
-  private clearSession(): void {
-    if (!this.isBrowser) {
-      return;
-    }
-
-    this.isLoggedInSubject.next(false);
-    this.rolesSubject.next([]);
-  }
-
-  private completeLogout(): void {
-    if (!this.isBrowser) {
-      return;
-    }
-
-    this.tokenStorage.removeToken();
-    this.clearSession();
-    this.currentUserSubject.next(null);
-    sessionStorage.removeItem('currentUser');
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('roles');
+    void this.router.navigate(['/login'], { queryParams: { sessionExpired: true } });
   }
 
   getToken(): string | null {
@@ -134,35 +121,54 @@ export class AuthService {
     return this.isBrowser && this.hasValidToken();
   }
 
-  private hasValidToken(): boolean {
-    const token = this.getToken();
-
-    if (!token || typeof token !== 'string' || token.split('.').length !== 3) {
-      return false;
+  validateSession(): Observable<SessionValidationState> {
+    if (!this.isBrowser || !this.hasValidToken()) {
+      this.completeLogout();
+      return of('invalid');
     }
 
-    try {
-      return !this.helper.isTokenExpired(token);
-    } catch (error) {
-      console.error('Invalid token:', error);
-      return false;
+    if (!this.sessionValidationRequest$) {
+      this.sessionValidationRequest$ = this.http.get<ApiResponse<MenuDTO[]>>(
+        `${environment.apiUrl}/citizenSearch/menus/my`,
+        {
+          context: new HttpContext().set(SKIP_AUTH_REDIRECT, true)
+        }
+      ).pipe(
+        map(() => {
+          this.syncSessionState();
+          return 'valid' as const;
+        }),
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === 401) {
+            this.handleInvalidSession(null);
+            return of('invalid' as const);
+          }
+
+          if (error.status === 0 || error.status >= 500) {
+            this.handleBackendUnavailable(null);
+            return of('unavailable' as const);
+          }
+
+          return of('valid' as const);
+        }),
+        finalize(() => {
+          this.sessionValidationRequest$ = null;
+        }),
+        shareReplay(1)
+      );
     }
+
+    return this.sessionValidationRequest$;
   }
 
-  private getRolesFromToken(): string[] {
-    const token = this.getToken();
+  handleBackendUnavailable(redirectTo: 'home' | null = 'home'): void {
+    this.completeLogout();
 
-    if (!token || typeof token !== 'string' || token.split('.').length !== 3) {
-      return [];
+    if (!this.isBrowser || redirectTo === null) {
+      return;
     }
 
-    try {
-      const decoded = this.helper.decodeToken(token) as { roles?: string[] } | null;
-      return decoded?.roles ?? [];
-    } catch (error) {
-      console.error('Error decoding token:', error);
-      return [];
-    }
+    void this.router.navigateByUrl('/');
   }
 
   getIsLoggedIn(): Observable<boolean> {
@@ -219,9 +225,8 @@ export class AuthService {
     return this.router.navigateByUrl('/unauthorized');
   }
 
-  private handleError(error: HttpErrorResponse): Observable<never> {
-    console.error('Auth error:', error);
-    return throwError(() => error);
+  navigateToUnauthorized(): Promise<boolean> {
+    return this.router.navigateByUrl('/unauthorized');
   }
 
   getCurrentUser(): User | null {
@@ -233,5 +238,80 @@ export class AuthService {
       sessionStorage.setItem('currentUser', JSON.stringify(user));
     }
     this.currentUserSubject.next(user);
+  }
+
+  private setSession(token: string | undefined): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
+    if (!token || token.trim() === '') {
+      this.completeLogout();
+      return;
+    }
+
+    this.tokenStorage.saveToken(token);
+    this.syncSessionState();
+  }
+
+  private completeLogout(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
+    this.sessionValidationRequest$ = null;
+    this.tokenStorage.removeToken();
+    this.isLoggedInSubject.next(false);
+    this.rolesSubject.next([]);
+    this.currentUserSubject.next(null);
+    sessionStorage.removeItem('currentUser');
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('roles');
+  }
+
+  private hasValidToken(): boolean {
+    const token = this.getToken();
+
+    if (!token || typeof token !== 'string' || token.split('.').length !== 3) {
+      return false;
+    }
+
+    try {
+      return !this.helper.isTokenExpired(token);
+    } catch (error) {
+      console.error('Invalid token:', error);
+      return false;
+    }
+  }
+
+  private getRolesFromToken(): string[] {
+    const token = this.getToken();
+
+    if (!token || typeof token !== 'string' || token.split('.').length !== 3) {
+      return [];
+    }
+
+    try {
+      const decoded = this.helper.decodeToken(token) as { roles?: string[] } | null;
+      return decoded?.roles ?? [];
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return [];
+    }
+  }
+
+  private syncSessionState(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
+    const isLoggedIn = this.hasValidToken();
+    this.isLoggedInSubject.next(isLoggedIn);
+    this.rolesSubject.next(isLoggedIn ? this.getRolesFromToken() : []);
+  }
+
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    console.error('Auth error:', error);
+    return throwError(() => error);
   }
 }

@@ -1,49 +1,40 @@
 import { Injectable } from '@angular/core';
-import { Router, ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot } from '@angular/router';
-import { LoginService } from './services/login.service';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { map, Observable, of } from 'rxjs';
 import { AuthService } from './services/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class authGuard implements CanActivate {
-
   constructor(private router: Router, private authService: AuthService) {}
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    if (typeof localStorage !== 'undefined') {
-    const isAuthenticated: string | null = localStorage.getItem("isAuthenticated");
-    const storedRoles: string | null = localStorage.getItem("roles");
-    const expectedRoles: string[] = route.data['expectedRole'];
-    
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> {
+    const expectedRoles = (route.data['expectedRole'] as string[] | undefined) ?? [];
+
     if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/']);
-      return false;
+      return of(this.router.parseUrl('/login'));
     }
 
-    if (!storedRoles) {
-      // Handle case where roles are not available
-      this.router.navigate(['/unauthorized']);
-      return false;
-    }
+    return this.authService.validateSession().pipe(
+      map((sessionState) => {
+        if (sessionState === 'invalid') {
+          return this.router.parseUrl('/login');
+        }
 
-    const userRoles: string[] = storedRoles.split(',');
-    debugger
-    // Check if any of the user roles match the expected roles
-    const hasMatchingRole = expectedRoles.some(expectedRole => userRoles.includes(expectedRole));
+        if (sessionState === 'unavailable') {
+          return this.router.parseUrl('/');
+        }
 
-    if (!hasMatchingRole) {
-      this.router.navigate(['/unauthorized']);
-      return false;
-    }
-    return true;
-  
-  }else{
-    this.router.navigate(['/unauthorized']);
-      return false;
+        if (expectedRoles.length === 0) {
+          return true;
+        }
+
+        const userRoles = this.authService.getUserRoles();
+        const hasMatchingRole = expectedRoles.some((expectedRole) => userRoles.includes(expectedRole));
+
+        return hasMatchingRole ? true : this.router.parseUrl('/unauthorized');
+      })
+    );
   }
-    
-    
-  }
-  
 }

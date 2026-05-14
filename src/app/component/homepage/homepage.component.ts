@@ -3,7 +3,6 @@ import { LanguageService } from '../../core/services/language.service';
 import { VisitTrackerService } from '../../services/sitevisitor/visit-tracker.service';
 import { VisitSummary } from '../../interface/visit-summary';
 import { isPlatformBrowser } from '@angular/common';
-import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-homepage',
@@ -17,18 +16,12 @@ export class HomepageComponent implements OnInit {
   constructor(
     private languageService: LanguageService,
     private visitService: VisitTrackerService,
-    private authService: AuthService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
   ngOnInit(): void {
-    if (this.isBrowser && this.authService.isAuthenticated()) {
-      void this.authService.navigateToPostLoginHome();
-      return;
-    }
-
     // Subscribe to language changes
     this.languageService.getLanguageObservable().subscribe(language => {
       // Update homepage content based on the new language

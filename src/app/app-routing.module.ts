@@ -17,9 +17,11 @@ import { DashboardDetailsComponent } from './component/dashboard-details/dashboa
 import { DuplicatedeatilsComponent } from './component/duplicatedeatils/duplicatedeatils.component';
 import { RequestFormComponent } from './component/request-form/request-form.component';
 import { PublicRouteGuard } from './public-route.guard';
+import { authGuard } from './auth.guard';
 
-
-
+const adminRoles = ['ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_DES_STATE', 'ROLE_DES_REGION', 'ROLE_DES_DISTRICT'];
+const commonPostLoginRoles = ['ROLE_ADMIN', 'ROLE_DES_STATE', 'ROLE_DES_REGION', 'ROLE_DES_DISTRICT', 'ROLE_REG_AUTH_API', 'ROLE_REG_AUTH_CSV'];
+const developerRoles = ['ROLE_DEVELOPER'];
 
 const routes: Routes = [
   {path:"",component:HomepageComponent, canActivate: [PublicRouteGuard]},
@@ -46,10 +48,10 @@ const routes: Routes = [
   {path:"feedback",component:FeedbackComponent},
   
   {path:"unauthorized",component:UnauthorizedComponent},
-  {path:"common-post-login/changePassword",component:ChangePasswordComponent},
-  { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
-  { path: 'developer', loadChildren: () => import('./developer/developer.module').then(m => m.DeveloperModule) },
-  { path: 'common-post-login', loadChildren: () => import('./common-post-login/common-post-login.module').then(m => m.CommonPostLoginModule) },
+  {path:"common-post-login/changePassword",component:ChangePasswordComponent, canActivate: [authGuard], data: { expectedRole: commonPostLoginRoles }},
+  { path: 'admin', canActivate: [authGuard], data: { expectedRole: adminRoles }, loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
+  { path: 'developer', canActivate: [authGuard], data: { expectedRole: developerRoles }, loadChildren: () => import('./developer/developer.module').then(m => m.DeveloperModule) },
+  { path: 'common-post-login', canActivate: [authGuard], data: { expectedRole: commonPostLoginRoles }, loadChildren: () => import('./common-post-login/common-post-login.module').then(m => m.CommonPostLoginModule) },
   //  { path: 'error', component: ErrorComponent }, // <-- Make sure this exists
   { path: '**', redirectTo: 'unauthorized' },
 ];
