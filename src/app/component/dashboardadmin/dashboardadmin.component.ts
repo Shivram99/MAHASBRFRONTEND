@@ -1,13 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DistrictServiceService } from '../../services/district-service.service';
 import { DataService } from '../../services/dashboard/data-service.service';
 import * as XLSX from 'xlsx-js-style';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 import { DialogService } from '../../services/dashboard/dialog.service';
 import { DetailsPageDTO } from '../../interface/details-page-dto';
 import { Page } from '../../interface/page';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
     selector: 'app-dashboardadmin',
@@ -34,8 +33,16 @@ export class DashboardadminComponent  {
     district: '',
     talukas: ''
   };
+  private readonly isBrowser: boolean;
 
-  constructor(private fb: FormBuilder,private dataService: DataService,private dialogService: DialogService) { }
+  constructor(
+    private fb: FormBuilder,
+    private dataService: DataService,
+    private dialogService: DialogService,
+    @Inject(PLATFORM_ID) platformId: object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
   ngOnInit(): void {
     this.fetchDistricts();
    this.getAlldata();
@@ -166,15 +173,25 @@ applyFilters() {
     XLSX.writeFile(workbook, 'download/data.xlsx');
   }
 
-  generatePDF() {
+  async generatePDF() {
+    if (!this.isBrowser) {
+      return;
+    }
+
     const element = document.getElementById('pdfContent'); // ID of the HTML element you want to convert to PDF
   
     if (!element) {
       console.error('Element with ID "pdfContent" not found.');
       return;
     }
-  
-    html2canvas(element).then((canvas) => {
+
+    try {
+      const [{ default: jsPDF }, { default: html2canvas }] = await Promise.all([
+        import('jspdf'),
+        import('html2canvas')
+      ]);
+
+      const canvas = await html2canvas(element);
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF();
       const imgWidth = 210; // Width of A4 in mm
@@ -194,9 +211,9 @@ applyFilters() {
       }
   
       pdf.save('generated.pdf');
-    }).catch((error) => {
+    } catch (error) {
       console.error('An error occurred while generating PDF:', error);
-    });
+    }
   }
   
 

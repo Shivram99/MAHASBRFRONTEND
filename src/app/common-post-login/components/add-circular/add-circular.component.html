@@ -48,6 +48,20 @@
       <div class="invalid-feedback">Marathi subject is required.</div>
     </div> -->
 
+    <div class="mb-3">
+      <label for="activity" class="form-label">
+        Activity <span class="text-danger">*</span>
+      </label>
+
+      <input type="text" id="activity" formControlName="activity" class="form-control" placeholder="Enter activity"
+        [ngClass]="{
+        'is-invalid':
+          circularForm.get('activity')?.invalid &&
+          circularForm.get('activity')?.touched
+      }" />
+      <div class="invalid-feedback">Activity is required.</div>
+    </div>
+
     <!-- Date -->
     <div class="mb-3">
       <label for="date" class="form-label ">
@@ -204,6 +218,7 @@
         <tr>
           <th>#</th>
           <th>Subject</th>
+          <th>Activity</th>
           <th>Date</th>
           <th>File</th>
           <th>Actions</th>
@@ -213,6 +228,7 @@
         <tr *ngFor="let c of paginatedCirculars; let i = index">
           <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
           <td>{{ c.subject }}</td>
+          <td>{{ c.activity }}</td>
           <td>{{ c.date | date: 'dd-MM-yyyy' }}</td>
           <td>
             <button class="btn btn-sm btn-outline-primary" (click)="openPdfModal(c.fileUrl, c.subject)">
@@ -230,7 +246,7 @@
         </tr>
 
         <tr *ngIf="paginatedCirculars.length === 0">
-          <td colspan="5" class="text-muted">No circulars found.</td>
+          <td colspan="6" class="text-muted">No circulars found.</td>
         </tr>
       </tbody>
     </table>

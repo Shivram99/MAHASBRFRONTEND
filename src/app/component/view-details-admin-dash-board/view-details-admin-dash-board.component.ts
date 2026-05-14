@@ -1,8 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import * as html2canvas from 'html2canvas';
-
-
 
 @Component({
     selector: 'app-view-details-admin-dash-board',

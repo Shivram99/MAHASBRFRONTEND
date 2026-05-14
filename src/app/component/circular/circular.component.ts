@@ -39,8 +39,7 @@ export class CircularComponent {
         this.circularService.getAllCircularsForCitizen().subscribe({
             next: (data) => {
                 this.circulars = data || [];
-                  this.circulars = data || [];
-        this.filteredCirculars = [...this.circulars]; 
+                this.filteredCirculars = [...this.circulars];
             },
             error: (error) => {
                 console.error('Error fetching circulars:', error);
@@ -90,6 +89,7 @@ export class CircularComponent {
 
       const matchesSearch = this.searchText
         ? c.subject.toLowerCase().includes(this.searchText.toLowerCase())
+          || c.activity.toLowerCase().includes(this.searchText.toLowerCase())
         : true;
 
       const matchesDate =

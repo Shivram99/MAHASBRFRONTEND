@@ -1,6 +1,6 @@
 import { Component, HostListener, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { Chart, ChartConfiguration, ChartOptions, registerables } from 'chart.js';
+import type { Chart, ChartConfiguration, ChartOptions } from 'chart.js';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { SerachBrnService } from '../../services/serach-brn.service';
@@ -13,10 +13,9 @@ import { CitizenDashboardRow } from '../../interface/citizen-dashboard-row';
 import { CitizenDashboardDataRegDeRegNewReg } from '../../interface/citizen-dashboard-data-reg-de-reg-new-reg';
 import { LanguageService } from '../../core/services/language.service';
 
-Chart.register(...registerables);
-
 type DashboardCountType = 'NR' | 'TR' | 'DR';
 type DashboardLanguage = 'en' | 'mr';
+type ChartJsModule = typeof import('chart.js');
 
 interface DashboardFilterOption {
   value: string;
@@ -157,6 +156,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
   private chartRefreshTimer: number | null = null;
   private usedColors = new Set<string>();
+  private chartModule: ChartJsModule | null = null;
+  private chartModulePromise: Promise<ChartJsModule | null> | null = null;
 
   constructor(
     private readonly dataService: SerachBrnService,
@@ -281,6 +282,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      void this.loadChartModule();
+    }
+
     this.currentLanguage = this.normalizeLanguage(this.languageService.getCurrentLanguage());
     this.observeLanguageChanges();
     this.loadLookupData();
@@ -613,16 +618,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     this.chartRefreshTimer = browserWindow.setTimeout(() => {
       this.chartRefreshTimer = null;
-      this.updateCharts();
+      void this.updateCharts();
     }, delay);
   }
 
-  private updateCharts(): void {
+  private async updateCharts(): Promise<void> {
     this.destroyAllCharts();
 
     if (!this.apiResponse.length) {
       return;
     }
+
+    const chartModule = await this.loadChartModule();
+    if (!chartModule) {
+      return;
+    }
+
+    const { Chart } = chartModule;
 
     this.usedColors.clear();
     Chart.defaults.font.family = this.getChartFontFamily();
@@ -725,6 +737,32 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.formatDashboardText(this.translate.instant('dashboard.charts.total_working_persons_axis'))
       )
     );
+  }
+
+  private loadChartModule(): Promise<ChartJsModule | null> {
+    if (!isPlatformBrowser(this.platformId)) {
+      return Promise.resolve(null);
+    }
+
+    if (this.chartModule) {
+      return Promise.resolve(this.chartModule);
+    }
+
+    if (!this.chartModulePromise) {
+      this.chartModulePromise = import('chart.js')
+        .then((module) => {
+          module.Chart.register(...module.registerables);
+          this.chartModule = module;
+          return module;
+        })
+        .catch((error) => {
+          console.error('Failed to load chart.js:', error);
+          this.chartModulePromise = null;
+          return null;
+        });
+    }
+
+    return this.chartModulePromise;
   }
 
   private createBarChartConfig(

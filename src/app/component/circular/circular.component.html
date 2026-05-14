@@ -76,6 +76,7 @@
                             <tr>
                                 <th>{{ 'Circular.sr_no' | translate }}</th>
                                 <th>{{ 'Circular.subject' | translate }}</th>
+                                <th>Activity</th>
                                 <th>{{ 'Circular.date' | translate }}</th>
                                 <th>{{ 'Circular.view_download' | translate }}</th>
                             </tr>
@@ -85,6 +86,7 @@
                             <tr *ngFor="let c of filteredCirculars; let i = index">
                                 <td>{{ i + 1 }}</td>
                                 <td>{{ c.subject }}</td>
+                                <td>{{ c.activity }}</td>
                                 <td>{{ c.date }}</td>
                                 <td>
                                     <button class="btn btn-sm btn-outline-primary"

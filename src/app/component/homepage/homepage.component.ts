@@ -33,6 +33,10 @@ export class HomepageComponent implements OnInit {
     this.languageService.getLanguageObservable().subscribe(language => {
       // Update homepage content based on the new language
     });
+    if (!this.isBrowser) {
+      return;
+    }
+
     if (!this.visitService.hasVisited()) {
       this.visitService.recordVisit().subscribe({
         next: () => {

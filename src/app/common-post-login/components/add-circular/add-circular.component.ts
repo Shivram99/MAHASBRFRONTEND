@@ -61,6 +61,7 @@ export class AddCircularComponent {
   ngOnInit(): void {
     this.circularForm = this.fb.group({
       subject: ['', Validators.required],
+      activity: ['', Validators.required],
       date: ['', Validators.required],
       file: [null, fileRequiredValidator],
       marathiInput: [''],
@@ -84,6 +85,7 @@ export class AddCircularComponent {
     }
 
     formData.append('subject', this.circularForm.get('subject')?.value);
+    formData.append('activity', this.circularForm.get('activity')?.value);
     formData.append('date', this.circularForm.get('date')?.value);
 
     // Only append file if a new file is selected
@@ -128,6 +130,7 @@ export class AddCircularComponent {
 
     this.circularForm.patchValue({
       subject: circular.subject,
+      activity: circular.activity,
       date: circular.date,
     });
 
@@ -146,6 +149,7 @@ export class AddCircularComponent {
   resetForm() {
     this.editMode = false;
     this.editingCircularId = 0;
+    this.previousFileUrl = null;
     this.circularForm.reset();
     this.selectedFile = null!;
     this.circularForm.get('file')?.reset();
@@ -248,6 +252,7 @@ export class AddCircularComponent {
     } else {
       this.filteredCirculars = this.circulars.filter(c =>
         c.subject.toLowerCase().includes(search) ||
+        c.activity.toLowerCase().includes(search) ||
         c.date.toString().toLowerCase().includes(search)
       );
     }

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { environment } from '../../../environments/environment.development';
 import { LanguageService } from '../../core/services/language.service'; 
 import { AuthService } from '../../services/auth.service';
 

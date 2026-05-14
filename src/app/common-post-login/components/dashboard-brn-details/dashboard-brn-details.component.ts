@@ -3,10 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MstRegistryDetailsPage } from '../../../model/mst-registry-details-page';
 import { DashboardDetailsService } from '../../../services/dashboard-details.service';
 import { PaginatedResponse } from '../../../interface/paginated-response';
-import jsPDF from 'jspdf';
 import * as XLSX from 'xlsx-js-style';
-import autoTable, { RowInput } from 'jspdf-autotable';
-import { formatDate, Location } from '@angular/common';
+import type { RowInput } from 'jspdf-autotable';
+import { formatDate, isPlatformBrowser, Location } from '@angular/common';
+import { Inject, PLATFORM_ID } from '@angular/core';
 
 @Component({
   selector: 'app-dashboard-brn-details',
@@ -17,13 +17,17 @@ import { formatDate, Location } from '@angular/common';
 export class DashboardBrnDetailsComponent implements OnInit {
   brn: any;
   mstRegistryDetailsPage!: MstRegistryDetailsPage;
+  private readonly isBrowser: boolean;
 
   constructor(
     private readonly route: ActivatedRoute,
     private readonly dashboardDetailsService: DashboardDetailsService,
     private readonly location: Location,
-    private readonly router: Router
-  ) { }
+    private readonly router: Router,
+    @Inject(PLATFORM_ID) platformId: object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
@@ -149,8 +153,16 @@ export class DashboardBrnDetailsComponent implements OnInit {
   /**
    * ✅ Export as PDF
    */
-  exportToPDF() {
+  async exportToPDF() {
+  if (!this.isBrowser) {
+    return;
+  }
+
   const brnNo = this.mstRegistryDetailsPage?.brnNo || 'BRN';
+  const [{ default: jsPDF }, { default: autoTable }] = await Promise.all([
+    import('jspdf'),
+    import('jspdf-autotable')
+  ]);
   const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
   // Title

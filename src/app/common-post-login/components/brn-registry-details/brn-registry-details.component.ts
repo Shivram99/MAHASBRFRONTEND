@@ -7,9 +7,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DetailsPageDTO } from '../../../interface/details-page-dto'; 
 import { DataService } from '../../../services/dashboard/data-service.service'; 
 import { AuthService } from '../../../services/auth.service';
-import jsPDF from 'jspdf';
 import * as XLSX from 'xlsx-js-style';
-import autoTable,{ RowInput } from 'jspdf-autotable';
+import type { RowInput } from 'jspdf-autotable';
 
 @Component({
   selector: 'app-brn-registry-details',
@@ -447,7 +446,16 @@ exportToExcel(): void {
   XLSX.writeFile(wb, fileName, { compression: true });
 }
   // ✅ Export to PDF
-  exportToPDF() {
+  async exportToPDF() {
+    if (!this.isBrowser) {
+      return;
+    }
+
+    const [{ default: jsPDF }, { default: autoTable }] = await Promise.all([
+      import('jspdf'),
+      import('jspdf-autotable')
+    ]);
+
     const doc = new jsPDF();
     doc.text('Registry Details', 14, 10);
 

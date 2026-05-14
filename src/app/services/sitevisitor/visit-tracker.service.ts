@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 import { VisitSummary } from '../../interface/visit-summary';
 import { isPlatformBrowser } from '@angular/common';

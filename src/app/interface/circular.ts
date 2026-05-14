@@ -1,8 +1,9 @@
 export interface Circular {
-    id: number;
+  id: number;
   subject: string;
+  activity: string;
   date: string;
   fileUrl: string;
   message?: string;
-  status?: number;
+  status?: string;
 }
