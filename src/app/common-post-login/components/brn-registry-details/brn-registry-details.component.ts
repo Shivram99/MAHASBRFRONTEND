@@ -8,7 +8,6 @@ import { DetailsPageDTO } from '../../../interface/details-page-dto';
 import { DataService } from '../../../services/dashboard/data-service.service'; 
 import { AuthService } from '../../../services/auth.service';
 import * as XLSX from 'xlsx-js-style';
-import type { RowInput } from 'jspdf-autotable';
 
 @Component({
   selector: 'app-brn-registry-details',
@@ -51,6 +50,8 @@ placeholder:string='';
   totalElements: number = 0;
   pageSizeOptions: number[] = [10, 12, 20, 50]; // Options for page size
   sortBy: string = 'siNo'; // Default sorting parameter
+  isPdfExporting = false;
+  pdfExportError = '';
   private readonly isBrowser: boolean;
 
   constructor(
@@ -267,6 +268,39 @@ searchBRN() {
     }
   }
 
+exportRegisteredEstablishmentsPdf(): void {
+  if (!this.isBrowser || this.isPdfExporting) {
+    return;
+  }
+
+  this.isPdfExporting = true;
+  this.pdfExportError = '';
+
+  this.fileUploadService.exportRegisteredEstablishmentsPdf({
+    districtIds: this.selectedDistrictIds,
+    talukaIds: this.selectedTalukaIds,
+    brn: this.BNR?.trim() ?? ''
+  }).subscribe({
+    next: (blob) => {
+      const objectUrl = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+
+      anchor.href = objectUrl;
+      anchor.download = this.buildPdfFileName();
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+      URL.revokeObjectURL(objectUrl);
+
+      this.isPdfExporting = false;
+    },
+    error: () => {
+      this.isPdfExporting = false;
+      this.pdfExportError = 'Failed to export PDF. Please try again.';
+    }
+  });
+}
+
 private canLoadProtectedData(): boolean {
   return this.isBrowser && this.authService.isAuthenticated();
 }
@@ -446,38 +480,20 @@ exportToExcel(): void {
   XLSX.writeFile(wb, fileName, { compression: true });
 }
   // ✅ Export to PDF
-  async exportToPDF() {
-    if (!this.isBrowser) {
-      return;
-    }
+private buildPdfFileName(): string {
+  const now = new Date();
+  const formattedDate = [
+    now.getFullYear().toString(),
+    (now.getMonth() + 1).toString().padStart(2, '0'),
+    now.getDate().toString().padStart(2, '0')
+  ].join('');
+  const formattedTime = [
+    now.getHours().toString().padStart(2, '0'),
+    now.getMinutes().toString().padStart(2, '0'),
+    now.getSeconds().toString().padStart(2, '0')
+  ].join('');
 
-    const [{ default: jsPDF }, { default: autoTable }] = await Promise.all([
-      import('jspdf'),
-      import('jspdf-autotable')
-    ]);
-
-    const doc = new jsPDF();
-    doc.text('Registry Details', 14, 10);
-
-    const body: RowInput[] = this.registryDetails.map((d, i) => [
-      i + 1,
-      d.brnNo ?? '',
-      d.nameOfEstablishmentOrOwner ?? '',
-      d.taluka ?? '',
-      d.district ?? '',
-      d.sector ?? ''
-    ]);
-
-    autoTable(doc, {
-      head: [['Sr.No', 'BRN', 'Establishment Name', 'City', 'District', 'Type Of Business']],
-      body: body,
-      startY: 20,
-      theme: 'grid',
-      headStyles: { fillColor: [41, 128, 185] },
-      styles: { fontSize: 9 }
-    });
-
-    doc.save('RegistryDetails.pdf');
-  }
+  return `registered-establishments-${formattedDate}-${formattedTime}.pdf`;
+}
 }
 

@@ -90,6 +90,32 @@ export class FileUploadService {
     });
 }
 
+exportRegisteredEstablishmentsPdf(filters: {
+  districtIds?: number[];
+  talukaIds?: number[];
+  brn?: string | null;
+}): Observable<Blob> {
+  let params = new HttpParams();
+
+  (filters.districtIds ?? []).forEach((districtId) => {
+    params = params.append('districtId', districtId.toString());
+  });
+
+  (filters.talukaIds ?? []).forEach((talukaId) => {
+    params = params.append('talukaId', talukaId.toString());
+  });
+
+  const trimmedBrn = filters.brn?.trim();
+  if (trimmedBrn) {
+    params = params.set('brn', trimmedBrn);
+  }
+
+  return this.http.get(`${this.apiUrl}/api/auth/registered-establishments/export/pdf`, {
+    params,
+    responseType: 'blob'
+  });
+}
+
 getBRNDetails(BNR: any): Observable<PaginatedResponse<MstRegistryDetailsPage>> {
  // return this.http.get<Page<DetailsPageDTO>>(`${this.apiUrl}/admin/detailsPages`, { params });
   return this.http.get<PaginatedResponse<MstRegistryDetailsPage>>(`${this.apiUrl}/api/auth/brn-details/${BNR}`);

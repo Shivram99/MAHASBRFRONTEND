@@ -37,6 +37,10 @@
   width: 100%;
 }
 
+.export-action-btn {
+  min-width: 146px;
+}
+
 .nav-dflex {
   justify-content: space-between;
 }
