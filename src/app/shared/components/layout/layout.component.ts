@@ -14,6 +14,7 @@ import { MenuDTO } from '../../../interface/menu-dto';
   styleUrl: './layout.component.css',
 })
 export class LayoutComponent implements OnInit {
+  private readonly uppercaseAcronyms = new Set(['API', 'BRN', 'CSV', 'DES', 'FAQ', 'ID', 'NIC', 'UAT']);
   menuItems: SideMenuItem[] = [];
   user: User | null = null;
  progfileIcon= 'assets/images/profile.png';
@@ -102,6 +103,34 @@ isMenuActive(menu: MenuDTO): boolean {
   }
 
   return (menu.children ?? []).some((child) => this.isMenuActive(child));
+}
+
+formatLabel(value: string | null | undefined): string {
+  if (!value) {
+    return '';
+  }
+
+  return value
+    .trim()
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .split(' ')
+    .map((word) => {
+      const normalizedWord = word.trim();
+
+      if (!normalizedWord) {
+        return '';
+      }
+
+      const uppercaseWord = normalizedWord.toUpperCase();
+      if (this.uppercaseAcronyms.has(uppercaseWord)) {
+        return uppercaseWord;
+      }
+
+      return normalizedWord.charAt(0).toUpperCase() + normalizedWord.slice(1).toLowerCase();
+    })
+    .filter(Boolean)
+    .join(' ');
 }
 
 private syncActiveMenuState(): void {
