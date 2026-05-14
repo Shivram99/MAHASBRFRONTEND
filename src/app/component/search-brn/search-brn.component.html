@@ -117,10 +117,10 @@
                 <tr *ngFor="let detail of registryDetails; let i = index">
                   <td>{{ ((currentPage - 1) * pageSize) + i + 1 }}</td>
                   <td>{{ detail.brnNo }}</td>
-                  <td>{{ detail.nameOfEstablishmentOrOwner | capitalize }}</td>
-                  <td>{{ detail.taluka | capitalize }}</td>
-                  <td>{{ detail.district | capitalize }}</td>
-                  <td>{{ detail.sector | capitalize }}</td>
+                  <td>{{ detail.nameOfEstablishmentOrOwner | titleCaseSafe }}</td>
+                  <td>{{ detail.taluka | titleCaseSafe }}</td>
+                  <td>{{ detail.district | titleCaseSafe }}</td>
+                  <td>{{ detail.sector | titleCaseSafe }}</td>
                 </tr>
               </tbody>
             </table>

@@ -6,13 +6,14 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TransliterateDirective } from './directives/transliterate.directive';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PaginationComponent } from './components/pagination/pagination.component';
+import { TitleCaseSafePipe } from './pipes/title-case-safe.pipe';
 
 
 
 
 @NgModule({
-  declarations: [LayoutComponent, TransliterateDirective, PaginationComponent],
-  exports: [LayoutComponent, TransliterateDirective, PaginationComponent],
+  declarations: [LayoutComponent, TransliterateDirective, PaginationComponent, TitleCaseSafePipe],
+  exports: [LayoutComponent, TransliterateDirective, PaginationComponent, TitleCaseSafePipe],
   imports: [
     CommonModule,
     RouterModule,TranslateModule ,FormsModule,ReactiveFormsModule

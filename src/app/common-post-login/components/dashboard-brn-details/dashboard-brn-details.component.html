@@ -17,7 +17,7 @@
   <div class="d-flex justify-content-between" *ngIf="mstRegistryDetailsPage; else loading">
     <ul class="details w-100 me-3">
       <li><strong>SI.No</strong> <span>{{ mstRegistryDetailsPage.siNo }}</span></li>
-      <li><strong>Name of Establishment / Owner</strong> <span>{{ mstRegistryDetailsPage.nameOfEstablishmentOrOwner }}</span></li>
+      <li><strong>Name of Establishment / Owner</strong> <span>{{ mstRegistryDetailsPage.nameOfEstablishmentOrOwner | titleCaseSafe }}</span></li>
       <li><strong>House No</strong> <span>{{ mstRegistryDetailsPage.houseNo }}</span></li>
       <li><strong>Street Name</strong> <span>{{ mstRegistryDetailsPage.streetName }}</span></li>
       <li><strong>Locality</strong> <span>{{ mstRegistryDetailsPage.locality }}</span></li>
@@ -32,7 +32,7 @@
       <li><strong>Head Office: Pin Code</strong> <span>{{ mstRegistryDetailsPage.headOfficePinCode }}</span></li>
       <li><strong>Head Office: Telephone/Mob Number</strong> <span>{{ mstRegistryDetailsPage.headOfficeTelephoneMobNumber }}</span></li>
       <li><strong>Email Address</strong> <span>{{ mstRegistryDetailsPage.headOfficeEmailAddress }}</span></li>
-      <li><strong>Description of major activity of Establishment/Enterprise</strong> <span>{{ mstRegistryDetailsPage.descriptionOfMajorActivity }}</span></li>
+      <li><strong>Description of major activity of Establishment/Enterprise</strong> <span>{{ mstRegistryDetailsPage.descriptionOfMajorActivity | titleCaseSafe }}</span></li>
       <li><strong>NIC 2008 activity code</strong> <span>{{ mstRegistryDetailsPage.nic2008ActivityCode }}</span></li>
     </ul>
 
@@ -44,12 +44,12 @@
       <li><strong>Remarks</strong> <span>{{ mstRegistryDetailsPage.remarks }}</span></li>
       <li><strong>Location Code</strong> <span>{{ mstRegistryDetailsPage.locationCode }}</span></li>
       <li><strong>Business Registration Number</strong> <span>{{ mstRegistryDetailsPage.brnNo }}</span></li>
-      <li><strong>Registration Status</strong> <span>{{ mstRegistryDetailsPage.registrationStatus }}</span></li>
-      <li><strong>Town/Village</strong> <span>{{ mstRegistryDetailsPage.townVillage }}</span></li>
-      <li><strong>Taluka</strong> <span>{{ mstRegistryDetailsPage.taluka }}</span></li>
-      <li><strong>District</strong> <span>{{ mstRegistryDetailsPage.district }}</span></li>
-      <li><strong>Sector (Rural/Urban)</strong> <span>{{ mstRegistryDetailsPage.sector }}</span></li>
-      <li><strong>Name of Act</strong> <span>{{ mstRegistryDetailsPage.nameOfAct }}</span></li>
+      <li><strong>Registration Status</strong> <span>{{ mstRegistryDetailsPage.registrationStatus | titleCaseSafe }}</span></li>
+      <li><strong>Town/Village</strong> <span>{{ mstRegistryDetailsPage.townVillage | titleCaseSafe }}</span></li>
+      <li><strong>Taluka</strong> <span>{{ mstRegistryDetailsPage.taluka | titleCaseSafe }}</span></li>
+      <li><strong>District</strong> <span>{{ mstRegistryDetailsPage.district | titleCaseSafe }}</span></li>
+      <li><strong>Sector (Rural/Urban)</strong> <span>{{ mstRegistryDetailsPage.sector | titleCaseSafe }}</span></li>
+      <li><strong>Name of Act</strong> <span>{{ mstRegistryDetailsPage.nameOfAct | titleCaseSafe }}</span></li>
       <li><strong>Date of Registration</strong> <span>{{ mstRegistryDetailsPage.dateOfRegistration | date:'dd-MMM-yyyy' }}</span></li>
       <li><strong>Date of deregistration/expiry</strong> <span>{{ mstRegistryDetailsPage.dateOfDeregistrationExpiry | date:'dd-MMM-yyyy' }}</span></li>
       <li><strong>GST Number</strong> <span>{{ mstRegistryDetailsPage.gstNumber }}</span></li>

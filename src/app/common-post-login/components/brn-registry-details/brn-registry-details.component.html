@@ -82,10 +82,10 @@
             {{ detail.brnNo }}
           </a>
         </td>
-        <td>{{ detail.nameOfEstablishmentOrOwner }}</td>
-        <td>{{ detail.taluka  }}</td>
-        <td>{{ detail.district  }}</td> <!-- assuming you meant taluka -->
-        <td>{{ detail.sector }}</td>
+        <td>{{ detail.nameOfEstablishmentOrOwner | titleCaseSafe }}</td>
+        <td>{{ detail.taluka | titleCaseSafe }}</td>
+        <td>{{ detail.district | titleCaseSafe }}</td>
+        <td>{{ detail.sector | titleCaseSafe }}</td>
       </tr>
     </tbody>
   </table>

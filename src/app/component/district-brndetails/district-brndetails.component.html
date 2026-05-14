@@ -15,10 +15,10 @@
         <tr *ngFor="let detail of registryDetails; let i = index" (click)="goToDetails(detail.brnNo)">
           <td>{{ i + 1 }}</td>
           <td><a class="nav-link">{{detail.brnNo }}</a> </td>
-          <td>{{ detail.nameOfEstablishmentOrOwner }}</td>
-          <td>{{ detail.district }}</td>
-          <td>{{ detail.district }}</td>
-          <td>{{ detail.sector }}</td>
+          <td>{{ detail.nameOfEstablishmentOrOwner | titleCaseSafe }}</td>
+          <td>{{ detail.district | titleCaseSafe }}</td>
+          <td>{{ detail.district | titleCaseSafe }}</td>
+          <td>{{ detail.sector | titleCaseSafe }}</td>
         </tr>
       </tbody>
     </table>

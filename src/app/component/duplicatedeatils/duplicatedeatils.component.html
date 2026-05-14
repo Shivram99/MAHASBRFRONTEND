@@ -15,10 +15,10 @@
             <tr *ngFor="let detail of deuplicateDetails; let i = index" >
                 <td>{{ i + 1 }}</td>
                 <td>{{ detail.brnNo }}</td>
-                <td>{{ detail.nameOfEstablishmentOrOwner }}</td>
-                <td>{{ detail.district }}</td>
-                <td>{{ detail.district }}</td>
-                <td>{{ detail.sector }}</td>
+                <td>{{ detail.nameOfEstablishmentOrOwner | titleCaseSafe }}</td>
+                <td>{{ detail.district | titleCaseSafe }}</td>
+                <td>{{ detail.district | titleCaseSafe }}</td>
+                <td>{{ detail.sector | titleCaseSafe }}</td>
             </tr>
         </tbody>
     </table>
