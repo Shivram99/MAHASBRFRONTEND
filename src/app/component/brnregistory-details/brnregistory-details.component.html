@@ -1,38 +1,63 @@
-
-
-<div class="row">
-
-  <div class="col-md-6"><app-multi-select-option  [items]="districts"
-    (selectionChange)="onSelectionDistrictChange($event)" [placeholder]="'District'" />
-  </div>
-  
-    <div class="col-md-6"><app-multi-select-option  [items]="talukas" (selectionChange)="onSelectionTalukaChange($event)" [placeholder]="'Taluka'" />
+<div class="brn-filter-panel">
+  <div class="row g-3 align-items-end brn-filter-layout">
+    <div class="col-xl-3 col-lg-6 col-md-6">
+      <div class="brn-filter-control">
+        <label class="form-label" for="publicDistrictFilter">
+          District <span class="required-mark" aria-hidden="true">*</span>
+        </label>
+        <app-multi-select-option
+          [items]="districts"
+          [controlId]="'publicDistrictFilter'"
+          [placeholder]="'Select District'"
+          [required]="true"
+          [disabled]="districts.length === 0"
+          (selectionChange)="onSelectionDistrictChange($event)" />
+      </div>
     </div>
 
-  <div class="col-md-4">
-    <label>BRN :</label>
-    <input type="text" placeholder="Enter BRN number" class="form-control" id="BNR" name="BNR" [(ngModel)]="BNR" /><br />
-    
+    <div class="col-xl-3 col-lg-6 col-md-6">
+      <div class="brn-filter-control">
+        <label class="form-label" for="publicTalukaFilter">Taluka</label>
+        <app-multi-select-option
+          [items]="talukas"
+          [controlId]="'publicTalukaFilter'"
+          [placeholder]="'Select Taluka'"
+          [disabled]="selectedDistrictIds.length === 0 || talukas.length === 0"
+          (selectionChange)="onSelectionTalukaChange($event)" />
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-lg-6 col-md-6">
+      <div class="brn-filter-control">
+        <label for="BNR" class="form-label">BRN</label>
+        <input type="text" placeholder="Enter BRN number" class="form-control" id="BNR" name="BNR" [(ngModel)]="BNR" />
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-lg-6 col-md-6">
+      <div class="brn-filter-action">
+        <button type="button" class="btn btn-primary brn-search-btn" [disabled]="!BNR" (click)="searchBRN()">
+          Search BRN
+        </button>
+      </div>
+    </div>
   </div>
 
-  <div class="col-md-4">
-   
-      <label for="registerDateFrom"> From Date:</label>
-      <input type="date" id="registerDateFrom" name="registerDateFrom" class="form-control"
-        [(ngModel)]="filters.registerDateFrom" (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
-  
-  </div>
-  <div class="col-md-4">
-
-      <label for="registerDateTo"> To Date:</label>
-      <input type="date" id="registerDateTo" class="form-control" [(ngModel)]="filters.registerDateTo"
-        (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
-    
-  </div>
-  <div class="col-12 ">
-    <button type="button" class="btn btn-primary" [disabled]="!BNR" (click)="searchBRN()">
-      Search BRN
-    </button>
+  <div class="row g-3 mt-1">
+    <div class="col-md-6">
+      <div class="brn-filter-control">
+        <label for="registerDateFrom" class="form-label">From Date</label>
+        <input type="date" id="registerDateFrom" name="registerDateFrom" class="form-control"
+          [(ngModel)]="filters.registerDateFrom" (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="brn-filter-control">
+        <label for="registerDateTo" class="form-label">To Date</label>
+        <input type="date" id="registerDateTo" class="form-control" [(ngModel)]="filters.registerDateTo"
+          (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
+      </div>
+    </div>
   </div>
 </div>
 

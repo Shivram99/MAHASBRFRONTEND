@@ -1,3 +1,38 @@
+.brn-filter-panel {
+  margin-bottom: 1.5rem;
+}
+
+.brn-filter-control {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.brn-filter-control .form-label {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.brn-filter-control app-multi-select-option {
+  display: block;
+  width: 100%;
+}
+
+.required-mark {
+  color: #dc3545;
+}
+
+.brn-filter-action {
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+}
+
+.brn-search-btn {
+  min-height: calc(1.5em + 0.75rem + 2px);
+  width: 100%;
+}
+
 .nav-dflex {
   justify-content: space-between;
 }
@@ -21,19 +56,8 @@
   background: #ff7600;
   color: #fff;
 }
-.filters {
-  background: #f7f7f7;
-  padding: 2px 15px;
-  margin-bottom: 10px;
-  color: #777;
-}
-.full-width {
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-
-.filters{
-  max-height: 150px;
-  overflow-y: auto;
+@media screen and (max-width: 767px) {
+  .brn-filter-action {
+    display: block;
+  }
 }

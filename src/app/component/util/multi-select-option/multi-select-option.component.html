@@ -1,14 +1,17 @@
-<div class="filters">
-    <small>{{ getSelectedText()  }}</small>
-</div>
-<br />
-<div class="dropdown" [class.open]="dropdownOpen" (mouseleave)="onMouseLeave($event)">
-    <button class="form-control  dropdown-toggle" type="button" (click)="toggleDropdown()"
-    
-    >
-        {{placeholder}} <span class="caret"></span>
+<div class="dropdown" [class.open]="dropdownOpen" [class.dropdown-disabled]="disabled" (mouseleave)="onMouseLeave($event)">
+    <button
+        class="form-control dropdown-toggle multi-select-trigger"
+        type="button"
+        [attr.id]="controlId || null"
+        [attr.aria-controls]="controlId ? controlId + '-listbox' : null"
+        [attr.aria-expanded]="dropdownOpen"
+        [attr.aria-required]="required"
+        aria-haspopup="listbox"
+        [disabled]="disabled"
+        (click)="toggleDropdown()">
+        <span class="multi-select-text" [title]="getSelectedText()">{{ getSelectedText() }}</span>
     </button>
-    <ul class="dropdown-menu cust-dropdown-menu">
+    <ul class="dropdown-menu cust-dropdown-menu" [attr.id]="controlId ? controlId + '-listbox' : null" role="listbox">
         <li>
             <label>
                 <input type="checkbox" [checked]="isAllSelected()"
@@ -19,9 +22,8 @@
         <li *ngFor="let item of items">
             <label>
                 <input type="checkbox" (change)="onCheckboxChange($event, item)" [checked]="isSelected(item)" />
-                {{ item.name  }}
+                {{ formatItemName(item.name) }}
             </label>
         </li>
     </ul>
-    <br/>
 </div>

@@ -11,12 +11,19 @@ export class MultiSelectOptionComponent {
   @Output() selectionChange = new EventEmitter<{ id: number, name: string }[]>();
 
   @Input() placeholder: string = 'Select District'; 
+  @Input() controlId = '';
+  @Input() disabled = false;
+  @Input() required = false;
   
 
   selectedItems: any[] = [];
   dropdownOpen = false;
 
   toggleDropdown() {
+    if (this.disabled) {
+      return;
+    }
+
     this.dropdownOpen = !this.dropdownOpen;
   }
 
@@ -49,7 +56,7 @@ export class MultiSelectOptionComponent {
     if (this.selectedItems.length === 0) {
       return this.placeholder;
     }
-   return this.selectedItems.map(item => item.name).join(', ');
+   return this.selectedItems.map(item => this.formatItemName(item.name)).join(', ');
   //  return this.selectedItems
   //  .map(item => this.capitalizePipe.transform(item.name)) // Apply the pipe
   //  .join(', ');
@@ -67,5 +74,19 @@ export class MultiSelectOptionComponent {
 
   isAllSelected(): boolean {
     return this.items.length === this.selectedItems.length;
+  }
+
+  formatItemName(value: string | null | undefined): string {
+    if (!value) {
+      return '';
+    }
+
+    return value
+      .trim()
+      .replace(/\s+/g, ' ')
+      .toLowerCase()
+      .replace(/(^|[\s\-/'(])([a-z])/g, (_match, prefix: string, character: string) => {
+        return `${prefix}${character.toUpperCase()}`;
+      });
   }
 }
