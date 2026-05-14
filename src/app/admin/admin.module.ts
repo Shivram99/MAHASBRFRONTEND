@@ -12,7 +12,6 @@ import { ChartfilterComponent } from '../component/chartfilter/chartfilter.compo
 import { DashboardTabComponent } from '../component/dashboard-tab/dashboard-tab.component';
 import { TranslateModule } from '@ngx-translate/core';
 
-console.log("properly loaded 1")
 @NgModule({
   declarations: [RegisterUserComponent,DashboardComponent,DashboardBarChartComponent,
     DashboarddataComponent,
