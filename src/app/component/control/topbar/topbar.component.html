@@ -6,6 +6,20 @@
 
     <div class="rightPannel position-absolute end-0" *ngIf="currentLanguage$ | async as currentLanguage">
       <ul class="accessibility-menu posHome m-0">
+        <ng-container *ngIf="currentUser$ | async as currentUser">
+          <li class="user-info-group">
+            <div class="logged-user-info">
+              <div class="user-fullname">
+                {{ getDisplayedName(currentUser) }}
+              </div>
+
+              <div class="user-role" *ngIf="getDisplayedRole(currentUser) as displayedRole">
+                {{ displayedRole }}
+              </div>
+            </div>
+          </li>
+        </ng-container>
+
         <li>
           <div class="font-size-controls" role="group" [attr.aria-label]="'ACCESSIBILITY.FONT_CONTROLS_ARIA_LABEL' | translate">
             <button

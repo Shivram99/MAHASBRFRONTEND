@@ -48,7 +48,7 @@ export class AuthInterceptor implements HttpInterceptor {
           this.injector.get(AuthService).handleBackendUnavailable('home');
         }
 
-        if (error.status === 403) {
+        if (error.status === 403 && !skipAuthRedirect) {
           void this.injector.get(AuthService).navigateToUnauthorized();
         }
 

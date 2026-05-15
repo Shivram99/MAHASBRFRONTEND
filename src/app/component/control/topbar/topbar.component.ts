@@ -4,6 +4,7 @@ import { AccessibilityService } from '../../../core/services/accessibility.servi
 import { LanguageService } from '../../../core/services/language.service';
 import { AppLanguageCode } from '../../../core/models/language.model';
 import { AuthService } from '../../../services/auth.service';
+import { LoggedInUser } from '../../../interface/logged-in-user';
 
 @Component({
     selector: 'app-topbar',
@@ -14,6 +15,7 @@ import { AuthService } from '../../../services/auth.service';
 export class TopbarComponent {
   readonly emblemImg = 'assets/images/emblem.png';
   readonly isLoggedIn$: Observable<boolean>;
+  readonly currentUser$: Observable<LoggedInUser | null>;
   readonly currentLanguage$: Observable<AppLanguageCode>;
   readonly fontScale$ = this.accessibilityService.getFontScaleObservable();
 
@@ -23,6 +25,7 @@ export class TopbarComponent {
     private readonly languageService: LanguageService
   ) {
     this.isLoggedIn$ = this.authService.getIsLoggedIn();
+    this.currentUser$ = this.authService.getCurrentUser();
     this.currentLanguage$ = this.languageService.getLanguageObservable();
   }
 
@@ -67,5 +70,13 @@ export class TopbarComponent {
     }
 
     return 'A';
+  }
+
+  getDisplayedRole(user: LoggedInUser): string {
+    return user.activeRole || user.roles?.[0] || '';
+  }
+
+  getDisplayedName(user: LoggedInUser): string {
+    return user.fullName || user.username || '';
   }
 }

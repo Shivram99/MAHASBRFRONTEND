@@ -56,6 +56,7 @@ import { RequestFormComponent } from './component/request-form/request-form.comp
 import { AccessibilityService } from './core/services/accessibility.service';
 import { LanguageService } from './core/services/language.service';
 import { initializeApplicationFactory } from './core/factories/app-initializer.factory';
+import { AuthService } from './services/auth.service';
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -120,7 +121,7 @@ import { initializeApplicationFactory } from './core/factories/app-initializer.f
     {
       provide: APP_INITIALIZER,
       useFactory: initializeApplicationFactory,
-      deps: [LanguageService, AccessibilityService],
+      deps: [LanguageService, AccessibilityService, AuthService],
       multi: true
     },
     provideAnimationsAsync(),
