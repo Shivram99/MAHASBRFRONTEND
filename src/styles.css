@@ -1,5 +1,3 @@
-
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -20,25 +18,44 @@
     --font-family-en: "Times New Roman", Times, serif;
     --font-family-mr: "DVOT SurekhMR", "Noto Sans Devanagari", serif;
     --app-font-family: var(--font-family-en);
+    --app-font-scale-percent: 100%;
+    --app-font-scale-ratio: 1;
+    --app-color-primary: #003366;
+    --app-color-secondary: #0b5b84;
+    --app-color-accent: #f59e0b;
+    --app-color-surface: #f4f8fb;
+    --app-color-text: #102a43;
     --bs-body-font-family: var(--app-font-family);
     --bs-font-sans-serif: var(--app-font-family);
 }
 
-html,
-body {
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
     height: 100%;
-    font-family: var(--app-font-family);
+    scroll-behavior: smooth;
+    font-size: calc(16px * var(--app-font-scale-ratio));
 }
 
 body {
+    min-height: 100%;
     margin: 0;
     font-family: var(--app-font-family) !important;
+    background: var(--app-color-surface);
+    color: var(--app-color-text);
+    transition: font-size 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
 
+html.lang-en,
 body.lang-en {
     --app-font-family: var(--font-family-en);
 }
 
+html.lang-mr,
 body.lang-mr {
     --app-font-family: var(--font-family-mr);
 }
@@ -47,15 +64,19 @@ button,
 input,
 optgroup,
 select,
-textarea {
+textarea,
+table,
+.table,
+.card,
+.modal-content,
+.alert,
+.breadcrumb,
+.dropdown-menu {
     font: inherit;
     font-family: var(--app-font-family) !important;
 }
 
-.mat-typography {
-    font-family: var(--app-font-family) !important;
-}
-
+.mat-typography,
 .mat-mdc-form-field,
 .mat-mdc-input-element,
 .mat-mdc-select,
@@ -71,8 +92,17 @@ textarea {
     font-family: var(--app-font-family) !important;
 }
 
+:focus-visible {
+    outline: 2px solid #ffbf47;
+    outline-offset: 2px;
+}
+
+a {
+    color: #0b63a5;
+}
+
 .table-striped > tbody > tr:nth-of-type(odd) > * {
-    background: #D4EBFF;
+    background: #d4ebff;
 }
 
 .table a.nav-link {

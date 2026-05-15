@@ -1,0 +1,60 @@
+<div
+  class="accessibility-toolbar"
+  role="toolbar"
+  [attr.aria-label]="'ACCESSIBILITY.TOOLBAR_ARIA_LABEL' | translate"
+>
+  <ng-container *ngIf="fontScaleState$ | async as fontScaleState">
+    <div
+      class="accessibility-toolbar__group"
+      role="group"
+      [attr.aria-label]="'ACCESSIBILITY.FONT_CONTROLS_ARIA_LABEL' | translate"
+    >
+      <button
+        type="button"
+        class="accessibility-toolbar__button"
+        [disabled]="!fontScaleState.canDecrease"
+        [attr.aria-label]="'ACCESSIBILITY.DECREASE_FONT' | translate"
+        (click)="decreaseFontSize()"
+      >
+        A-
+      </button>
+
+      <button
+        type="button"
+        class="accessibility-toolbar__button accessibility-toolbar__button--default"
+        [attr.aria-label]="'ACCESSIBILITY.RESET_FONT' | translate"
+        (click)="resetFontSize()"
+      >
+        A
+      </button>
+
+      <button
+        type="button"
+        class="accessibility-toolbar__button"
+        [disabled]="!fontScaleState.canIncrease"
+        [attr.aria-label]="'ACCESSIBILITY.INCREASE_FONT' | translate"
+        (click)="increaseFontSize()"
+      >
+        A+
+      </button>
+    </div>
+
+    <span class="accessibility-toolbar__status" aria-live="polite">
+      {{ 'ACCESSIBILITY.FONT_SCALE' | translate:{ scale: fontScaleState.scale } }}
+    </span>
+  </ng-container>
+
+  <span class="accessibility-toolbar__divider" aria-hidden="true"></span>
+
+  <app-language-switcher></app-language-switcher>
+
+  <ng-container *ngIf="showLoginLink && !isLoggedIn">
+    <span class="accessibility-toolbar__divider" aria-hidden="true"></span>
+    <a
+      class="accessibility-toolbar__link"
+      [routerLink]="loginRoute"
+    >
+      {{ 'BUTTON.LOGIN' | translate }}
+    </a>
+  </ng-container>
+</div>

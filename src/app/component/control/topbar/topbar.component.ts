@@ -1,5 +1,8 @@
-import { Component, Renderer2 } from '@angular/core';
+import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
+import { AccessibilityService } from '../../../core/services/accessibility.service';
+import { LanguageService } from '../../../core/services/language.service';
+import { AppLanguageCode } from '../../../core/models/language.model';
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
@@ -9,63 +12,60 @@ import { AuthService } from '../../../services/auth.service';
     standalone: false
 })
 export class TopbarComponent {
- emblemImg : string = 'assets/images/emblem.png';
-
- isLoggedIn$: Observable<boolean>;
-private currentSize = 14;
-  private intervalId: any;
+  readonly emblemImg = 'assets/images/emblem.png';
+  readonly isLoggedIn$: Observable<boolean>;
+  readonly currentLanguage$: Observable<AppLanguageCode>;
+  readonly fontScale$ = this.accessibilityService.getFontScaleObservable();
 
   constructor(
-    private renderer: Renderer2,
-    private authService: AuthService
+    private readonly authService: AuthService,
+    private readonly accessibilityService: AccessibilityService,
+    private readonly languageService: LanguageService
   ) {
     this.isLoggedIn$ = this.authService.getIsLoggedIn();
+    this.currentLanguage$ = this.languageService.getLanguageObservable();
   }
- 
-  private animateFontSize(targetSize: number): void {
-    const step = targetSize > this.currentSize ? 1 : -1;
 
-    // Clear any previous animation
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
+  decreaseFontSize(): void {
+    this.accessibilityService.decreaseFontSize();
+  }
+
+  resetFontSize(): void {
+    this.accessibilityService.resetFontSize();
+  }
+
+  increaseFontSize(): void {
+    this.accessibilityService.increaseFontSize();
+  }
+
+  toggleLanguage(currentLanguage: AppLanguageCode): void {
+    this.languageService.setLanguage(currentLanguage === 'en' ? 'mr' : 'en');
+  }
+
+  getFontControlLabel(
+    currentLanguage: AppLanguageCode,
+    variant: 'decrease' | 'reset' | 'increase'
+  ): string {
+    if (currentLanguage === 'mr') {
+      if (variant === 'decrease') {
+        return 'अ-';
+      }
+
+      if (variant === 'increase') {
+        return 'अ+';
+      }
+
+      return 'अ';
     }
 
-    this.intervalId = setInterval(() => {
-      if (this.currentSize === targetSize) {
-        clearInterval(this.intervalId);
-      } else {
-        this.currentSize += step;
-        this.renderer.setStyle(document.body, 'font-size', `${this.currentSize}px`);
-      }
-    }, 80);
+    if (variant === 'decrease') {
+      return 'A-';
+    }
+
+    if (variant === 'increase') {
+      return 'A+';
+    }
+
+    return 'A';
   }
-
-  changeFontSize(type: 'small' | 'medium' | 'large'): void {
-    let newSize = 14;
-    if (type === 'small') newSize = 12;
-    if (type === 'large') newSize = 16;
-    this.animateFontSize(newSize);
-  }
-  
-   private colorThemes = ['normal', 'deuteranopia', 'protanopia', 'high-contrast'];
-
-  
-
-  setTheme(theme: string): void {
-    if (!this.colorThemes.includes(theme)) theme = 'normal';
-    this.colorThemes.forEach(t => this.renderer.removeClass(document.body, t));
-    this.renderer.addClass(document.body, theme);
-    localStorage.setItem('colorTheme', theme);
-  }
-
-  loadSavedTheme(): void {
-    const savedTheme = localStorage.getItem('colorTheme') || 'normal';
-    this.setTheme(savedTheme);
-  }
-  isColorBlindMode = false;
-
-toggleColorBlindMode(): void {
-  this.isColorBlindMode = !this.isColorBlindMode;
-  document.body.classList.toggle('color-blind-mode', this.isColorBlindMode);
-}
 }

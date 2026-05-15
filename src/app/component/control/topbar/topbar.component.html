@@ -1,28 +1,49 @@
 <div class="darkblue p-2">
   <div class="container position-relative d-flex align-items-center">
-
-    <!-- Center Emblem -->
-    <!-- <div class="emblem text-center w-100">
-      <a href="https://www.india.gov.in/" target="_blank" class="emb">
-        <img [src]="emblemImg" alt="Example Image">
-      </a>
-    </div> -->
     <div class="emblem text-center w-100">
-      <img [src]="emblemImg" alt="Example Image">
+      <img [src]="emblemImg" [alt]="'TOPBAR.EMBLEM_ALT' | translate">
     </div>
-    <!-- Right Panel -->
-    <div class="rightPannel position-absolute end-0">
+
+    <div class="rightPannel position-absolute end-0" *ngIf="currentLanguage$ | async as currentLanguage">
       <ul class="accessibility-menu posHome m-0">
         <li>
-          <div class="font-size-controls">
-            <button (click)="changeFontSize('small')" class="font-size-btn">A-</button>
-            <button (click)="changeFontSize('medium')" class="font-size-btn">A</button>
-            <button (click)="changeFontSize('large')" class="font-size-btn">A+</button>
+          <div class="font-size-controls" role="group" [attr.aria-label]="'ACCESSIBILITY.FONT_CONTROLS_ARIA_LABEL' | translate">
+            <button
+              type="button"
+              class="font-size-btn"
+              [attr.aria-label]="'ACCESSIBILITY.DECREASE_FONT' | translate"
+              (click)="decreaseFontSize()"
+            >
+              {{ getFontControlLabel(currentLanguage, 'decrease') }}
+            </button>
+            <button
+              type="button"
+              class="font-size-btn"
+              [attr.aria-label]="'ACCESSIBILITY.RESET_FONT' | translate"
+              (click)="resetFontSize()"
+            >
+              {{ getFontControlLabel(currentLanguage, 'reset') }}
+            </button>
+            <button
+              type="button"
+              class="font-size-btn"
+              [attr.aria-label]="'ACCESSIBILITY.INCREASE_FONT' | translate"
+              (click)="increaseFontSize()"
+            >
+              {{ getFontControlLabel(currentLanguage, 'increase') }}
+            </button>
           </div>
         </li>
 
         <li>
-          <app-language-switcher></app-language-switcher>
+          <a
+            href="#"
+            class="lang-toggle"
+            [attr.aria-label]="'LANGUAGE.SWITCHER_ARIA_LABEL' | translate"
+            (click)="$event.preventDefault(); toggleLanguage(currentLanguage)"
+          >
+            {{ currentLanguage === 'en' ? 'English' : 'मराठी' }}
+          </a>
         </li>
 
         <li class="text-light">|</li>
@@ -34,6 +55,5 @@
         </li>
       </ul>
     </div>
-
   </div>
 </div>

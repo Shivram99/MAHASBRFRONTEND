@@ -1,7 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { LanguageService } from '../../core/services/language.service'; 
-import { AuthService } from '../../services/auth.service';
+import { Component } from '@angular/core';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -10,66 +7,8 @@ import { environment } from '../../../environments/environment';
     styleUrl: './header.component.css',
     standalone: false
 })
-export class HeaderComponent  implements OnInit{
-  isChecked: boolean = true;
-  isLoggedIn: boolean = false;
+export class HeaderComponent {
   readonly environmentLabel = environment.environmentName.toUpperCase();
   readonly environmentClass = `env-badge--${environment.environmentName}`;
-
-  ngOnInit(): void {
-
-    const currentLang = this.translate.currentLang;
-    this.isChecked = currentLang === 'mr'; 
-
-    this.languageService.getLanguageObservable().subscribe(language => {
-     /* this.languageService.setCurrentLanguage(language);
-      // alert(language);
-       this.translate.use(language);*/
-    });
-
-    this.authService.getIsLoggedIn().subscribe(isLoggedIn => {
-      this.isLoggedIn = isLoggedIn;
-    });
-  }
-
-
-
-  toggleLang(event: Event) {
-    const checked = (event.target as HTMLInputElement).checked;
-    this.isChecked = checked;
-    const selectedLang = checked ? 'mr' : 'en'; // Change 'en' and 'mr' to your language codes
-    this.translate.use(selectedLang);
-  }
-
-
-  constructor(
-    public translate: TranslateService,
-    private languageService: LanguageService,
-    private authService: AuthService
-  ) 
-  {
- 
-    translate.addLangs(['en','mr']);
- 
-    translate.setDefaultLang('en');
- 
-  }
-
-
-  switchLang(lang: string) {
-
-    this.languageService.setLanguage(lang);
-
-   // alert(environment.apiUrl);
-
-  //  alert(lang);
-    this.translate.use(lang);
-  }
-
-
-  
-
-  mh_logo : string = 'assets/images/DES_Logo.png';
-  
-
+  readonly mh_logo = 'assets/images/DES_Logo.png';
 }

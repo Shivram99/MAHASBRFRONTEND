@@ -1,7 +1,16 @@
 .footerbg {
     background: #007097;
     color: #fff;
-    padding: 10px;
+    padding: 10px 0;
+}
+
+.footerbg__content,
+.darkbg__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .visitor span {
@@ -20,12 +29,14 @@
     padding: 10px;
 }
 
-.footerbg  a:hover, .darkbg a:hover {
+.footerbg a:hover,
+.darkbg a:hover {
     background-color: #f18016;
 }
+
 .darkbg {
     background: #000;
-    padding: 10px;
+    padding: 10px 0;
     color: #fff;
     text-align: center;
 }
@@ -36,11 +47,19 @@
     padding: 5px;
     text-decoration: none;
 }
-.darkbg  span a {
+
+.darkbg span a {
     color: #f18016;
 }
 
-.darkbg  span a:hover {
+.darkbg span a:hover {
     background: #fff;
 }
 
+@media (max-width: 767px) {
+    .footerbg__content,
+    .darkbg__content {
+        justify-content: center;
+        text-align: center;
+    }
+}

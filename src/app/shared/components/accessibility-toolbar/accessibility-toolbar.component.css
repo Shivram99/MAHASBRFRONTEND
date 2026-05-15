@@ -1,0 +1,82 @@
+.accessibility-toolbar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  color: #ffffff;
+}
+
+.accessibility-toolbar__group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.accessibility-toolbar__button {
+  min-width: 2.5rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0.5rem 0.75rem;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.accessibility-toolbar__button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.accessibility-toolbar__button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.accessibility-toolbar__button:focus-visible,
+.accessibility-toolbar__link:focus-visible {
+  outline: 2px solid #ffd166;
+  outline-offset: 2px;
+}
+
+.accessibility-toolbar__button--default {
+  background: #ffffff;
+  color: #003366;
+}
+
+.accessibility-toolbar__status {
+  font-size: 0.85rem;
+  opacity: 0.92;
+}
+
+.accessibility-toolbar__divider {
+  width: 1px;
+  align-self: stretch;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.accessibility-toolbar__link {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.accessibility-toolbar__link:hover {
+  color: #ffd166;
+}
+
+@media (max-width: 767px) {
+  .accessibility-toolbar {
+    justify-content: center;
+  }
+
+  .accessibility-toolbar__status,
+  .accessibility-toolbar__divider {
+    display: none;
+  }
+}

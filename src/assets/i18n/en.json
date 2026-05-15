@@ -87,9 +87,9 @@
       "jalna": "Jalna",
       "kolhapur": "Kolhapur",
       "latur": "Latur",
-        "mumbai": "Mumbai",
-        "mumbai_city": "Mumbai City",
-        "mumbai_suburban": "Mumbai Suburban",
+      "mumbai": "Mumbai",
+      "mumbai_city": "Mumbai City",
+      "mumbai_suburban": "Mumbai Suburban",
       "nagpur": "Nagpur",
       "nanded": "Nanded",
       "nandurbar": "Nandurbar",
@@ -290,7 +290,8 @@
       "twitter": "Twitter",
       "instagram": "Instagram",
       "youtube": "YouTube"
-    }
+    },
+    "socialLinks": "Social media links"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -376,5 +377,37 @@
       "unknown_district": "Unknown",
       "unknown_registry": "Unknown Registry"
     }
+  },
+  "REQUEST_FORM": "Request Form",
+  "WELCOME_MESSAGE": "Welcome to the State Business Register portal",
+  "WHATS_NEW": "What's New",
+  "LANGUAGE": {
+    "ENGLISH": "English",
+    "MARATHI": "Marathi",
+    "SELECT_ENGLISH": "Switch language to English",
+    "SELECT_MARATHI": "Switch language to Marathi",
+    "SWITCHER_ARIA_LABEL": "Select portal language"
+  },
+  "ACCESSIBILITY": {
+    "SKIP_TO_MAIN": "Skip to main content",
+    "TOOLBAR_ARIA_LABEL": "Accessibility toolbar",
+    "FONT_CONTROLS_ARIA_LABEL": "Font size controls",
+    "DECREASE_FONT": "Decrease font size",
+    "RESET_FONT": "Reset font size",
+    "INCREASE_FONT": "Increase font size",
+    "FONT_SCALE": "Font size {{scale}}%"
+  },
+  "VALIDATION": {
+    "REVIEW_FORM_ERRORS": "Please review the highlighted fields and try again.",
+    "INVALID_FIELD": "Please enter a valid value."
+  },
+  "MESSAGES": {
+    "UNEXPECTED_ERROR": "An unexpected error occurred. Please try again.",
+    "NETWORK_ERROR": "Server is not reachable. Please check your network or backend.",
+    "NOT_FOUND": "Requested resource not found.",
+    "SERVER_ERROR": "Internal Server Error. Please try again later."
+  },
+  "TOPBAR": {
+    "EMBLEM_ALT": "Government of Maharashtra emblem"
   }
 }

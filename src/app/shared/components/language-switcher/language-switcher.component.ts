@@ -1,45 +1,28 @@
-import { Component } from '@angular/core';
-import { LanguageService } from '../../../core/services/language.service'; 
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
+import { LanguageService } from '../../../core/services/language.service';
+import { AppLanguageCode, LanguageOption } from '../../../core/models/language.model';
 
 @Component({
-    selector: 'app-language-switcher',
-    templateUrl: './language-switcher.component.html',
-    styleUrls: ['./language-switcher.component.css'],
-    standalone: false
+  selector: 'app-language-switcher',
+  standalone: true,
+  imports: [CommonModule, TranslateModule],
+  templateUrl: './language-switcher.component.html',
+  styleUrls: ['./language-switcher.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LanguageSwitcherComponent {
-  languages = ['en', 'mr'];
-selectedLang: string = 'en'; 
+  readonly languageOptions = this.languageService.getLanguageOptions();
+  readonly currentLanguage$ = this.languageService.getLanguageObservable();
 
-  constructor(private langService: LanguageService) {
-    this.languages = this.langService.getAvailableLanguages();
-    this.selectedLang = this.langService.getCurrentLanguage();
+  constructor(private readonly languageService: LanguageService) {}
+
+  selectLanguage(languageCode: AppLanguageCode): void {
+    this.languageService.setLanguage(languageCode);
   }
 
-//   toggleLanguage() {
-//   this.selectedLang = this.selectedLang === 'en' ? 'mr' : 'en';
-//   this.onLanguageChange(this.selectedLang);
-// }
- // default language
-
-toggleLanguage() {
-  this.selectedLang = this.selectedLang === 'en' ? 'mr' : 'en';
-  this.onLanguageChange(this.selectedLang);
-}
-
-onLanguageChange(lang: string) {
-   this.selectedLang = lang;
-   this.langService.setLanguage(lang);
-  // console.log("Language changed to:", lang);
-}
-
-// onLanguageChange(event: Event) {
-//   const selectElement = event.target as HTMLSelectElement | null;
-//   if (selectElement) {
-//     const lang = selectElement.value;
-//     this.selectedLang = lang;
-//     this.langService.setLanguage(lang);
-//   }
-// }
-
+  trackByCode(_: number, option: LanguageOption): AppLanguageCode {
+    return option.code;
+  }
 }

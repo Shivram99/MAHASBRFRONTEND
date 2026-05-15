@@ -1,86 +1,125 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-
-type SupportedLanguage = 'en' | 'mr';
+import { BehaviorSubject, Observable, catchError, firstValueFrom, of } from 'rxjs';
+import {
+  APP_DEFAULT_LANGUAGE,
+  APP_LANGUAGE_OPTIONS,
+  APP_STORAGE_KEYS
+} from '../constants/user-preferences.constants';
+import { AppLanguageCode, LanguageOption } from '../models/language.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LanguageService {
-  private readonly defaultLang: SupportedLanguage = 'en';
-  private readonly storageKey = 'lang';
-  private readonly supportedLanguages: SupportedLanguage[] = ['en', 'mr'];
-  private readonly languageFonts: Record<SupportedLanguage, string> = {
+  private readonly supportedLanguages: AppLanguageCode[] = APP_LANGUAGE_OPTIONS.map(
+    ({ code }) => code
+  );
+  private readonly languageFonts: Record<AppLanguageCode, string> = {
     en: '"Times New Roman", Times, serif',
     mr: '"DVOT SurekhMR", "Noto Sans Devanagari", serif'
   };
   private readonly isBrowser: boolean;
-  private readonly languageSubject: BehaviorSubject<string>;
+  private readonly languageSubject = new BehaviorSubject<AppLanguageCode>(APP_DEFAULT_LANGUAGE);
 
   constructor(
-    private translate: TranslateService,
-    @Inject(DOCUMENT) private document: Document,
+    private readonly translate: TranslateService,
+    @Inject(DOCUMENT) private readonly document: Document,
     @Inject(PLATFORM_ID) platformId: object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
+  }
 
+  async initialize(): Promise<void> {
     this.translate.addLangs(this.supportedLanguages);
+    this.translate.setDefaultLang(APP_DEFAULT_LANGUAGE);
 
-    const savedLang = this.isBrowser
-      ? localStorage.getItem(this.storageKey) || this.defaultLang
-      : this.defaultLang;
+    const savedLanguage = this.readStoredLanguage();
+    const normalizedLanguage = this.normalizeLanguage(savedLanguage);
 
-    this.languageSubject = new BehaviorSubject<string>(this.normalizeLanguage(savedLang));
-
-    this.setLanguage(savedLang);
+    await this.useLanguage(normalizedLanguage);
   }
 
-  setLanguage(lang: string): void {
-    const normalizedLang = this.normalizeLanguage(lang);
-
-    this.translate.use(normalizedLang);
-    this.applyLanguageStyling(normalizedLang);
-
-    if (this.isBrowser) {
-      localStorage.setItem(this.storageKey, normalizedLang);
-    }
-
-    this.languageSubject.next(normalizedLang);
+  setLanguage(language: string): void {
+    const normalizedLanguage = this.normalizeLanguage(language);
+    void this.useLanguage(normalizedLanguage);
   }
 
-  getCurrentLanguage(): string {
+  getCurrentLanguage(): AppLanguageCode {
     return this.languageSubject.value;
   }
 
-  getAvailableLanguages(): string[] {
+  getAvailableLanguages(): AppLanguageCode[] {
     return [...this.supportedLanguages];
   }
 
-  getLanguageObservable(): Observable<string> {
+  getLanguageOptions(): readonly LanguageOption[] {
+    return APP_LANGUAGE_OPTIONS;
+  }
+
+  getLanguageObservable(): Observable<AppLanguageCode> {
     return this.languageSubject.asObservable();
   }
 
-  private normalizeLanguage(lang: string): SupportedLanguage {
-    return this.supportedLanguages.includes(lang as SupportedLanguage)
-      ? (lang as SupportedLanguage)
-      : this.defaultLang;
+  private async useLanguage(language: AppLanguageCode): Promise<void> {
+    this.applyLanguageStyling(language);
+    this.persistLanguage(language);
+    this.languageSubject.next(language);
+
+    await firstValueFrom(
+      this.translate.use(language).pipe(
+        catchError(() => {
+          if (language !== APP_DEFAULT_LANGUAGE) {
+            this.applyLanguageStyling(APP_DEFAULT_LANGUAGE);
+            this.persistLanguage(APP_DEFAULT_LANGUAGE);
+            this.languageSubject.next(APP_DEFAULT_LANGUAGE);
+            return this.translate.use(APP_DEFAULT_LANGUAGE);
+          }
+
+          return of({});
+        })
+      )
+    );
   }
 
-  private applyLanguageStyling(lang: SupportedLanguage): void {
-    this.document.documentElement.lang = lang;
-    this.document.documentElement.style.setProperty(
-      '--app-font-family',
-      this.languageFonts[lang]
-    );
+  private readStoredLanguage(): AppLanguageCode {
+    if (!this.isBrowser) {
+      return APP_DEFAULT_LANGUAGE;
+    }
+
+    const storedLanguage = window.localStorage.getItem(APP_STORAGE_KEYS.language);
+    return this.normalizeLanguage(storedLanguage);
+  }
+
+  private persistLanguage(language: AppLanguageCode): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
+    window.localStorage.setItem(APP_STORAGE_KEYS.language, language);
+  }
+
+  private normalizeLanguage(language: string | null): AppLanguageCode {
+    return this.supportedLanguages.includes(language as AppLanguageCode)
+      ? (language as AppLanguageCode)
+      : APP_DEFAULT_LANGUAGE;
+  }
+
+  private applyLanguageStyling(language: AppLanguageCode): void {
+    const rootElement = this.document.documentElement;
+    rootElement.lang = language;
+    rootElement.setAttribute('data-language', language);
+    rootElement.style.setProperty('--app-font-family', this.languageFonts[language]);
+    rootElement.classList.remove(...this.supportedLanguages.map((code) => `lang-${code}`));
+    rootElement.classList.add(`lang-${language}`);
 
     const body = this.document.body;
     if (!body) {
       return;
     }
 
-    body.classList.remove(...this.supportedLanguages.map(language => `lang-${language}`));
-    body.classList.add(`lang-${lang}`);
+    body.classList.remove(...this.supportedLanguages.map((code) => `lang-${code}`));
+    body.classList.add(`lang-${language}`);
   }
 }

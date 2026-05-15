@@ -6,11 +6,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DeveloperDashboardComponent } from '../component/developer-dashboard/developer-dashboard.component';
 import { AdduserComponent } from './component/user/adduser/adduser.component';
 import { RouterModule } from '@angular/router';
-
-
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-  declarations: [    
+  declarations: [
     MenuRoleMappingComponent,
     DeveloperDashboardComponent,
     AdduserComponent,
@@ -21,6 +20,7 @@ import { RouterModule } from '@angular/router';
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
+    TranslateModule,
   ]
 })
 export class DeveloperModule { }

@@ -1,9 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from './services/auth.service';
-import { BehaviorSubject } from 'rxjs';
-import { VisitTrackerService } from './services/sitevisitor/visit-tracker.service';
-import { VisitSummary } from './interface/visit-summary';
-import { LanguageService } from './core/services/language.service';
 
 @Component({
     selector: 'app-root',
@@ -12,35 +8,14 @@ import { LanguageService } from './core/services/language.service';
     standalone: false
 })
 export class AppComponent implements OnInit {
-  
   title = 'MahaSbrFrontend';
-  isLoggedIn: boolean = false;
-  private loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  summary: VisitSummary = { totalVisits: 0, todayVisits: 0 };
-  constructor(
-    private authService: AuthService,
-    private visitService: VisitTrackerService,
-    private languageService: LanguageService
-  ) {}
+  isLoggedIn = false;
 
-  ngOnInit() {
-    // Ensure saved language styling, including fonts, is applied at app bootstrap.
-    this.languageService.getCurrentLanguage();
+  constructor(private readonly authService: AuthService) {}
 
-    this.authService.getIsLoggedIn().subscribe(isLoggedIn => {
+  ngOnInit(): void {
+    this.authService.getIsLoggedIn().subscribe((isLoggedIn) => {
       this.isLoggedIn = isLoggedIn;
-    });
-      
-  }
-
-  private loadSummary(): void {
-    this.visitService.getVisitSummary().subscribe({
-      next: (data) => {
-        this.summary = data;
-      },
-      error: (err) => {
-        console.error('Error loading summary', err);
-      }
     });
   }
 }

@@ -1,6 +1,5 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ErrorHandler, NgModule } from '@angular/core';
+import { APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './component/header/header.component';
@@ -9,11 +8,16 @@ import { HomepageComponent } from './component/homepage/homepage.component';
 import { DashboardComponent } from './component/dashboard/dashboard.component';
 import { AboutusComponent } from './component/aboutus/aboutus.component';
 import { ContactusComponent } from './component/contactus/contactus.component';
-import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  HttpClient,
+  provideHttpClient,
+  withFetch,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { LoginComponent } from './component/login/login.component';
 import { AuthInterceptor } from './auth-interceptor.interceptor';
 import { authGuard } from './auth.guard';
@@ -36,8 +40,8 @@ import { SearchBrnComponent } from './component/search-brn/search-brn.component'
 import { DashboardNavComponent } from './component/dashboard-nav/dashboard-nav.component';
 import { CitizenDashboardComponent } from './component/citizen-dashboard/citizen-dashboard.component';
 import { CircularComponent } from './component/circular/circular.component';
-import { NgIdleModule } from '@ng-idle/core';
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
+import { NgIdleModule } from '@ng-idle/core';
 import { DashboardDetailsComponent } from './component/dashboard-details/dashboard-details.component';
 import { DuplicatedeatilsComponent } from './component/duplicatedeatils/duplicatedeatils.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -46,88 +50,85 @@ import { PostLoginDashboardComponent } from './component/post-login-dashboard/po
 import { RegionBRNDetailsComponent } from './component/region-brndetails/region-brndetails.component';
 import { DistrictBRNDetailsComponent } from './component/district-brndetails/district-brndetails.component';
 import { CapitalizePipe } from './pipes/capitalize.pipe';
-import { LanguageSwitcherComponent } from './shared/components/language-switcher/language-switcher.component';
 import { SharedModule } from './shared/shared.module';
 import { GlobalErrorHandler } from './core/handlers/global-error.handler';
 import { RequestFormComponent } from './component/request-form/request-form.component';
-
-// import { LanguageSwitcherComponent } from './shared/components/language-switcher/language-switcher.component';
-
-
-//import { ChartfilterComponent } from './component/chartfilter/chartfilter.component';
-
+import { AccessibilityService } from './core/services/accessibility.service';
+import { LanguageService } from './core/services/language.service';
+import { initializeApplicationFactory } from './core/factories/app-initializer.factory';
 
 @NgModule({
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    declarations: [
-        AppComponent,
-        HeaderComponent,
-        FooterComponent,
-        HomepageComponent,
-        AboutusComponent,
-        ContactusComponent,
-        LoginComponent,
-        UnauthorizedComponent,
-        ChangePasswordComponent,
-        DepartmentMstComponent,
-        RoleComponent,
-        DashboardadminComponent,
-        ViewDetailsAdminDashBoardComponent,
-        TopbarComponent,
-        NavComponent,
-        CaroselComponent,
-        NewsTickerComponent,
-        AwardsComponent,
-        FeedbackComponent,
-        OwlCorosalComponent,
-        FaqComponent,
-        ImportantDocumentComponent,
-        SearchBrnComponent,
-        DashboardNavComponent,
-        CitizenDashboardComponent,
-        CircularComponent,
-        DashboardDetailsComponent,
-        DuplicatedeatilsComponent,
-        PostLoginDashboardComponent,
-        RegionBRNDetailsComponent,
-        DistrictBRNDetailsComponent,
-        CapitalizePipe,
-        LanguageSwitcherComponent,
-        RequestFormComponent,
-        // ChartfilterComponent,
-    ],
-    bootstrap: [AppComponent], imports: [BrowserModule,
-        AppRoutingModule,
-        ReactiveFormsModule,
-        FormsModule,
-        SharedModule,
-        NgIdleModule.forRoot(), // Initialize NgIdleModule
-        NgIdleKeepaliveModule.forRoot(),
-        TranslateModule.forRoot({
-            defaultLanguage: 'en', // default
-            loader: {
-                provide: TranslateLoader,
-                useFactory: HttpLoaderFactory,
-                deps: [HttpClient]
-            }
-        })], providers: [
-            provideClientHydration(), provideHttpClient(withFetch()),
-            authGuard,
-            { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-             { provide: ErrorHandler, useClass: GlobalErrorHandler },
-            provideAnimationsAsync(),
-            provideHttpClient(withInterceptorsFromDi()),
-        ]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  declarations: [
+    AppComponent,
+    HeaderComponent,
+    FooterComponent,
+    HomepageComponent,
+    AboutusComponent,
+    ContactusComponent,
+    LoginComponent,
+    UnauthorizedComponent,
+    ChangePasswordComponent,
+    DepartmentMstComponent,
+    RoleComponent,
+    DashboardadminComponent,
+    ViewDetailsAdminDashBoardComponent,
+    TopbarComponent,
+    NavComponent,
+    CaroselComponent,
+    NewsTickerComponent,
+    AwardsComponent,
+    FeedbackComponent,
+    OwlCorosalComponent,
+    FaqComponent,
+    ImportantDocumentComponent,
+    SearchBrnComponent,
+    DashboardNavComponent,
+    CitizenDashboardComponent,
+    CircularComponent,
+    DashboardDetailsComponent,
+    DuplicatedeatilsComponent,
+    PostLoginDashboardComponent,
+    RegionBRNDetailsComponent,
+    DistrictBRNDetailsComponent,
+    CapitalizePipe,
+    RequestFormComponent,
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
+    FormsModule,
+    SharedModule,
+    NgIdleModule.forRoot(),
+    NgIdleKeepaliveModule.forRoot(),
+    TranslateModule.forRoot({
+      defaultLanguage: 'en',
+      loader: {
+        provide: TranslateLoader,
+        useFactory: httpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
+  ],
+  providers: [
+    provideClientHydration(),
+    provideHttpClient(withFetch(), withInterceptorsFromDi()),
+    authGuard,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeApplicationFactory,
+      deps: [LanguageService, AccessibilityService],
+      multi: true
+    },
+    provideAnimationsAsync(),
+  ],
+  bootstrap: [AppComponent]
 })
-export class AppModule {
+export class AppModule {}
 
-  constructor(translate: TranslateService) {
-    translate.addLangs(['en', 'mr']); // list your langs
-    translate.setDefaultLang('en');
-  }
- }
-
-
-export function HttpLoaderFactory(http: HttpClient) {
-    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+export function httpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }

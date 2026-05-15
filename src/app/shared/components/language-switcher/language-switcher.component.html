@@ -1,9 +1,20 @@
-<!-- <select [value]="selectedLang" (change)="onLanguageChange($event)">
-  <option *ngFor="let lang of languages" [value]="lang">
-    {{ lang === 'en' ? 'English' : 'मराठी' }}
-  </option>
-</select> -->
-
-<a (click)="toggleLanguage()" class="lang-toggle">
-  {{ selectedLang === 'en' ? 'English' : 'मराठी' }}
-</a>
+<div
+  class="language-switcher"
+  role="group"
+  [attr.aria-label]="'LANGUAGE.SWITCHER_ARIA_LABEL' | translate"
+>
+  <ng-container *ngIf="currentLanguage$ | async as currentLanguage">
+    <button
+      *ngFor="let option of languageOptions; trackBy: trackByCode"
+      type="button"
+      class="language-switcher__button"
+      [class.language-switcher__button--active]="option.code === currentLanguage"
+      [attr.aria-pressed]="option.code === currentLanguage"
+      [attr.aria-label]="option.ariaLabelKey | translate"
+      [attr.lang]="option.code"
+      (click)="selectLanguage(option.code)"
+    >
+      {{ option.nativeLabel }}
+    </button>
+  </ng-container>
+</div>

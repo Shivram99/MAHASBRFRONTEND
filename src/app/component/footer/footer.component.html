@@ -1,43 +1,41 @@
 <footer>
   <div class="footerbg">
-    <div class="container d-flex justify-content-between">
+    <div class="container footerbg__content">
       <div class="visitor">
-  <span>
-    Total Visitors : {{ summary!.totalVisits | number }}
-  </span>
-  <span>
-    Today’s Count : {{ summary!.todayVisits | number }}
-    
-  </span>
-  <!-- <span>
-    Last Reviewed : 22/04/2024
-  </span> -->
-</div>
+        <span>
+          {{ 'footer.totalVisitors' | translate }}: {{ summary.totalVisits | number }}
+        </span>
+        <span>
+          {{ 'footer.todayCount' | translate }}: {{ summary.todayVisits | number }}
+        </span>
+      </div>
+
       <div class="footerLink">
         <a routerLink="/feedback">{{ 'footer.feedback' | translate }}</a>
         <a routerLink="/contactus">{{ 'footer.contactUs' | translate }}</a>
         <a routerLink="/important-document">{{ 'footer.importantDocs' | translate }}</a>
       </div>
     </div>
-     
   </div>
+
   <div class="darkbg">
-    <div class="container d-flex justify-content-center">
- <div class="social">
-      <a routerLink="#links">
-        <i class="bi bi-facebook"></i>
-      </a>
-      <a routerLink="#links">
-        <i class="bi bi-twitter-x"></i>
-      </a>
-      <a routerLink="#links">
-        <i class="bi bi-instagram"></i>
-      </a>
-      <a routerLink="#links">
-        <i class="bi bi-youtube"></i>
-      </a>
+    <div class="container darkbg__content">
+      <div class="social" [attr.aria-label]="'footer.socialLinks' | translate">
+        <a routerLink="#links" [attr.aria-label]="'footer.socialAlt.facebook' | translate">
+          <i class="bi bi-facebook"></i>
+        </a>
+        <a routerLink="#links" [attr.aria-label]="'footer.socialAlt.twitter' | translate">
+          <i class="bi bi-twitter-x"></i>
+        </a>
+        <a routerLink="#links" [attr.aria-label]="'footer.socialAlt.instagram' | translate">
+          <i class="bi bi-instagram"></i>
+        </a>
+        <a routerLink="#links" [attr.aria-label]="'footer.socialAlt.youtube' | translate">
+          <i class="bi bi-youtube"></i>
+        </a>
+      </div>
+
+      <span>{{ 'footer.copyright' | translate }}<a routerLink="#links">MahaIT</a></span>
     </div>
-    <span>{{ 'footer.copyright' | translate }}<a routerLink="#links">MahaIT</a></span>
-  </div>
   </div>
 </footer>
