@@ -41,6 +41,59 @@
   min-width: 146px;
 }
 
+.export-progress-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.export-progress-card {
+  border: 1px solid #d9e2ec;
+  border-radius: 0.85rem;
+  padding: 1rem;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+
+.export-progress-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.export-progress-title {
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.export-progress-stage {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.export-progress-bar {
+  height: 1rem;
+  margin-bottom: 0.6rem;
+  background-color: #e5e7eb;
+}
+
+.export-progress-message {
+  font-size: 0.92rem;
+  color: #475569;
+}
+
+.pdf-card {
+  border-color: rgba(220, 53, 69, 0.18);
+}
+
+.excel-card {
+  border-color: rgba(25, 135, 84, 0.2);
+}
+
 .nav-dflex {
   justify-content: space-between;
 }

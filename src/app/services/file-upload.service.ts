@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpEvent, HttpRequest, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpEvent, HttpParams, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -6,6 +6,11 @@ import { MstRegistryDetailsPage } from '../model/mst-registry-details-page';
 import { PaginatedResponse } from '../interface/paginated-response';
 import { BRNGenerationRecordCount } from '../interfaces/brngeneration-record-count';
 import { UploadResultResponse } from '../interface/upload-result-response';
+import {
+  RegisteredEstablishmentExportJobCreatedResponse,
+  RegisteredEstablishmentExportJobRequest,
+  RegisteredEstablishmentExportJobStatusResponse
+} from '../interface/registered-establishment-export-job';
 
 
 @Injectable({
@@ -95,23 +100,45 @@ exportRegisteredEstablishmentsPdf(filters: {
   talukaIds?: number[];
   brn?: string | null;
 }): Observable<Blob> {
-  let params = new HttpParams();
-
-  (filters.districtIds ?? []).forEach((districtId) => {
-    params = params.append('districtId', districtId.toString());
-  });
-
-  (filters.talukaIds ?? []).forEach((talukaId) => {
-    params = params.append('talukaId', talukaId.toString());
-  });
-
-  const trimmedBrn = filters.brn?.trim();
-  if (trimmedBrn) {
-    params = params.set('brn', trimmedBrn);
-  }
-
   return this.http.get(`${this.apiUrl}/api/auth/registered-establishments/export/pdf`, {
-    params,
+    params: this.buildRegisteredEstablishmentExportParams(filters),
+    responseType: 'blob'
+  });
+}
+
+exportRegisteredEstablishmentsExcel(filters: {
+  districtIds?: number[];
+  talukaIds?: number[];
+  brn?: string | null;
+}): Observable<HttpResponse<Blob>> {
+  return this.http.get(`${this.apiUrl}/api/registered-establishments/export/excel`, {
+    params: this.buildRegisteredEstablishmentExportParams(filters),
+    observe: 'response',
+    responseType: 'blob'
+  });
+}
+
+createRegisteredEstablishmentExportJob(
+  request: RegisteredEstablishmentExportJobRequest
+): Observable<RegisteredEstablishmentExportJobCreatedResponse> {
+  return this.http.post<RegisteredEstablishmentExportJobCreatedResponse>(
+    `${this.apiUrl}/api/auth/registered-establishments/export/jobs`,
+    request
+  );
+}
+
+getRegisteredEstablishmentExportJobStatus(
+  jobId: string
+): Observable<RegisteredEstablishmentExportJobStatusResponse> {
+  return this.http.get<RegisteredEstablishmentExportJobStatusResponse>(
+    `${this.apiUrl}/api/auth/registered-establishments/export/jobs/${jobId}`
+  );
+}
+
+downloadRegisteredEstablishmentExport(jobId: string): Observable<HttpEvent<Blob>> {
+  return this.http.get(`${this.apiUrl}/api/auth/registered-establishments/export/jobs/${jobId}/download`, {
+    observe: 'events',
+    reportProgress: true,
     responseType: 'blob'
   });
 }
@@ -157,6 +184,29 @@ preview(file: File): Observable<any> {
 
   getUploadResult(fileId: string): Observable<UploadResultResponse> {
   return this.http.get<UploadResultResponse>(`/api/auth/result/${fileId}`);
+}
+
+private buildRegisteredEstablishmentExportParams(filters: {
+  districtIds?: number[];
+  talukaIds?: number[];
+  brn?: string | null;
+}): HttpParams {
+  let params = new HttpParams();
+
+  (filters.districtIds ?? []).forEach((districtId) => {
+    params = params.append('districtId', districtId.toString());
+  });
+
+  (filters.talukaIds ?? []).forEach((talukaId) => {
+    params = params.append('talukaId', talukaId.toString());
+  });
+
+  const trimmedBrn = filters.brn?.trim();
+  if (trimmedBrn) {
+    params = params.set('brn', trimmedBrn);
+  }
+
+  return params;
 }
 
   

@@ -74,13 +74,53 @@
         <i *ngIf="!isPdfExporting" class="bi bi-file-earmark-pdf me-1"></i>
         {{ isPdfExporting ? 'Exporting PDF...' : 'PDF Export' }}
       </button>
-      <button class="btn btn-outline-success btn-sm me-2" (click)="exportToExcel()">
-        <i class="bi bi-file-earmark-excel"></i>Excel Export
+      <button
+        class="btn btn-outline-success btn-sm me-2"
+        type="button"
+        [disabled]="isExcelExporting"
+        (click)="exportToExcel()">
+        <span *ngIf="isExcelExporting" class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+        <i *ngIf="!isExcelExporting" class="bi bi-file-earmark-excel me-1"></i>
+        {{ isExcelExporting ? 'Exporting Excel...' : 'Excel Export' }}
       </button>
     </div>
   </div>
+
+  <div class="export-progress-grid" *ngIf="pdfExportState.phase !== 'idle' || excelExportState.phase !== 'idle'">
+    <div class="export-progress-card pdf-card" *ngIf="pdfExportState.phase !== 'idle'">
+      <div class="export-progress-header">
+        <span class="export-progress-title">PDF Export</span>
+        <span class="export-progress-stage">{{ pdfExportState.stage }}</span>
+      </div>
+      <div class="progress export-progress-bar" role="progressbar" aria-label="PDF export progress"
+        [attr.aria-valuenow]="pdfExportState.progressPercent" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar bg-danger" [style.width.%]="pdfExportState.progressPercent">
+          {{ pdfExportState.progressPercent }}%
+        </div>
+      </div>
+      <p class="export-progress-message mb-0">{{ pdfExportState.message || 'Waiting for export activity.' }}</p>
+    </div>
+
+    <div class="export-progress-card excel-card" *ngIf="excelExportState.phase !== 'idle'">
+      <div class="export-progress-header">
+        <span class="export-progress-title">Excel Export</span>
+        <span class="export-progress-stage">{{ excelExportState.stage }}</span>
+      </div>
+      <div class="progress export-progress-bar" role="progressbar" aria-label="Excel export progress"
+        [attr.aria-valuenow]="excelExportState.progressPercent" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar bg-success" [style.width.%]="excelExportState.progressPercent">
+          {{ excelExportState.progressPercent }}%
+        </div>
+      </div>
+      <p class="export-progress-message mb-0">{{ excelExportState.message || 'Waiting for export activity.' }}</p>
+    </div>
+  </div>
+
   <div *ngIf="pdfExportError" class="alert alert-danger py-2 px-3 mb-3" role="alert">
     {{ pdfExportError }}
+  </div>
+  <div *ngIf="excelExportError" class="alert alert-danger py-2 px-3 mb-3" role="alert">
+    {{ excelExportError }}
   </div>
   <!-- filter component start -->
   <table class="table table-bordered table-striped">
