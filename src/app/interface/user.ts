@@ -3,10 +3,10 @@ export interface User {
   username: string;
   email: string;
   isFirstTimeLogin?: boolean; 
-  roles?: string[];
-  registryId?: number;
-  districtId?: number;
-  divisionCode?: number;
+  roles: string[];
+  registryId?: number | null;
+  districtId?: number | null;
+  divisionCode?: string | null;
   userProfile?: UserProfile;
 }
 

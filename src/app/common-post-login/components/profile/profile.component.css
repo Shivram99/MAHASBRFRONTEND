@@ -5,3 +5,7 @@
 img.img-fluid.rounded {
     width: 70%;
 }
+
+.role-text {
+    word-break: break-word;
+}

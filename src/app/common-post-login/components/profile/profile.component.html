@@ -30,6 +30,10 @@
               <div>{{ user?.userProfile?.officeName || 'Admin' }}</div>
             </div>
             <div class="col-sm-6">
+              <label class="fw-bold">Role:</label>
+              <div class="role-text">{{ userRolesDisplay }}</div>
+            </div>
+            <div class="col-sm-6">
               <label class=" fw-bold">Email:</label>
               <div> {{ user?.email || 'Admin' }}</div>
             </div>

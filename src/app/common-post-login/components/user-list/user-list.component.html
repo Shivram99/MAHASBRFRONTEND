@@ -2,11 +2,14 @@
   <h2>User Management</h2>
 
   <form
-  #userForm="ngForm"
-  (ngSubmit)="saveUser(userForm)"
-  novalidate
-  class="needs-validation p-4 border rounded shadow-sm bg-white"
->
+    [formGroup]="userForm"
+    (ngSubmit)="saveUser()"
+    novalidate
+    class="needs-validation p-4 border rounded shadow-sm bg-white"
+  >
+  <div *ngIf="submissionMessage" class="alert" [ngClass]="submissionMessageType === 'success' ? 'alert-success' : 'alert-danger'">
+    {{ submissionMessage }}
+  </div>
 
   <!-- Section: Basic Info -->
   <!-- <h5 class="mb-3 border-bottom pb-2 ">Basic Information</h5> -->
@@ -18,15 +21,13 @@
         id="username"
         name="username"
         class="form-control"
-        [(ngModel)]="newUser.username"
-        required
-        #username="ngModel"
+        formControlName="username"
         [ngClass]="{
-          'is-invalid': username.invalid && username.touched,
-          'is-valid': username.valid && username.touched
+          'is-invalid': hasControlError('username'),
+          'is-valid': !hasControlError('username') && userForm.get('username')?.valid && userForm.get('username')?.touched
         }"
       />
-      <div class="invalid-feedback">Username is required</div>
+      <div class="invalid-feedback">{{ getControlErrorMessage('username') }}</div>
     </div>
 
     <div class="col-md-6">
@@ -36,78 +37,80 @@
         id="email"
         name="email"
         class="form-control"
-        [(ngModel)]="newUser.email"
-        required
-        email
-        #email="ngModel"
+        formControlName="email"
         [ngClass]="{
-          'is-invalid': email.invalid && email.touched,
-          'is-valid': email.valid && email.touched
+          'is-invalid': hasControlError('email'),
+          'is-valid': !hasControlError('email') && userForm.get('email')?.valid && userForm.get('email')?.touched
         }"
       />
-      <div class="invalid-feedback">Valid email is required</div>
+      <div class="invalid-feedback">{{ getControlErrorMessage('email') }}</div>
     </div>
   </div>
 
   <!-- Section: Profile Info -->
   <h5 class="mb-3 border-bottom pb-2 ">Profile Details</h5>
-  <div class="row g-3 mb-3">
-    <div class="col-md-6">
-      <label for="fullName" class="form-label">Full Name</label>
-      <input
-        type="text"
-        id="fullName"
-        name="fullName"
-        class="form-control"
-        [(ngModel)]="newUser.userProfile!.fullName"
-        #fullName="ngModel"
-        [ngClass]="{ 'is-valid': fullName.valid && fullName.touched }"
-      />
+  <div formGroupName="userProfile">
+    <div class="row g-3 mb-3">
+      <div class="col-md-6">
+        <label for="fullName" class="form-label">Full Name <span class="text-danger">*</span></label>
+        <input
+          type="text"
+          id="fullName"
+          name="fullName"
+          class="form-control"
+          formControlName="fullName"
+          [ngClass]="{
+            'is-invalid': hasControlError('userProfile.fullName'),
+            'is-valid': !hasControlError('userProfile.fullName') && userForm.get('userProfile.fullName')?.valid && userForm.get('userProfile.fullName')?.touched
+          }"
+        />
+        <div class="invalid-feedback">{{ getControlErrorMessage('userProfile.fullName') }}</div>
+      </div>
+
+      <div class="col-md-6">
+        <label for="officeName" class="form-label">Office Name <span class="text-danger">*</span></label>
+        <input
+          type="text"
+          id="officeName"
+          name="officeName"
+          class="form-control"
+          formControlName="officeName"
+          [ngClass]="{
+            'is-invalid': hasControlError('userProfile.officeName'),
+            'is-valid': !hasControlError('userProfile.officeName') && userForm.get('userProfile.officeName')?.valid && userForm.get('userProfile.officeName')?.touched
+          }"
+        />
+        <div class="invalid-feedback">{{ getControlErrorMessage('userProfile.officeName') }}</div>
+      </div>
     </div>
 
-    <div class="col-md-6">
-      <label for="officeName" class="form-label">Office Name</label>
-      <input
-        type="text"
-        id="officeName"
-        name="officeName"
-        class="form-control"
-        [(ngModel)]="newUser.userProfile!.officeName"
-        #officeName="ngModel"
-        [ngClass]="{ 'is-valid': officeName.valid && officeName.touched }"
-      />
-    </div>
-  </div>
+    <div class="row g-3 mb-3">
+      <div class="col-md-6">
+        <label for="officeAddress" class="form-label">Office Address</label>
+        <input
+          type="text"
+          id="officeAddress"
+          name="officeAddress"
+          class="form-control"
+          formControlName="officeAddress"
+        />
+      </div>
 
-  <div class="row g-3 mb-3">
-    <div class="col-md-6">
-      <label for="officeAddress" class="form-label">Office Address</label>
-      <input
-        type="text"
-        id="officeAddress"
-        name="officeAddress"
-        class="form-control"
-        [(ngModel)]="newUser.userProfile!.officeAddress"
-        #officeAddress="ngModel"
-      />
-    </div>
-
-    <div class="col-md-6">
-      <label for="mobileNumber" class="form-label">Mobile Number</label>
-      <input
-        type="text"
-        id="mobileNumber"
-        name="mobileNumber"
-        class="form-control"
-        [(ngModel)]="newUser.userProfile!.mobileNumber"
-        pattern="^[0-9]{10}$"
-        #mobileNumber="ngModel"
-        [ngClass]="{
-          'is-invalid': mobileNumber.invalid && mobileNumber.touched,
-          'is-valid': mobileNumber.valid && mobileNumber.touched
-        }"
-      />
-      <div class="invalid-feedback">Mobile number must be 10 digits</div>
+      <div class="col-md-6">
+        <label for="mobileNumber" class="form-label">Mobile Number <span class="text-danger">*</span></label>
+        <input
+          type="text"
+          id="mobileNumber"
+          name="mobileNumber"
+          class="form-control"
+          formControlName="mobileNumber"
+          [ngClass]="{
+            'is-invalid': hasControlError('userProfile.mobileNumber'),
+            'is-valid': !hasControlError('userProfile.mobileNumber') && userForm.get('userProfile.mobileNumber')?.valid && userForm.get('userProfile.mobileNumber')?.touched
+          }"
+        />
+        <div class="invalid-feedback">{{ getControlErrorMessage('userProfile.mobileNumber') }}</div>
+      </div>
     </div>
   </div>
 
@@ -120,102 +123,76 @@
         id="roles"
         name="roles"
         class="form-select"
-        [(ngModel)]="newUser.roles"
-        required
+        formControlName="roles"
         multiple
-        #roles="ngModel"
         [ngClass]="{
-          'is-invalid': roles.invalid && roles.touched,
-          'is-valid': roles.valid && roles.touched
+          'is-invalid': hasControlError('roles'),
+          'is-valid': !hasControlError('roles') && userForm.get('roles')?.valid && userForm.get('roles')?.touched
         }"
       >
         <option *ngFor="let role of rolesList" [value]="role.name">{{ role.name }}</option>
       </select>
-      <div class="invalid-feedback">At least one role must be selected</div>
+      <div class="invalid-feedback">{{ getControlErrorMessage('roles') }}</div>
     </div>
 
-    <div class="col-md-6">
-      <label for="registryId" class="form-label">Registry</label>
+    <div class="col-md-6" *ngIf="isLocationFieldVisible('registryId')">
+      <label for="registryId" class="form-label">Registry <span class="text-danger">*</span></label>
       <select
         id="registryId"
         name="registryId"
         class="form-select"
-        [(ngModel)]="newUser.registryId"
-        [required]="canShowRegistry"
-        [disabled]="!canShowRegistry"
-        #registryId="ngModel"
+        formControlName="registryId"
         [ngClass]="{
-          'is-invalid': registryId.invalid && registryId.touched && canShowRegistry,
-          'is-valid': registryId.valid && registryId.touched && canShowRegistry
+          'is-invalid': hasControlError('registryId'),
+          'is-valid': !hasControlError('registryId') && userForm.get('registryId')?.valid && userForm.get('registryId')?.touched
         }"
       >
-        <option value="" *ngIf="canShowRegistry">-- Select Registry --</option>
-        <ng-container *ngIf="canShowRegistry">
-          <option *ngFor="let r of registries" [value]="r.id">{{ r.registryNameEn }}</option>
-        </ng-container>
-        <option *ngIf="!canShowRegistry" value="">Not Applicable</option>
+        <option [ngValue]="null">-- Select Registry --</option>
+        <option *ngFor="let r of registries" [ngValue]="r.id">{{ r.registryNameEn }}</option>
       </select>
-      <div class="invalid-feedback" *ngIf="canShowRegistry">
-        Registry selection is required
-      </div>
+      <div class="invalid-feedback">{{ getControlErrorMessage('registryId') }}</div>
     </div>
   </div>
 
   <!-- Section: Division & District -->
   <!-- <h5 class="mb-3 border-bottom pb-2 text-primary">Location Details</h5> -->
   <div class="row g-3 mb-3">
-    <div class="col-md-6">
-      <label for="divisionCode" class="form-label">Division</label>
+    <div class="col-md-6" *ngIf="isLocationFieldVisible('divisionCode')">
+      <label for="divisionCode" class="form-label">Division <span class="text-danger">*</span></label>
       <select
         id="divisionCode"
         name="divisionCode"
         class="form-select"
-        [(ngModel)]="newUser.divisionCode"
-        [required]="canShowDivision"
-        [disabled]="!canShowDivision"
-        #divisionCode="ngModel"
+        formControlName="divisionCode"
         [ngClass]="{
-          'is-invalid': divisionCode.invalid && divisionCode.touched && canShowDivision,
-          'is-valid': divisionCode.valid && divisionCode.touched && canShowDivision
+          'is-invalid': hasControlError('divisionCode'),
+          'is-valid': !hasControlError('divisionCode') && userForm.get('divisionCode')?.valid && userForm.get('divisionCode')?.touched
         }"
       >
-        <option value="" *ngIf="canShowDivision">-- Select Division --</option>
-        <ng-container *ngIf="canShowDivision">
-          <option *ngFor="let d of division" [value]="d.divisionCode">
-            {{ d.divisionName }} ({{ d.divisionCode }})
-          </option>
-        </ng-container>
-        <option *ngIf="!canShowDivision" value="">Not Applicable</option>
+        <option [ngValue]="null">-- Select Division --</option>
+        <option *ngFor="let d of divisions" [ngValue]="d.divisionCode">
+          {{ d.divisionName }} ({{ d.divisionCode }})
+        </option>
       </select>
-      <div class="invalid-feedback" *ngIf="divisionCode.invalid && divisionCode.touched && canShowDivision">
-        Division selection is required
-      </div>
+      <div class="invalid-feedback">{{ getControlErrorMessage('divisionCode') }}</div>
     </div>
 
-    <div class="col-md-6">
-      <label for="districtId" class="form-label">District</label>
+    <div class="col-md-6" *ngIf="isLocationFieldVisible('districtId')">
+      <label for="districtId" class="form-label">District <span class="text-danger">*</span></label>
       <select
         id="districtId"
         name="districtId"
         class="form-select"
-        [(ngModel)]="newUser.districtId"
-        [required]="canShowDistrict"
-        [disabled]="!canShowDistrict"
-        #districtId="ngModel"
+        formControlName="districtId"
         [ngClass]="{
-          'is-invalid': districtId.invalid && districtId.touched && canShowDistrict,
-          'is-valid': districtId.valid && districtId.touched && canShowDistrict
+          'is-invalid': hasControlError('districtId'),
+          'is-valid': !hasControlError('districtId') && userForm.get('districtId')?.valid && userForm.get('districtId')?.touched
         }"
       >
-        <option value="" *ngIf="canShowDistrict">-- Select District --</option>
-        <ng-container *ngIf="canShowDistrict">
-          <option *ngFor="let d of district" [value]="d.districtId">{{ d.districtName }}</option>
-        </ng-container>
-        <option *ngIf="!canShowDistrict" value="">Not Applicable</option>
+        <option [ngValue]="null">-- Select District --</option>
+        <option *ngFor="let d of districts" [ngValue]="d.districtId">{{ d.districtName }}</option>
       </select>
-      <div class="invalid-feedback" *ngIf="districtId.invalid && districtId.touched && canShowDistrict">
-        District selection is required.
-      </div>
+      <div class="invalid-feedback">{{ getControlErrorMessage('districtId') }}</div>
     </div>
   </div>
 
@@ -224,14 +201,14 @@
     <button
       type="submit"
       class="btn btn-primary px-4"
-      [disabled]="userForm.invalid"
+      [disabled]="userForm.invalid || isSaving"
     >
-      {{ newUser.id ? 'Update User' : 'Save User' }}
+      {{ userForm.get('id')?.value ? 'Update User' : 'Save User' }}
     </button>
 
     <!-- Cancel Button - only shows when updating -->
     <button
-      *ngIf="newUser.id"
+      *ngIf="userForm.get('id')?.value"
       type="button"
       class="btn btn-secondary px-4"
       (click)="cancelEdit()"
@@ -255,6 +232,7 @@
         class="form-control"
         placeholder="Search by name, email, or office..."
         [(ngModel)]="searchText"
+        [ngModelOptions]="{ standalone: true }"
       />
     </div>
   </div>
@@ -289,6 +267,7 @@
               Edit
             </button>
             <button
+              type="button"
               class="btn btn-sm btn-danger"
               (click)="deleteUser(user.id!)"
             >

@@ -4,6 +4,13 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { User } from '../interface/user';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Role } from '../model/user';
+import { ApiResponse } from '../interface/api-response';
+
+export interface UserServiceError {
+  message: string;
+  status: number;
+  validationErrors?: Record<string, string>;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -54,7 +61,17 @@ export class UserService {
   // Centralized error handling
   private handleError(error: HttpErrorResponse) {
     console.error('UserService error:', error);
-    return throwError(() => new Error(error.message || 'Server error'));
+    const apiError = error.error as ApiResponse<Record<string, string>> | string | null;
+    const message = typeof apiError === 'string'
+      ? apiError
+      : apiError?.message || error.message || 'Server error';
+    const validationErrors = typeof apiError === 'object' && apiError !== null ? apiError.data : undefined;
+
+    return throwError((): UserServiceError => ({
+      message,
+      status: error.status,
+      validationErrors
+    }));
   }
 
    getRoles(): Observable<Role[]> {
