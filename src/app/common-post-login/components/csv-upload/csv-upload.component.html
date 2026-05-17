@@ -2,10 +2,10 @@
   <div class="page-header">
     <div>
       <p class="eyebrow mb-2">MAHASBR Bulk Registry Upload</p>
-      <h2 class="mb-2">Upload CSV/XLSX files and track processing in real time</h2>
+      <h2 class="mb-1">Upload CSV/XLSX and monitor batch progress</h2>
       <p class="page-copy mb-0">
         Supported formats: <strong>.csv</strong>, <strong>.xls</strong>, <strong>.xlsx</strong>.
-        Maximum file size: <strong>50 MB</strong>. Preview, success, and failed results are loaded page by page for better performance.
+        Maximum file size: <strong>50 MB</strong>. Preview and results stay paginated for smoother performance.
       </p>
     </div>
   </div>
@@ -15,8 +15,8 @@
       <div class="upload-copy">
         <span class="upload-icon">BRN</span>
         <h4 class="mb-2">Choose a registry file</h4>
-        <p class="text-muted mb-3">
-          File selection uploads once, generates a paginated preview, and then starts a backend job only when you click <strong>Start Processing</strong>.
+        <p class="text-muted mb-3 upload-support-copy">
+          Upload once, review the preview, then start processing only when you are ready.
         </p>
 
         <input #fileInput type="file" hidden [accept]="acceptedTypes" (change)="onFileSelected($event)">
@@ -110,13 +110,17 @@
 
   <div *ngIf="uploadSession || jobStatus" class="status-strip mt-4">
     <div class="status-card">
-      <span class="summary-label">Status</span>
-      <strong>{{ currentStatusLabel }}</strong>
+      <div class="status-heading">
+        <span class="summary-label">Status</span>
+        <strong>{{ currentStatusLabel }}</strong>
+      </div>
       <small class="d-block text-muted mt-2">{{ jobStatus?.message || previewResponse?.message || uploadSession?.message }}</small>
     </div>
     <div class="status-card" *ngIf="shouldShowProgress">
-      <span class="summary-label">Processing Progress</span>
-      <strong>{{ progressPercentage }}%</strong>
+      <div class="status-heading">
+        <span class="summary-label">Progress</span>
+        <strong>{{ progressPercentage }}%</strong>
+      </div>
       <small class="d-block text-muted mt-2">{{ progressStatusMessage }}</small>
       <div class="progress job-progress mt-3" role="progressbar" aria-label="Upload processing progress" [attr.aria-valuenow]="progressPercentage" aria-valuemin="0" aria-valuemax="100">
         <div class="progress-bar" [style.width.%]="progressPercentage">{{ progressPercentage }}%</div>
@@ -124,41 +128,41 @@
     </div>
   </div>
 
-  <div class="summary-grid mt-4" *ngIf="previewSummaryAvailable || jobStatus">
-    <div class="summary-card total-card">
-      <span class="summary-label">Total Records</span>
+  <div class="metric-strip mt-4" *ngIf="previewSummaryAvailable || jobStatus">
+    <div class="metric-chip total-card">
+      <span class="summary-label">Total</span>
       <strong>{{ totalRecords }}</strong>
     </div>
-    <div class="summary-card processed-card">
-      <span class="summary-label">Processed Records</span>
+    <div class="metric-chip processed-card">
+      <span class="summary-label">Processed</span>
       <strong>{{ processedRecords }}</strong>
     </div>
-    <div class="summary-card valid-card">
-      <span class="summary-label">Success Records</span>
+    <div class="metric-chip valid-card">
+      <span class="summary-label">Success</span>
       <strong>{{ successRecordsCount }}</strong>
     </div>
-    <div class="summary-card invalid-card">
-      <span class="summary-label">Failed Records</span>
+    <div class="metric-chip invalid-card">
+      <span class="summary-label">Failed</span>
       <strong>{{ failedRecordsCount }}</strong>
     </div>
-    <div class="summary-card pending-card">
-      <span class="summary-label">Pending Records</span>
+    <div class="metric-chip pending-card">
+      <span class="summary-label">Pending</span>
       <strong>{{ pendingRecordsCount }}</strong>
     </div>
   </div>
 
   <ng-container *ngIf="previewResponse">
-    <div class="summary-grid compact-grid mt-4">
-      <div class="summary-card neutral-card">
-        <span class="summary-label">Valid Preview Rows</span>
+    <div class="metric-strip preview-metric-strip mt-3">
+      <div class="metric-chip neutral-card">
+        <span class="summary-label">Preview Valid</span>
         <strong>{{ previewResponse.validRecords }}</strong>
       </div>
-      <div class="summary-card neutral-card">
-        <span class="summary-label">Invalid Preview Rows</span>
+      <div class="metric-chip neutral-card">
+        <span class="summary-label">Preview Invalid</span>
         <strong>{{ previewResponse.invalidRecords }}</strong>
       </div>
-      <div class="summary-card neutral-card">
-        <span class="summary-label">Duplicate Preview Rows</span>
+      <div class="metric-chip neutral-card">
+        <span class="summary-label">Preview Duplicate</span>
         <strong>{{ previewResponse.duplicateRecords }}</strong>
       </div>
     </div>
@@ -237,17 +241,23 @@
             <thead>
               <tr>
                 <th>Row Number</th>
-                <th>BRN</th>
+                <th>Generated BRN</th>
+                <th>Status</th>
                 <th>Establishment/Owner Name</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngIf="successRecords.length === 0">
-                <td colspan="3" class="text-center py-4">No success records available for the current page.</td>
+                <td colspan="4" class="text-center py-4">No success records available for the current page.</td>
               </tr>
               <tr *ngFor="let record of successRecords; trackBy: trackByRowNumber">
                 <td>{{ record.rowNumber }}</td>
-                <td>{{ record.brn }}</td>
+                <td>
+                  <span class="brn-pill">{{ getSuccessBrn(record) }}</span>
+                </td>
+                <td>
+                  <span class="status-badge valid-status">Success</span>
+                </td>
                 <td>{{ record.establishmentName }}</td>
               </tr>
             </tbody>

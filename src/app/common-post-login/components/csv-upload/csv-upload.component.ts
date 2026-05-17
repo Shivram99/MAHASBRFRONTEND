@@ -409,6 +409,10 @@ export class CsvUploadComponent implements OnDestroy {
     return record.errorReason || record.reason || '-';
   }
 
+  getSuccessBrn(record: CsvUploadSuccessRecord): string {
+    return record.brn || record.brnNo || record.generatedBrn || '-';
+  }
+
   trackByRowNumber(_: number, record: CsvUploadPreviewRecord | CsvUploadSuccessRecord | CsvUploadFailedRecord): number {
     return record.rowNumber;
   }

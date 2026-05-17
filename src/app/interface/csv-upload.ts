@@ -41,7 +41,9 @@ export interface CsvUploadPreviewResponse {
 
 export interface CsvUploadSuccessRecord {
   rowNumber: number;
-  brn: string;
+  brn?: string | null;
+  brnNo?: string | null;
+  generatedBrn?: string | null;
   establishmentName: string;
   rawData?: string | null;
 }
