@@ -37,20 +37,6 @@
 
       <div class="col-xl-2 col-lg-6 col-md-6">
         <div class="brn-filter-control">
-          <label for="BNR" class="form-label">BRN</label>
-          <input
-            type="text"
-            placeholder="Enter BRN number"
-            class="form-control"
-            id="BNR"
-            name="BNR"
-            [(ngModel)]="BNR"
-            (keypress)="allowOnlyNumbers($event)" />
-        </div>
-      </div>
-
-      <div class="col-xl-2 col-lg-6 col-md-6">
-        <div class="brn-filter-control">
           <label for="registerDateFrom" class="form-label"> From</label>
           <input
             type="date"
@@ -79,15 +65,28 @@
     <div class="brn-filter-action-row">
       <div class="brn-filter-action">
         <div class="brn-filter-action-group">
-          <button type="button" class="btn btn-primary brn-search-btn" [disabled]="!BNR" (click)="searchBRN()">
-            BRN Search
-          </button>
-          <button type="button" class="btn btn-outline-primary brn-search-btn" (click)="showTodaysGeneratedBrn()">
-            Today's BRN
-          </button>
-          <button type="button" class="btn btn-outline-secondary brn-search-btn" (click)="clearGeneratedDateFilters()">
-            Clear
-          </button>
+          <div class="brn-filter-control brn-action-input">
+            <label for="BNR" class="form-label">BRN</label>
+            <input
+              type="text"
+              placeholder="Enter BRN number"
+              class="form-control"
+              id="BNR"
+              name="BNR"
+              [(ngModel)]="BNR"
+              (keypress)="allowOnlyNumbers($event)" />
+          </div>
+          <div class="brn-action-buttons">
+            <button type="button" class="btn btn-primary brn-search-btn" [disabled]="!BNR" (click)="searchBRN()">
+              BRN Search
+            </button>
+            <button type="button" class="btn btn-outline-primary brn-search-btn" (click)="showTodaysGeneratedBrn()">
+              Today's BRN
+            </button>
+            <button type="button" class="btn btn-outline-secondary brn-search-btn" (click)="clearGeneratedDateFilters()">
+              Clear
+            </button>
+          </div>
         </div>
       </div>
     </div>
