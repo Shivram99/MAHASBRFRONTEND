@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Component, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AccessibilityService } from '../../../core/services/accessibility.service';
 import { LanguageService } from '../../../core/services/language.service';
@@ -12,21 +13,42 @@ import { LoggedInUser } from '../../../interface/logged-in-user';
     styleUrl: './topbar.component.css',
     standalone: false
 })
-export class TopbarComponent {
+export class TopbarComponent implements OnInit, OnDestroy {
   readonly emblemImg = 'assets/images/emblem.png';
   readonly isLoggedIn$: Observable<boolean>;
   readonly currentUser$: Observable<LoggedInUser | null>;
   readonly currentLanguage$: Observable<AppLanguageCode>;
   readonly fontScale$ = this.accessibilityService.getFontScaleObservable();
+  currentDateTime = new Date();
+  private clockIntervalId: ReturnType<typeof setInterval> | null = null;
+  private readonly isBrowser: boolean;
 
   constructor(
     private readonly authService: AuthService,
     private readonly accessibilityService: AccessibilityService,
-    private readonly languageService: LanguageService
+    private readonly languageService: LanguageService,
+    @Inject(PLATFORM_ID) platformId: object
   ) {
     this.isLoggedIn$ = this.authService.getIsLoggedIn();
     this.currentUser$ = this.authService.getCurrentUser();
     this.currentLanguage$ = this.languageService.getLanguageObservable();
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
+
+  ngOnInit(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
+    this.clockIntervalId = setInterval(() => {
+      this.currentDateTime = new Date();
+    }, 1000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.clockIntervalId) {
+      clearInterval(this.clockIntervalId);
+    }
   }
 
   decreaseFontSize(): void {

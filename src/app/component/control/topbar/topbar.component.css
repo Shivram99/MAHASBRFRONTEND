@@ -57,6 +57,14 @@
     text-overflow: ellipsis;
 }
 
+.header-date-time {
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
 .accessibility-menu li a {
     padding: 5px 6px;
     color: #fff;
@@ -135,6 +143,10 @@
 
     .user-role {
         font-size: 10px;
+    }
+
+    .header-date-time {
+        font-size: 11px;
     }
 
     .accessibility-menu li a,
