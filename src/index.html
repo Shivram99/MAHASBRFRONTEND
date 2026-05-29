@@ -14,10 +14,135 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@indic-transliteration/sanscript@1.0.0/sanscript.min.js"></script>
+  <style>
+    .app-initial-skeleton {
+      min-height: 100vh;
+      background: #f4f8fb;
+      color: #102a43;
+      font-family: "Times New Roman", Times, serif;
+    }
+
+    .app-initial-skeleton__topbar {
+      height: 42px;
+      background: #003366;
+    }
+
+    .app-initial-skeleton__brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 86px;
+      background: #ffffff;
+      border-bottom: 1px solid #d9e6ef;
+    }
+
+    .app-initial-skeleton__brand-line {
+      position: relative;
+      overflow: hidden;
+      width: min(520px, 72vw);
+      height: 24px;
+      border-radius: 6px;
+      background: #dbe8f2;
+    }
+
+    .app-initial-skeleton__nav {
+      height: 46px;
+      background: #0b5b84;
+    }
+
+    .app-initial-skeleton__content {
+      width: min(1120px, calc(100% - 32px));
+      margin: 28px auto;
+    }
+
+    .app-initial-skeleton__toolbar {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 120px;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .app-initial-skeleton__line,
+    .app-initial-skeleton__block,
+    .app-initial-skeleton__card {
+      position: relative;
+      overflow: hidden;
+      background: #dbe8f2;
+    }
+
+    .app-initial-skeleton__line::after,
+    .app-initial-skeleton__block::after,
+    .app-initial-skeleton__card::after,
+    .app-initial-skeleton__brand-line::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform: translateX(-100%);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+      animation: appSkeletonShimmer 1.35s infinite;
+    }
+
+    .app-initial-skeleton__line {
+      height: 42px;
+      border-radius: 8px;
+    }
+
+    .app-initial-skeleton__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .app-initial-skeleton__card {
+      height: 118px;
+      border-radius: 10px;
+    }
+
+    .app-initial-skeleton__block {
+      height: 330px;
+      border-radius: 10px;
+    }
+
+    @keyframes appSkeletonShimmer {
+      100% {
+        transform: translateX(100%);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .app-initial-skeleton__toolbar,
+      .app-initial-skeleton__grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 
 <body class="mat-typography">
-  <app-root></app-root>
+  <app-root>
+    <div class="app-initial-skeleton" aria-label="Loading application">
+      <div class="app-initial-skeleton__topbar"></div>
+      <div class="app-initial-skeleton__brand">
+        <div class="app-initial-skeleton__brand-line"></div>
+      </div>
+      <div class="app-initial-skeleton__nav"></div>
+      <div class="app-initial-skeleton__content">
+        <div class="app-initial-skeleton__toolbar">
+          <div class="app-initial-skeleton__line"></div>
+          <div class="app-initial-skeleton__line"></div>
+          <div class="app-initial-skeleton__line"></div>
+          <div class="app-initial-skeleton__line"></div>
+        </div>
+        <div class="app-initial-skeleton__grid">
+          <div class="app-initial-skeleton__card"></div>
+          <div class="app-initial-skeleton__card"></div>
+          <div class="app-initial-skeleton__card"></div>
+        </div>
+        <div class="app-initial-skeleton__block"></div>
+      </div>
+    </div>
+  </app-root>
 </body>
 <script>
 
