@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from '../shared/components/layout/layout.component';
-import { BRNregistoryDetailsComponent } from './components/brn-registry-details/brn-registry-details.component';
+import { CommonPostLoginBrnRegistryDetailsComponent } from './components/brn-registry-details/brn-registry-details.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
 import { DashboardBrnDetailsComponent } from './components/dashboard-brn-details/dashboard-brn-details.component';
@@ -26,11 +26,11 @@ const routes: Routes = [{
   path: '', component: LayoutComponent, children: [
   {
     path: '',
-    component: BRNregistoryDetailsComponent
+    component: CommonPostLoginBrnRegistryDetailsComponent
   },
   {
     path: 'detailsPage',
-    component: BRNregistoryDetailsComponent
+    component: CommonPostLoginBrnRegistryDetailsComponent
   },
   { path: 'profile', component: ProfileComponent },
   { path: 'change-password', component: ChangePasswordComponent },

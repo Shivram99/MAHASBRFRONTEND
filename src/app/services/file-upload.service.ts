@@ -34,11 +34,28 @@ export class FileUploadService {
     }
     return throwError(errorMessage);
   }
-  getRegistryDetailsPage(page: number, size: number, sortBy: string): Observable<PaginatedResponse<MstRegistryDetailsPage>> {
-    const params = new HttpParams()
+  getRegistryDetailsPage(
+    page: number,
+    size: number,
+    sortBy: string,
+    filters?: { registerDateFrom?: string; registerDateTo?: string }
+  ): Observable<PaginatedResponse<MstRegistryDetailsPage>> {
+    let params = new HttpParams()
     .set('page', page.toString())
     .set('size', size.toString())
     .set('sortBy', sortBy);
+
+    const registerDateFrom = filters?.registerDateFrom?.trim();
+    const registerDateTo = filters?.registerDateTo?.trim();
+
+    if (registerDateFrom) {
+      params = params.set('registerDateFrom', registerDateFrom);
+    }
+
+    if (registerDateTo) {
+      params = params.set('registerDateTo', registerDateTo);
+    }
+
     return this.http.get<PaginatedResponse<MstRegistryDetailsPage>>(`${this.apiUrl}/api/auth/registoryData`, { params });
   }
 
@@ -143,9 +160,24 @@ downloadRegisteredEstablishmentExport(jobId: string): Observable<HttpEvent<Blob>
   });
 }
 
-getBRNDetails(BNR: any): Observable<PaginatedResponse<MstRegistryDetailsPage>> {
- // return this.http.get<Page<DetailsPageDTO>>(`${this.apiUrl}/admin/detailsPages`, { params });
-  return this.http.get<PaginatedResponse<MstRegistryDetailsPage>>(`${this.apiUrl}/api/auth/brn-details/${BNR}`);
+getBRNDetails(
+  BNR: any,
+  filters?: { registerDateFrom?: string; registerDateTo?: string }
+): Observable<PaginatedResponse<MstRegistryDetailsPage>> {
+  let params = new HttpParams();
+
+  const registerDateFrom = filters?.registerDateFrom?.trim();
+  const registerDateTo = filters?.registerDateTo?.trim();
+
+  if (registerDateFrom) {
+    params = params.set('registerDateFrom', registerDateFrom);
+  }
+
+  if (registerDateTo) {
+    params = params.set('registerDateTo', registerDateTo);
+  }
+
+  return this.http.get<PaginatedResponse<MstRegistryDetailsPage>>(`${this.apiUrl}/api/auth/brn-details/${BNR}`, { params });
 }
 
 

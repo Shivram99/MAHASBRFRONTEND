@@ -32,12 +32,14 @@ interface ExportProgressState {
   selector: 'app-brn-registry-details',
   standalone: false,
   templateUrl: './brn-registry-details.component.html',
-  styleUrl: './brn-registry-details.component.css'
+  styleUrls: ['./brn-registry-details.component.css']
 })
-export class BRNregistoryDetailsComponent implements OnDestroy {
+export class CommonPostLoginBrnRegistryDetailsComponent implements OnDestroy {
   allowedRoles: string[] = [
+    'ROLE_ADMIN',
     'ROLE_DES_STATE',
     'ROLE_DES_REGION',
+    'ROLE_DES_DISTRICT',
     'ROLE_REG_AUTH_API',
     'ROLE_REG_AUTH_CSV'
   ];
@@ -55,8 +57,8 @@ export class BRNregistoryDetailsComponent implements OnDestroy {
   tableData1: DetailsPageDTO[] = [];
   BNR: any;
   filters = {
-    registerDateFrom: '',
-    registerDateTo: '',
+    registerDateFrom: this.getTodayDateString(),
+    registerDateTo: this.getTodayDateString(),
   };
 
   registryDetails: MstRegistryDetailsPage[] = [];
@@ -148,6 +150,13 @@ export class BRNregistoryDetailsComponent implements OnDestroy {
   }
 
   applyFilters() {
+    this.currentPage = 0;
+
+    if (this.BNR?.trim()) {
+      this.searchBRN();
+      return;
+    }
+
     this.postLoginDashboardData(this.currentPage, this.pageSize, this.sortBy);
   }
 
@@ -161,7 +170,7 @@ export class BRNregistoryDetailsComponent implements OnDestroy {
       return;
     }
 
-    this.fileUploadService.getRegistryDetailsPage(page, size, sortBy).subscribe(
+    this.fileUploadService.getRegistryDetailsPage(page, size, sortBy, this.filters).subscribe(
       (response: PaginatedResponse<MstRegistryDetailsPage>) => {
         this.registryDetails = response.content;
         this.totalPages = response.totalPages;
@@ -272,7 +281,8 @@ export class BRNregistoryDetailsComponent implements OnDestroy {
 
     if (this.BNR) {
       const trimmedBRN = this.BNR.trim();
-      this.fileUploadService.getBRNDetails(trimmedBRN).subscribe(
+      this.currentPage = 0;
+      this.fileUploadService.getBRNDetails(trimmedBRN, this.filters).subscribe(
         (response: PaginatedResponse<MstRegistryDetailsPage>) => {
           this.registryDetails = response.content;
           this.totalPages = response.totalPages;
@@ -283,6 +293,31 @@ export class BRNregistoryDetailsComponent implements OnDestroy {
         }
       );
     }
+  }
+
+  clearGeneratedDateFilters(): void {
+    this.filters.registerDateFrom = '';
+    this.filters.registerDateTo = '';
+    this.applyFilters();
+  }
+
+  showTodaysGeneratedBrn(): void {
+    const today = this.getTodayDateString();
+    this.filters.registerDateFrom = today;
+    this.filters.registerDateTo = today;
+    this.currentPage = 0;
+
+    if (this.BNR?.trim()) {
+      this.searchBRN();
+      return;
+    }
+
+    if (this.selectedDistrictIds.length === 0 && this.selectedTalukaIds.length === 0) {
+      this.loadRegistryDetails(this.currentPage, this.pageSize, this.sortBy);
+      return;
+    }
+
+    this.postLoginDashboardData(this.currentPage, this.pageSize, this.sortBy);
   }
 
   exportRegisteredEstablishmentsPdf(): void {
@@ -556,5 +591,12 @@ export class BRNregistoryDetailsComponent implements OnDestroy {
     anchor.click();
     document.body.removeChild(anchor);
     URL.revokeObjectURL(objectUrl);
+  }
+
+  private getTodayDateString(): string {
+    const today = new Date();
+    const offset = today.getTimezoneOffset();
+    const localDate = new Date(today.getTime() - offset * 60 * 1000);
+    return localDate.toISOString().split('T')[0];
   }
 }

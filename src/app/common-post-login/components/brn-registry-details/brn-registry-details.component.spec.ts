@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BRNregistoryDetailsComponent } from './brn-registry-details.component'; 
+import { CommonPostLoginBrnRegistryDetailsComponent } from './brn-registry-details.component'; 
 
 describe('BrnRegistryDetailsComponent', () => {
-  let component: BRNregistoryDetailsComponent;
-  let fixture: ComponentFixture<BRNregistoryDetailsComponent>;
+  let component: CommonPostLoginBrnRegistryDetailsComponent;
+  let fixture: ComponentFixture<CommonPostLoginBrnRegistryDetailsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [BRNregistoryDetailsComponent]
+      declarations: [CommonPostLoginBrnRegistryDetailsComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(BRNregistoryDetailsComponent);
+    fixture = TestBed.createComponent(CommonPostLoginBrnRegistryDetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

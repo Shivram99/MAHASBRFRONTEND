@@ -1,209 +1,262 @@
-<div class="brn-filter-panel">
-  <div class="row g-3 align-items-end brn-filter-layout" [hidden]="!isAllowed()">
-    <div class="col-xl-3 col-lg-6 col-md-6">
-      <div class="brn-filter-control">
-        <label class="form-label" for="postLoginDistrictFilter">
-          District <span class="required-mark" aria-hidden="true">*</span>
-        </label>
-        <app-multi-select-option
-          [items]="districts"
-          [controlId]="'postLoginDistrictFilter'"
-          [placeholder]="'Select District'"
-          [required]="true"
-          [disabled]="districts.length === 0"
-          (selectionChange)="onSelectionDistrictChange($event)" />
+<div class="brn-page-shell">
+  <div class="brn-filter-panel card-panel" [hidden]="!isAllowed()">
+    <div class="brn-panel-heading">
+      <div>
+        <h4 class="brn-panel-title">Registered Establishments</h4>
+        <p class="brn-panel-subtitle mb-0">Filter BRN records by location, BRN number, and generated date.</p>
       </div>
     </div>
 
-    <div class="col-xl-3 col-lg-6 col-md-6">
-      <div class="brn-filter-control">
-        <label class="form-label" for="postLoginTalukaFilter">Taluka</label>
-        <app-multi-select-option
-          [items]="talukas"
-          [controlId]="'postLoginTalukaFilter'"
-          [placeholder]="'Select Taluka'"
-          [disabled]="selectedDistrictIds.length === 0 || talukas.length === 0"
-          (selectionChange)="onSelectionTalukaChange($event)" />
+    <div class="row g-3 brn-filter-layout brn-filter-fields">
+      <div class="col-xl-3 col-lg-6 col-md-6">
+        <div class="brn-filter-control">
+          <label class="form-label" for="postLoginDistrictFilter">
+            District <span class="required-mark" aria-hidden="true">*</span>
+          </label>
+          <app-multi-select-option
+            [items]="districts"
+            [controlId]="'postLoginDistrictFilter'"
+            [placeholder]="'Select District'"
+            [required]="true"
+            [disabled]="districts.length === 0"
+            (selectionChange)="onSelectionDistrictChange($event)" />
+        </div>
+      </div>
+
+      <div class="col-xl-3 col-lg-6 col-md-6">
+        <div class="brn-filter-control">
+          <label class="form-label" for="postLoginTalukaFilter">Taluka</label>
+          <app-multi-select-option
+            [items]="talukas"
+            [controlId]="'postLoginTalukaFilter'"
+            [placeholder]="'Select Taluka'"
+            [disabled]="selectedDistrictIds.length === 0 || talukas.length === 0"
+            (selectionChange)="onSelectionTalukaChange($event)" />
+        </div>
+      </div>
+
+      <div class="col-xl-2 col-lg-6 col-md-6">
+        <div class="brn-filter-control">
+          <label for="BNR" class="form-label">BRN</label>
+          <input
+            type="text"
+            placeholder="Enter BRN number"
+            class="form-control"
+            id="BNR"
+            name="BNR"
+            [(ngModel)]="BNR"
+            (keypress)="allowOnlyNumbers($event)" />
+        </div>
+      </div>
+
+      <div class="col-xl-2 col-lg-6 col-md-6">
+        <div class="brn-filter-control">
+          <label for="registerDateFrom" class="form-label">Generated From</label>
+          <input
+            type="date"
+            id="registerDateFrom"
+            name="registerDateFrom"
+            class="form-control"
+            [(ngModel)]="filters.registerDateFrom"
+            (ngModelChange)="applyFilters()">
+        </div>
+      </div>
+
+      <div class="col-xl-2 col-lg-6 col-md-6">
+        <div class="brn-filter-control">
+          <label for="registerDateTo" class="form-label">Generated To</label>
+          <input
+            type="date"
+            id="registerDateTo"
+            name="registerDateTo"
+            class="form-control"
+            [(ngModel)]="filters.registerDateTo"
+            (ngModelChange)="applyFilters()">
+        </div>
       </div>
     </div>
 
-    <div class="col-xl-3 col-lg-6 col-md-6">
-      <div class="brn-filter-control">
-        <label for="BNR" class="form-label">BRN</label>
-        <input type="text" placeholder="Enter BRN number" class="form-control" id="BNR" name="BNR" [(ngModel)]="BNR"
-          (keypress)="allowOnlyNumbers($event)" />
-      </div>
-    </div>
-
-    <div class="col-xl-3 col-lg-6 col-md-6">
+    <div class="brn-filter-action-row">
       <div class="brn-filter-action">
-        <button type="button" class="btn btn-primary brn-search-btn" [disabled]="!BNR" (click)="searchBRN()">
-          Search BRN
-        </button>
+        <div class="brn-filter-action-group">
+          <button type="button" class="btn btn-primary brn-search-btn" [disabled]="!BNR" (click)="searchBRN()">
+            Search BRN
+          </button>
+          <button type="button" class="btn btn-outline-primary brn-search-btn" (click)="showTodaysGeneratedBrn()">
+            Today's BRN
+          </button>
+          <button type="button" class="btn btn-outline-secondary brn-search-btn" (click)="clearGeneratedDateFilters()">
+            Clear Dates
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="row g-3" *ngIf="false">
-    <div class="col-md-4">
-      <label for="registerDateFrom"> From Date:</label>
-      <input type="date" id="registerDateFrom" name="registerDateFrom" class="form-control"
-        [(ngModel)]="filters.registerDateFrom" (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
-    </div>
+  <div *ngIf="registryDetails.length > 0; else noData" class="brn-results-shell">
+    <div class="card-panel results-panel">
+      <div class="results-toolbar">
+        <div class="results-meta">
+          <h5 class="results-title mb-1">Generated BRN Records</h5>
+          <p class="results-count mb-0">Showing {{ registryDetails.length }} of {{ totalElements }} records</p>
+        </div>
 
-    <div class="col-md-4">
-      <label for="registerDateTo"> To Date:</label>
-      <input type="date" id="registerDateTo" class="form-control" [(ngModel)]="filters.registerDateTo"
-        (ngModelChange)="applyFilters()" placeholder="DD-MM-YYYY">
+        <div class="results-actions">
+          <button
+            class="btn btn-outline-danger btn-sm export-action-btn"
+            type="button"
+            [disabled]="isPdfExporting"
+            (click)="exportRegisteredEstablishmentsPdf()">
+            <span *ngIf="isPdfExporting" class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+            <i *ngIf="!isPdfExporting" class="bi bi-file-earmark-pdf me-1"></i>
+            {{ isPdfExporting ? 'Exporting PDF...' : 'PDF Export' }}
+          </button>
+
+          <button
+            class="btn btn-outline-success btn-sm export-action-btn"
+            type="button"
+            [disabled]="isExcelExporting"
+            (click)="exportToExcel()">
+            <span *ngIf="isExcelExporting" class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+            <i *ngIf="!isExcelExporting" class="bi bi-file-earmark-excel me-1"></i>
+            {{ isExcelExporting ? 'Exporting Excel...' : 'Excel Export' }}
+          </button>
+        </div>
+      </div>
+
+      <div class="export-progress-grid" *ngIf="pdfExportState.phase !== 'idle' || excelExportState.phase !== 'idle'">
+        <div class="export-progress-card pdf-card" *ngIf="pdfExportState.phase !== 'idle'">
+          <div class="export-progress-header">
+            <span class="export-progress-title">PDF Export</span>
+            <span class="export-progress-stage">{{ pdfExportState.stage }}</span>
+          </div>
+          <div
+            class="progress export-progress-bar"
+            role="progressbar"
+            aria-label="PDF export progress"
+            [attr.aria-valuenow]="pdfExportState.progressPercent"
+            aria-valuemin="0"
+            aria-valuemax="100">
+            <div class="progress-bar bg-danger" [style.width.%]="pdfExportState.progressPercent">
+              {{ pdfExportState.progressPercent }}%
+            </div>
+          </div>
+          <p class="export-progress-message mb-0">{{ pdfExportState.message || 'Waiting for export activity.' }}</p>
+        </div>
+
+        <div class="export-progress-card excel-card" *ngIf="excelExportState.phase !== 'idle'">
+          <div class="export-progress-header">
+            <span class="export-progress-title">Excel Export</span>
+            <span class="export-progress-stage">{{ excelExportState.stage }}</span>
+          </div>
+          <div
+            class="progress export-progress-bar"
+            role="progressbar"
+            aria-label="Excel export progress"
+            [attr.aria-valuenow]="excelExportState.progressPercent"
+            aria-valuemin="0"
+            aria-valuemax="100">
+            <div class="progress-bar bg-success" [style.width.%]="excelExportState.progressPercent">
+              {{ excelExportState.progressPercent }}%
+            </div>
+          </div>
+          <p class="export-progress-message mb-0">{{ excelExportState.message || 'Waiting for export activity.' }}</p>
+        </div>
+      </div>
+
+      <div *ngIf="pdfExportError" class="alert alert-danger py-2 px-3 mb-3" role="alert">
+        {{ pdfExportError }}
+      </div>
+
+      <div *ngIf="excelExportError" class="alert alert-danger py-2 px-3 mb-3" role="alert">
+        {{ excelExportError }}
+      </div>
+
+      <div class="table-responsive brn-table-wrap">
+        <table class="table table-bordered table-striped brn-results-table">
+          <thead>
+            <tr>
+              <th>Sr. No.</th>
+              <th>BRN</th>
+              <th>Establishment Name</th>
+              <th>City</th>
+              <th>District</th>
+              <th>Institution Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let detail of registryDetails; let i = index">
+              <td>{{ currentPage * pageSize + i + 1 }}</td>
+              <td>
+                <a class="brn-link" (click)="goToDetails(detail.brnNo)">
+                  {{ detail.brnNo }}
+                </a>
+              </td>
+              <td>{{ detail.nameOfEstablishmentOrOwner | titleCaseSafe }}</td>
+              <td>{{ detail.taluka | titleCaseSafe }}</td>
+              <td>{{ detail.district | titleCaseSafe }}</td>
+              <td>{{ detail.sector | titleCaseSafe }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="totalPages !== 1" class="pagination-toolbar">
+        <nav aria-label="Page navigation">
+          <ul class="pagination mb-0">
+            <li class="page-item" [class.disabled]="currentPage === 0">
+              <a class="page-link" (click)="goToFirst()" aria-label="First">
+                << First
+              </a>
+            </li>
+
+            <li class="page-item" [class.disabled]="currentPage === 0">
+              <a class="page-link" (click)="goToPage(currentPage - 1)" aria-label="Previous">
+                < Prev
+              </a>
+            </li>
+
+            <li
+              class="page-item"
+              *ngFor="let page of getVisiblePages()"
+              [class.disabled]="page === -1"
+              [class.active]="page === currentPage">
+              <ng-container *ngIf="page === -1">
+                <span class="page-link">...</span>
+              </ng-container>
+              <ng-container *ngIf="page !== -1">
+                <a class="page-link" (click)="goToPage(page)">{{ page + 1 }}</a>
+              </ng-container>
+            </li>
+
+            <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+              <a class="page-link" (click)="goToPage(currentPage + 1)" aria-label="Next">
+                Next >
+              </a>
+            </li>
+
+            <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+              <a class="page-link" (click)="goToLast()" aria-label="Last">
+                Last >>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="form-group page-size-control">
+          <label for="pageSize">Page Size</label>
+          <select id="pageSize" [(ngModel)]="pageSize" (change)="onPageSizeChange($event)" class="no-form-control">
+            <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+          </select>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-
-<div *ngIf="registryDetails.length > 0; else noData" class="mt-3">
-  <!-- Header with Export Buttons -->
-  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
-    <h4>Registered Establishments</h4>
-    <div class="d-flex align-items-center flex-wrap gap-2">
-      <button
-        class="btn btn-outline-danger btn-sm export-action-btn"
-        type="button"
-        [disabled]="isPdfExporting"
-        (click)="exportRegisteredEstablishmentsPdf()">
-        <span *ngIf="isPdfExporting" class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
-        <i *ngIf="!isPdfExporting" class="bi bi-file-earmark-pdf me-1"></i>
-        {{ isPdfExporting ? 'Exporting PDF...' : 'PDF Export' }}
-      </button>
-      <button
-        class="btn btn-outline-success btn-sm me-2"
-        type="button"
-        [disabled]="isExcelExporting"
-        (click)="exportToExcel()">
-        <span *ngIf="isExcelExporting" class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
-        <i *ngIf="!isExcelExporting" class="bi bi-file-earmark-excel me-1"></i>
-        {{ isExcelExporting ? 'Exporting Excel...' : 'Excel Export' }}
-      </button>
-    </div>
-  </div>
-
-  <div class="export-progress-grid" *ngIf="pdfExportState.phase !== 'idle' || excelExportState.phase !== 'idle'">
-    <div class="export-progress-card pdf-card" *ngIf="pdfExportState.phase !== 'idle'">
-      <div class="export-progress-header">
-        <span class="export-progress-title">PDF Export</span>
-        <span class="export-progress-stage">{{ pdfExportState.stage }}</span>
-      </div>
-      <div class="progress export-progress-bar" role="progressbar" aria-label="PDF export progress"
-        [attr.aria-valuenow]="pdfExportState.progressPercent" aria-valuemin="0" aria-valuemax="100">
-        <div class="progress-bar bg-danger" [style.width.%]="pdfExportState.progressPercent">
-          {{ pdfExportState.progressPercent }}%
-        </div>
-      </div>
-      <p class="export-progress-message mb-0">{{ pdfExportState.message || 'Waiting for export activity.' }}</p>
-    </div>
-
-    <div class="export-progress-card excel-card" *ngIf="excelExportState.phase !== 'idle'">
-      <div class="export-progress-header">
-        <span class="export-progress-title">Excel Export</span>
-        <span class="export-progress-stage">{{ excelExportState.stage }}</span>
-      </div>
-      <div class="progress export-progress-bar" role="progressbar" aria-label="Excel export progress"
-        [attr.aria-valuenow]="excelExportState.progressPercent" aria-valuemin="0" aria-valuemax="100">
-        <div class="progress-bar bg-success" [style.width.%]="excelExportState.progressPercent">
-          {{ excelExportState.progressPercent }}%
-        </div>
-      </div>
-      <p class="export-progress-message mb-0">{{ excelExportState.message || 'Waiting for export activity.' }}</p>
-    </div>
-  </div>
-
-  <div *ngIf="pdfExportError" class="alert alert-danger py-2 px-3 mb-3" role="alert">
-    {{ pdfExportError }}
-  </div>
-  <div *ngIf="excelExportError" class="alert alert-danger py-2 px-3 mb-3" role="alert">
-    {{ excelExportError }}
-  </div>
-  <!-- filter component start -->
-  <table class="table table-bordered table-striped">
-    <thead>
-      <tr>
-        <th class="first">Sr.No</th>
-        <th>BRN </th>
-        <th>Establishment Name</th>
-        <th>City</th>
-        <th>District</th>
-        <th>Institution Type</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let detail of registryDetails; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td>
-          <a class="nav-link" (click)="goToDetails(detail.brnNo)">
-            {{ detail.brnNo }}
-          </a>
-        </td>
-        <td>{{ detail.nameOfEstablishmentOrOwner | titleCaseSafe }}</td>
-        <td>{{ detail.taluka | titleCaseSafe }}</td>
-        <td>{{ detail.district | titleCaseSafe }}</td>
-        <td>{{ detail.sector | titleCaseSafe }}</td>
-      </tr>
-    </tbody>
-  </table>
-  <div *ngIf="totalPages != 1" class="d-flex nav-dflex">
-    <nav aria-label="Page navigation">
-      <ul class="pagination">
-
-        <!-- First -->
-        <li class="page-item" [class.disabled]="currentPage === 0">
-          <a class="page-link" (click)="goToFirst()" aria-label="First">
-            « First
-          </a>
-        </li>
-
-        <!-- Previous -->
-        <li class="page-item" [class.disabled]="currentPage === 0">
-          <a class="page-link" (click)="goToPage(currentPage - 1)" aria-label="Previous">
-            ‹ Prev
-          </a>
-        </li>
-
-        <!-- Page Numbers -->
-        <li class="page-item" *ngFor="let page of getVisiblePages()" [class.disabled]="page === -1"
-          [class.active]="page === currentPage">
-          <ng-container *ngIf="page === -1">
-            <span class="page-link">…</span>
-          </ng-container>
-          <ng-container *ngIf="page !== -1">
-            <a class="page-link" (click)="goToPage(page)">{{ page + 1 }}</a>
-          </ng-container>
-        </li>
-
-        <!-- Next -->
-        <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
-          <a class="page-link" (click)="goToPage(currentPage + 1)" aria-label="Next">
-            Next ›
-          </a>
-        </li>
-
-        <!-- Last -->
-        <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
-          <a class="page-link" (click)="goToLast()" aria-label="Last">
-            Last »
-          </a>
-        </li>
-
-      </ul>
-    </nav>
-
-
-    <div class="form-group">
-      <label for="pageSize">Page Size:</label>
-      <select id="pageSize" [(ngModel)]="pageSize" (change)="onPageSizeChange($event)" class="no-form-control">
-        <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
-      </select>
-    </div>
-  </div>
-</div>
 <ng-template #noData>
-  <p class="">No data available.</p>
+  <div class="card-panel empty-state">
+    <h5 class="empty-title">No data available</h5>
+    <p class="empty-copy mb-0">Try adjusting the BRN, location, or generated date filters to view matching records.</p>
+  </div>
 </ng-template>
