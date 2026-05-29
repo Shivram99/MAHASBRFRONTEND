@@ -64,7 +64,6 @@ export class DataService {
     if (filters.talukas) {
       params = params.set('talukas', filters.talukas);
     }
-    console.log("params "+params)
     return this.http.get<Page<DetailsPageDTO>>(`${this.apiUrl}/admin/getFilterData`, { params });
   }
     

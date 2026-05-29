@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthService } from './services/auth.service';
+import { Component } from '@angular/core';
 
 @Component({
     selector: 'app-root',
@@ -7,15 +6,6 @@ import { AuthService } from './services/auth.service';
     styleUrl: './app.component.css',
     standalone: false
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'MahaSbrFrontend';
-  isLoggedIn = false;
-
-  constructor(private readonly authService: AuthService) {}
-
-  ngOnInit(): void {
-    this.authService.getIsLoggedIn().subscribe((isLoggedIn) => {
-      this.isLoggedIn = isLoggedIn;
-    });
-  }
 }

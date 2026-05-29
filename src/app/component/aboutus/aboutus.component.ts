@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { environment } from '../../../environments/environment';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -27,10 +26,6 @@ export class AboutusComponent {
 
 
   switchLang(lang: string) {
-
-    alert(environment.apiUrl);
-
-    alert(lang);
     this.translate.use(lang);
   }
 

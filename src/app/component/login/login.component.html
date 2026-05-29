@@ -78,7 +78,8 @@
               <input formControlName="recaptchaResponse" type="hidden" autocomplete="off">
               <div class="form-group">
                 <div id="recaptchaElement"></div>
-                 <small class="text-danger" *ngIf="captchaError">Recaptcha not verified.</small>
+                 <small class="text-danger" *ngIf="recaptchaLoadError">Unable to load Google reCAPTCHA. Please check your internet connection and reload the page.</small>
+                 <small class="text-danger" *ngIf="captchaError && !recaptchaLoadError">Recaptcha not verified.</small>
               </div>
 
               <!-- Submit -->

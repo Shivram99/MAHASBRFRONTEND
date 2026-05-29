@@ -1,5 +1,14 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Component, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  PLATFORM_ID
+} from '@angular/core';
 import { Observable } from 'rxjs';
 import { AccessibilityService } from '../../../core/services/accessibility.service';
 import { LanguageService } from '../../../core/services/language.service';
@@ -11,6 +20,7 @@ import { LoggedInUser } from '../../../interface/logged-in-user';
     selector: 'app-topbar',
     templateUrl: './topbar.component.html',
     styleUrl: './topbar.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: false
 })
 export class TopbarComponent implements OnInit, OnDestroy {
@@ -27,6 +37,8 @@ export class TopbarComponent implements OnInit, OnDestroy {
     private readonly authService: AuthService,
     private readonly accessibilityService: AccessibilityService,
     private readonly languageService: LanguageService,
+    private readonly ngZone: NgZone,
+    private readonly changeDetectorRef: ChangeDetectorRef,
     @Inject(PLATFORM_ID) platformId: object
   ) {
     this.isLoggedIn$ = this.authService.getIsLoggedIn();
@@ -40,9 +52,12 @@ export class TopbarComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.clockIntervalId = setInterval(() => {
-      this.currentDateTime = new Date();
-    }, 1000);
+    this.ngZone.runOutsideAngular(() => {
+      this.clockIntervalId = setInterval(() => {
+        this.currentDateTime = new Date();
+        this.changeDetectorRef.detectChanges();
+      }, 1000);
+    });
   }
 
   ngOnDestroy(): void {

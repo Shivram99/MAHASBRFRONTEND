@@ -77,7 +77,6 @@ export class FileUploadService {
   
   // Change the method to accept FormData instead of File
   uploadFile(formData: FormData): Observable<HttpEvent<BRNGenerationRecordCount>> {
-    console.log("formData : "+formData.getAll);
     const req = new HttpRequest('POST', `${this.apiUrl}/api/auth/upload`, formData, {
       reportProgress: true,
     });
@@ -85,7 +84,6 @@ export class FileUploadService {
   }
 
   upload(files: File[]): Observable<HttpEvent<any>> {
-    debugger
     const formData: FormData = new FormData();
     files.forEach(file => formData.append('files', file));
 
@@ -188,7 +186,6 @@ downloadFile(fileName: string): Observable<Blob> {
     responseType: 'blob'
   }).pipe(
     map((res: Blob) => {
-      console.log("Blob :"+Blob)
       return res;
     })
   );

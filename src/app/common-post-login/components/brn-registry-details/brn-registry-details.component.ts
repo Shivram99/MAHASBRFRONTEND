@@ -565,6 +565,18 @@ export class CommonPostLoginBrnRegistryDetailsComponent implements OnDestroy {
     return pages;
   }
 
+  trackByRegistryDetail(index: number, detail: MstRegistryDetailsPage): string | number {
+    return detail.brnNo || detail.siNo || index;
+  }
+
+  trackByPage(_index: number, page: number): number {
+    return page;
+  }
+
+  trackByPageSize(_index: number, size: number): number {
+    return size;
+  }
+
   allowOnlyNumbers(event: KeyboardEvent) {
     const charCode = event.which ? event.which : event.keyCode;
     if (charCode < 48 || charCode > 57) {

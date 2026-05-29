@@ -1,7 +1,8 @@
-import { AfterViewInit, Component, Inject, OnInit, PLATFORM_ID, Renderer2 } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, Inject, OnInit, PLATFORM_ID, Renderer2 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../../services/login.service';
 import { take } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -18,6 +19,9 @@ declare var grecaptcha: any;
   standalone: false
 })
 export class LoginComponent implements OnInit, AfterViewInit {
+  private static recaptchaScriptPromise: Promise<void> | null = null;
+  private static readonly recaptchaCallbackName = 'mahaSbrRecaptchaReady';
+  private static readonly recaptchaScriptId = 'google-recaptcha-script';
   loginForm!: FormGroup;
   registrationForm!: FormGroup;
   registrationSuccess: boolean = false;
@@ -26,6 +30,9 @@ export class LoginComponent implements OnInit, AfterViewInit {
   serverErrors: any = {};
   currentLanguage: string = "en";
   passwordVisible = false;
+  recaptchaLoadError = false;
+  private recaptchaWidgetId: number | null = null;
+  private readonly recaptchaSiteKey = '6LdB6vsrAAAAAJ-IRvpch6flEj7I5JJ4i8drmCpt';
 
   constructor(
     private authService: AuthService,
@@ -36,18 +43,17 @@ export class LoginComponent implements OnInit, AfterViewInit {
     private idleTimeoutService: IdleTimeoutService,
     private fb: FormBuilder,
     private menuService: MenuService,
+    private destroyRef: DestroyRef,
     @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
   ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      this.loadReCaptchaScript();
-    }
-
     this.currentLanguage = this.languageService.getCurrentLanguage();
-    this.languageService.getLanguageObservable().subscribe(language => {
-      this.currentLanguage = language;
-    });
+    this.languageService.getLanguageObservable()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(language => {
+        this.currentLanguage = language;
+      });
 
     this.loginForm = this.fb.group({
       username: ['', [Validators.required]],
@@ -57,18 +63,20 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
     // Clear backend error when the field changes
     Object.keys(this.loginForm.controls).forEach(field => {
-      this.loginForm.get(field)?.valueChanges.subscribe(() => {
-        const control = this.loginForm.get(field);
-        if (control?.hasError('backend')) {
-          const newErrors = { ...control.errors };
-          delete newErrors['backend'];
-          if (Object.keys(newErrors).length === 0) {
-            control.setErrors(null);
-          } else {
-            control.setErrors(newErrors);
+      this.loginForm.get(field)?.valueChanges
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(() => {
+          const control = this.loginForm.get(field);
+          if (control?.hasError('backend')) {
+            const newErrors = { ...control.errors };
+            delete newErrors['backend'];
+            if (Object.keys(newErrors).length === 0) {
+              control.setErrors(null);
+            } else {
+              control.setErrors(newErrors);
+            }
           }
-        }
-      });
+        });
     });
   }
 
@@ -85,7 +93,12 @@ export class LoginComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const response = grecaptcha.getResponse();
+    if (!this.isReCaptchaReady() || this.recaptchaWidgetId === null) {
+      this.captchaError = true;
+      return;
+    }
+
+    const response = grecaptcha.getResponse(this.recaptchaWidgetId);
     this.loginForm.get('recaptchaResponse')?.setValue(response);
 
     if (response.length === 0) {
@@ -99,13 +112,13 @@ export class LoginComponent implements OnInit, AfterViewInit {
       this.loginForm.value.recaptchaResponse
     ).subscribe({
       next: async () => {
-        grecaptcha.reset();
+        this.resetReCaptcha();
         this.menuService.loadMyMenus();
         await this.authService.navigateToPostLoginHome();
         this.idleTimeoutService.reset();
       },
       error: (err: HttpErrorResponse) => {
-        grecaptcha.reset();
+        this.resetReCaptcha();
 
         if (err.status === 400 && err.error && typeof err.error === 'object') {
           this.serverErrors = err.error;
@@ -136,21 +149,49 @@ export class LoginComponent implements OnInit, AfterViewInit {
       });
   }
 
-  loadReCaptchaScript() {
-    const script = this.renderer.createElement('script');
-    script.src = 'https://www.google.com/recaptcha/api.js?render=explicit';
-    script.async = true;
-    script.defer = true;
-    document.body.appendChild(script);
+  loadReCaptchaScript(): Promise<void> {
+    if (!isPlatformBrowser(this.platformId) || this.isReCaptchaReady()) {
+      return Promise.resolve();
+    }
+
+    if (LoginComponent.recaptchaScriptPromise) {
+      return LoginComponent.recaptchaScriptPromise;
+    }
+
+    LoginComponent.recaptchaScriptPromise = new Promise((resolve, reject) => {
+      const browserWindow = window as any;
+      browserWindow[LoginComponent.recaptchaCallbackName] = () => {
+        this.waitForReCaptchaReady().then(resolve).catch(reject);
+      };
+
+      if (document.getElementById(LoginComponent.recaptchaScriptId)) {
+        this.waitForReCaptchaReady().then(resolve).catch(reject);
+        return;
+      }
+
+      const script = this.renderer.createElement('script');
+      script.id = LoginComponent.recaptchaScriptId;
+      script.src = `https://www.google.com/recaptcha/api.js?onload=${LoginComponent.recaptchaCallbackName}&render=explicit`;
+      script.async = true;
+      script.defer = true;
+      script.onerror = () => {
+        LoginComponent.recaptchaScriptPromise = null;
+        reject();
+      };
+      document.body.appendChild(script);
+    });
+
+    return LoginComponent.recaptchaScriptPromise;
   }
   // 'sitekey': '6Le8N_QpAAAAAJBErDqsniTRWKzU9m45WOcnoi7x',
 
   initializeReCaptcha() {
-    if (isPlatformBrowser(this.platformId)) {
-      grecaptcha.render('recaptchaElement', {
-        'sitekey': '6LdB6vsrAAAAAJ-IRvpch6flEj7I5JJ4i8drmCpt',
+    if (isPlatformBrowser(this.platformId) && this.isReCaptchaReady() && this.recaptchaWidgetId === null) {
+      this.recaptchaWidgetId = grecaptcha.render('recaptchaElement', {
+        'sitekey': this.recaptchaSiteKey,
         'callback': this.handleCaptchaResponse.bind(this)
       });
+      this.recaptchaLoadError = false;
     }
   }
 
@@ -159,6 +200,40 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.initializeReCaptcha();
+    this.loadReCaptchaScript()
+      .then(() => this.initializeReCaptcha())
+      .catch(() => {
+        this.recaptchaLoadError = true;
+        this.captchaError = true;
+      });
+  }
+
+  private isReCaptchaReady(): boolean {
+    return typeof grecaptcha !== 'undefined' && typeof grecaptcha.render === 'function';
+  }
+
+  private resetReCaptcha(): void {
+    if (this.isReCaptchaReady() && this.recaptchaWidgetId !== null) {
+      grecaptcha.reset(this.recaptchaWidgetId);
+    }
+  }
+
+  private waitForReCaptchaReady(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const startedAt = Date.now();
+      const intervalId = window.setInterval(() => {
+        if (this.isReCaptchaReady()) {
+          window.clearInterval(intervalId);
+          resolve();
+          return;
+        }
+
+        if (Date.now() - startedAt > 10000) {
+          window.clearInterval(intervalId);
+          LoginComponent.recaptchaScriptPromise = null;
+          reject();
+        }
+      }, 50);
+    });
   }
 }
