@@ -57,8 +57,8 @@ export class CommonPostLoginBrnRegistryDetailsComponent implements OnDestroy {
   tableData1: DetailsPageDTO[] = [];
   BNR: any;
   filters = {
-    registerDateFrom: this.getTodayDateString(),
-    registerDateTo: this.getTodayDateString(),
+    registerDateFrom: '',
+    registerDateTo: '',
   };
 
   registryDetails: MstRegistryDetailsPage[] = [];
