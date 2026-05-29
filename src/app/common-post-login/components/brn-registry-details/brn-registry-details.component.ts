@@ -296,6 +296,7 @@ export class CommonPostLoginBrnRegistryDetailsComponent implements OnDestroy {
   }
 
   clearGeneratedDateFilters(): void {
+    this.BNR = '';
     this.filters.registerDateFrom = '';
     this.filters.registerDateTo = '';
     this.applyFilters();
