@@ -1,8 +1,6 @@
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DistrictServiceService } from '../../services/district-service.service';
+import { Component, DestroyRef, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DataService } from '../../services/dashboard/data-service.service';
-import * as XLSX from 'xlsx-js-style';
 import { DialogService } from '../../services/dashboard/dialog.service';
 import { DetailsPageDTO } from '../../interface/details-page-dto';
 import { Page } from '../../interface/page';
@@ -14,7 +12,7 @@ import { isPlatformBrowser } from '@angular/common';
     styleUrl: './dashboardadmin.component.css',
     standalone: false
 })
-export class DashboardadminComponent  { 
+export class DashboardadminComponent implements OnInit { 
  
   districts: any[]=[] ;
   talukas:any[]=[];
@@ -36,9 +34,9 @@ export class DashboardadminComponent  {
   private readonly isBrowser: boolean;
 
   constructor(
-    private fb: FormBuilder,
-    private dataService: DataService,
-    private dialogService: DialogService,
+    private readonly dataService: DataService,
+    private readonly dialogService: DialogService,
+    private readonly destroyRef: DestroyRef,
     @Inject(PLATFORM_ID) platformId: object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
@@ -50,6 +48,7 @@ export class DashboardadminComponent  {
   // load all districts 
   fetchDistricts(): void {
     this.dataService.getAllDistricts()
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(districts1 => {
         this.districts = districts1.map(district => ({
           censusDistrictCode: district.censusDistrictCode,
@@ -68,6 +67,7 @@ export class DashboardadminComponent  {
     // load the talukas 
     fetchTalukas(selectedValue:number): void {
       this.dataService.getAllTaluka(selectedValue)
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(talukas1 => {
           this.talukas = talukas1.map(talukas => ({
             censusTalukaCode: talukas.censusTalukaCode,
@@ -79,7 +79,9 @@ export class DashboardadminComponent  {
     }
   // load the initial data in dashboard
   getAlldata(){
-      this.dataService.getDashBoardData(this.currentPage - 1, this.pageSize).subscribe((response: Page<DetailsPageDTO>) => {
+      this.dataService.getDashBoardData(this.currentPage - 1, this.pageSize)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((response: Page<DetailsPageDTO>) => {
         this.totalPages = response.totalPages;
         this.totalElements = response.totalElements;
         this.tableData1 = response.content;
@@ -97,12 +99,11 @@ export class DashboardadminComponent  {
   //load the BRN number details
   searchBRN() {
     if (this.BNR) {
-      this.dataService.getBRNDetails(this.BNR).subscribe(
+      this.dataService.getBRNDetails(this.BNR).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
         (response: Page<DetailsPageDTO>) => {
           this.totalPages = response.totalPages;
           this.totalElements = response.totalElements;
           this.tableData1 = response.content;
-          console.log(this.tableData1);
         },
         (error) => {
           this.tableData1 = [];
@@ -113,15 +114,15 @@ export class DashboardadminComponent  {
   }
 
 applyFilters() {
-    this.dataService.fetchDataWithFilters(this.filters,this.currentPage,this.pageSize).subscribe(
+    this.dataService.fetchDataWithFilters(this.filters,this.currentPage,this.pageSize)
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe(
       (response: Page<DetailsPageDTO>) => {
         this.totalPages = response.totalPages;
         this.totalElements = response.totalElements;
         this.tableData1 = response.content;
-        console.log(this.tableData1);
       },
       (error) => {
-        console.log("console.log(this.tableData1); "+this.tableData1);
         this.tableData1 = [];
         this.totalElements = 0;
       }
@@ -149,13 +150,16 @@ applyFilters() {
 
   
  
-  generateExcel(data:any[]) {
+  async generateExcel(data:any[]): Promise<void> {
+    if (!this.isBrowser) {
+      return;
+    }
+
     const data1 = [];
 
     // Add header row
     data1.push(['Serial Number', 'Department Name', 'District BRN']);
 
-    console.log(data)
     for (let item of this.tableData) {
       const row = [
         item.serialNumber,
@@ -164,6 +168,7 @@ applyFilters() {
       ];
       data1.push(row)
     }
+    const XLSX = await import('xlsx-js-style');
     const workbook = XLSX.utils.book_new();
   
     const worksheet = XLSX.utils.aoa_to_sheet(data1);

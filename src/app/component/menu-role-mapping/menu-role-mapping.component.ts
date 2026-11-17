@@ -90,7 +90,6 @@ export class MenuRoleMappingComponent  implements OnInit {
 
   
   loadRoles(): void {
-    debugger
     this.mappingService.getAllRoles().subscribe(
       roles => {
         this.roles = roles;

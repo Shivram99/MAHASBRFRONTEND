@@ -1,12 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MstRegistryDetailsPage } from '../../../model/mst-registry-details-page';
 import { DashboardDetailsService } from '../../../services/dashboard-details.service';
 import { PaginatedResponse } from '../../../interface/paginated-response';
-import * as XLSX from 'xlsx-js-style';
 import type { RowInput } from 'jspdf-autotable';
 import { formatDate, isPlatformBrowser, Location } from '@angular/common';
-import { Inject, PLATFORM_ID } from '@angular/core';
 
 @Component({
   selector: 'app-dashboard-brn-details',
@@ -24,13 +23,14 @@ export class DashboardBrnDetailsComponent implements OnInit {
     private readonly dashboardDetailsService: DashboardDetailsService,
     private readonly location: Location,
     private readonly router: Router,
+    private readonly destroyRef: DestroyRef,
     @Inject(PLATFORM_ID) platformId: object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
   }
 
-  ngOnInit() {
-    this.route.paramMap.subscribe(params => {
+  ngOnInit(): void {
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
       this.brn = params.get('brnNo');
       this.getBRNDetails();
 
@@ -38,10 +38,9 @@ export class DashboardBrnDetailsComponent implements OnInit {
   }
 
   getBRNDetails(): void {
-    this.dashboardDetailsService.getBRNDetails(this.brn).subscribe(
+    this.dashboardDetailsService.getBRNDetails(this.brn).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
       (data: PaginatedResponse<MstRegistryDetailsPage>) => {
         this.mstRegistryDetailsPage = data.content[0];
-        console.log('BRN Details:', this.mstRegistryDetailsPage);
       },
       (error: any) => {
         console.error('Error fetching BRN details:', error);
@@ -50,7 +49,7 @@ export class DashboardBrnDetailsComponent implements OnInit {
   }
 
   goBack(): void {
-    if (window.history.length > 1) {
+    if (this.isBrowser && window.history.length > 1) {
       this.location.back();
       return;
     }
@@ -61,8 +60,8 @@ export class DashboardBrnDetailsComponent implements OnInit {
   /**
    * ✅ Export as Excel
    */
-  exportToExcel(): void {
-    if (!this.mstRegistryDetailsPage) {
+  async exportToExcel(): Promise<void> {
+    if (!this.isBrowser || !this.mstRegistryDetailsPage) {
       console.error('No data available to export');
       return;
     }
@@ -114,8 +113,8 @@ export class DashboardBrnDetailsComponent implements OnInit {
       'Value': this.formatValue(key, (this.mstRegistryDetailsPage as any)[key])
     }));
 
-    // 3️⃣ Create worksheet
-    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+    const XLSX = await import('xlsx-js-style');
+    const ws = XLSX.utils.json_to_sheet(data);
 
     // 4️⃣ Apply styling (using xlsx-js-style)
     const range = XLSX.utils.decode_range(ws['!ref']!);
@@ -146,7 +145,7 @@ export class DashboardBrnDetailsComponent implements OnInit {
     ws['!cols'] = [{ wch: 40 }, { wch: 50 }];
 
     // 6️⃣ Create workbook and export
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'BRN Details');
     XLSX.writeFile(wb, `${brnNo}_Details.xlsx`);
   }

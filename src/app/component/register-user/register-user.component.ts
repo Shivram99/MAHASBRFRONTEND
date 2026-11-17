@@ -32,7 +32,6 @@ export class RegisterUserComponent implements OnInit {
 
 
   ngOnInit() {
-    debugger
     this.registerUserService.fetchRoles().subscribe(
       roles => {
         this.roles = roles;

@@ -10,6 +10,7 @@ import { LanguageService } from '../../core/services/language.service';
 import { isPlatformBrowser } from '@angular/common';
 import { IdleTimeoutService } from '../../services/idle-timeout.service';
 import { MenuService } from '../../services/menu.service';
+import { environment } from '../../../environments/environment';
 declare var grecaptcha: any;
 
 @Component({
@@ -22,6 +23,10 @@ export class LoginComponent implements OnInit, AfterViewInit {
   private static recaptchaScriptPromise: Promise<void> | null = null;
   private static readonly recaptchaCallbackName = 'mahaSbrRecaptchaReady';
   private static readonly recaptchaScriptId = 'google-recaptcha-script';
+  private static readonly recaptchaScriptHosts = [
+    'https://www.google.com/recaptcha/api.js',
+    'https://www.recaptcha.net/recaptcha/api.js'
+  ];
   loginForm!: FormGroup;
   registrationForm!: FormGroup;
   registrationSuccess: boolean = false;
@@ -32,7 +37,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   passwordVisible = false;
   recaptchaLoadError = false;
   private recaptchaWidgetId: number | null = null;
-  private readonly recaptchaSiteKey = '6LdB6vsrAAAAAJ-IRvpch6flEj7I5JJ4i8drmCpt';
+  private readonly recaptchaSiteKey = environment.recaptchaSiteKey;
 
   constructor(
     private authService: AuthService,
@@ -158,45 +163,53 @@ export class LoginComponent implements OnInit, AfterViewInit {
       return LoginComponent.recaptchaScriptPromise;
     }
 
-    LoginComponent.recaptchaScriptPromise = new Promise((resolve, reject) => {
-      const browserWindow = window as any;
-      browserWindow[LoginComponent.recaptchaCallbackName] = () => {
-        this.waitForReCaptchaReady().then(resolve).catch(reject);
-      };
-
-      if (document.getElementById(LoginComponent.recaptchaScriptId)) {
-        this.waitForReCaptchaReady().then(resolve).catch(reject);
-        return;
-      }
-
-      const script = this.renderer.createElement('script');
-      script.id = LoginComponent.recaptchaScriptId;
-      script.src = `https://www.google.com/recaptcha/api.js?onload=${LoginComponent.recaptchaCallbackName}&render=explicit`;
-      script.async = true;
-      script.defer = true;
-      script.onerror = () => {
-        LoginComponent.recaptchaScriptPromise = null;
-        reject();
-      };
-      document.body.appendChild(script);
-    });
+    LoginComponent.recaptchaScriptPromise = this.loadReCaptchaScriptFromHost(0);
 
     return LoginComponent.recaptchaScriptPromise;
   }
-  // 'sitekey': '6Le8N_QpAAAAAJBErDqsniTRWKzU9m45WOcnoi7x',
 
   initializeReCaptcha() {
-    if (isPlatformBrowser(this.platformId) && this.isReCaptchaReady() && this.recaptchaWidgetId === null) {
-      this.recaptchaWidgetId = grecaptcha.render('recaptchaElement', {
-        'sitekey': this.recaptchaSiteKey,
-        'callback': this.handleCaptchaResponse.bind(this)
+    if (!isPlatformBrowser(this.platformId) || !this.isReCaptchaReady() || this.recaptchaWidgetId !== null) {
+      return;
+    }
+
+    if (!this.recaptchaSiteKey) {
+      this.recaptchaLoadError = true;
+      this.captchaError = true;
+      return;
+    }
+
+    const recaptchaElement = document.getElementById('recaptchaElement');
+    if (!recaptchaElement) {
+      return;
+    }
+
+    try {
+      this.recaptchaWidgetId = grecaptcha.render(recaptchaElement, {
+        sitekey: this.recaptchaSiteKey,
+        callback: this.handleCaptchaResponse.bind(this),
+        'expired-callback': this.handleCaptchaExpired.bind(this),
+        'error-callback': this.handleCaptchaLoadError.bind(this)
       });
       this.recaptchaLoadError = false;
+      this.captchaError = false;
+    } catch {
+      this.handleCaptchaLoadError();
     }
   }
 
   handleCaptchaResponse(token: string) {
     this.loginForm.get('recaptchaResponse')?.setValue(token);
+    this.captchaError = false;
+  }
+
+  handleCaptchaExpired(): void {
+    this.loginForm.get('recaptchaResponse')?.setValue('');
+  }
+
+  handleCaptchaLoadError(): void {
+    this.recaptchaLoadError = true;
+    this.captchaError = true;
   }
 
   ngAfterViewInit() {
@@ -234,6 +247,66 @@ export class LoginComponent implements OnInit, AfterViewInit {
           reject();
         }
       }, 50);
+    });
+  }
+
+  private loadReCaptchaScriptFromHost(hostIndex: number): Promise<void> {
+    const host = LoginComponent.recaptchaScriptHosts[hostIndex];
+    if (!host) {
+      LoginComponent.recaptchaScriptPromise = null;
+      return Promise.reject();
+    }
+
+    return new Promise((resolve, reject) => {
+      const browserWindow = window as any;
+      const existingScript = document.getElementById(LoginComponent.recaptchaScriptId);
+      let completed = false;
+
+      if (existingScript) {
+        existingScript.remove();
+      }
+
+      const tryNextHost = () => {
+        if (completed) {
+          return;
+        }
+
+        completed = true;
+        const script = document.getElementById(LoginComponent.recaptchaScriptId);
+        script?.remove();
+        this.loadReCaptchaScriptFromHost(hostIndex + 1).then(resolve).catch(reject);
+      };
+
+      const loadTimeoutId = window.setTimeout(tryNextHost, 10000);
+
+      browserWindow[LoginComponent.recaptchaCallbackName] = () => {
+        this.waitForReCaptchaReady()
+          .then(() => {
+            if (completed) {
+              return;
+            }
+
+            completed = true;
+            window.clearTimeout(loadTimeoutId);
+            resolve();
+          })
+          .catch(() => {
+            window.clearTimeout(loadTimeoutId);
+            tryNextHost();
+          });
+      };
+
+      const script = this.renderer.createElement('script');
+      script.id = LoginComponent.recaptchaScriptId;
+      script.src = `${host}?onload=${LoginComponent.recaptchaCallbackName}&render=explicit`;
+      script.async = true;
+      script.defer = true;
+      script.onerror = () => {
+        window.clearTimeout(loadTimeoutId);
+        tryNextHost();
+      };
+
+      document.body.appendChild(script);
     });
   }
 }

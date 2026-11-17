@@ -3,7 +3,7 @@ import { HttpClient, HttpContext, HttpErrorResponse } from '@angular/common/http
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { BehaviorSubject, catchError, finalize, firstValueFrom, map, Observable, of, shareReplay, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, finalize, map, Observable, of, shareReplay, tap, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { SKIP_AUTH_REDIRECT } from '../auth-interceptor.interceptor';
 import { AuthResponse } from '../interface/AuthResponse';
@@ -50,8 +50,10 @@ export class AuthService {
   readonly currentUser$ = this.currentUserSubject.asObservable();
 
   private readonly isBrowser: boolean;
+  private readonly sessionValidationCacheWindowMs = 2 * 60 * 1000;
   private sessionValidationRequest$: Observable<SessionValidationState> | null = null;
   private currentUserRequest$: Observable<LoggedInUser | null> | null = null;
+  private lastSessionValidatedAt = 0;
 
   constructor(
     private http: HttpClient,
@@ -71,14 +73,14 @@ export class AuthService {
     }
   }
 
-  async initialize(): Promise<void> {
+  initialize(): Promise<void> {
     if (!this.isBrowser) {
-      return;
+      return Promise.resolve();
     }
 
     if (!this.hasValidToken()) {
       this.completeLogout();
-      return;
+      return Promise.resolve();
     }
 
     this.syncSessionState();
@@ -86,9 +88,11 @@ export class AuthService {
     const storedUser = this.getStoredCurrentUser();
     if (storedUser) {
       this.setCurrentUserState(storedUser, false);
+      return Promise.resolve();
     }
 
-    await firstValueFrom(this.loadCurrentUser().pipe(map(() => void 0)));
+    this.loadCurrentUser().subscribe();
+    return Promise.resolve();
   }
 
   login(username: string, password: string, recaptchaResponse: string): Observable<AuthResponse> {
@@ -147,10 +151,14 @@ export class AuthService {
     return this.isBrowser && this.hasValidToken();
   }
 
-  validateSession(): Observable<SessionValidationState> {
+  validateSession(forceRefresh = false): Observable<SessionValidationState> {
     if (!this.isBrowser || !this.hasValidToken()) {
       this.completeLogout();
       return of('invalid');
+    }
+
+    if (!forceRefresh && this.lastSessionValidatedAt && Date.now() - this.lastSessionValidatedAt < this.sessionValidationCacheWindowMs) {
+      return of('valid');
     }
 
     if (!this.sessionValidationRequest$) {
@@ -162,9 +170,11 @@ export class AuthService {
       ).pipe(
         map(() => {
           this.syncSessionState();
+          this.lastSessionValidatedAt = Date.now();
           return 'valid' as const;
         }),
         catchError((error: HttpErrorResponse) => {
+          this.lastSessionValidatedAt = 0;
           if (error.status === 401) {
             this.handleInvalidSession(null);
             return of('invalid' as const);
@@ -185,6 +195,14 @@ export class AuthService {
     }
 
     return this.sessionValidationRequest$;
+  }
+
+  validateSessionInBackground(): void {
+    if (!this.isBrowser || !this.hasValidToken()) {
+      return;
+    }
+
+    this.validateSession().subscribe();
   }
 
   handleBackendUnavailable(redirectTo: 'home' | null = 'home'): void {
@@ -321,6 +339,7 @@ export class AuthService {
 
     this.sessionValidationRequest$ = null;
     this.currentUserRequest$ = null;
+    this.lastSessionValidatedAt = 0;
     this.tokenStorage.removeToken();
     this.isLoggedInSubject.next(false);
     this.rolesSubject.next([]);

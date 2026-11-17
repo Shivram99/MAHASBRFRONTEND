@@ -2,7 +2,6 @@ import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription, finalize } from 'rxjs';
 import Swal from 'sweetalert2';
-import * as XLSX from 'xlsx-js-style';
 
 import {
   CsvUploadFailedPageResponse,
@@ -225,7 +224,7 @@ export class CsvUploadComponent implements OnDestroy {
     );
   }
 
-  downloadSampleExcel(): void {
+  async downloadSampleExcel(): Promise<void> {
     const worksheetData = [
       CsvUploadComponent.SAMPLE_HEADERS,
       ...CsvUploadComponent.SAMPLE_ROWS.map((row) =>
@@ -233,6 +232,7 @@ export class CsvUploadComponent implements OnDestroy {
       )
     ];
 
+    const XLSX = await import('xlsx-js-style');
     const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sample Upload');

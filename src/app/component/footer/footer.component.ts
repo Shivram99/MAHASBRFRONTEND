@@ -1,5 +1,6 @@
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, DestroyRef, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { VisitTrackerService } from '../../services/sitevisitor/visit-tracker.service';
 import { VisitSummary } from '../../interface/visit-summary';
 
@@ -15,6 +16,7 @@ export class FooterComponent implements OnInit {
 
   constructor(
     private readonly visitService: VisitTrackerService,
+    private readonly destroyRef: DestroyRef,
     @Inject(PLATFORM_ID) platformId: object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
@@ -27,7 +29,9 @@ export class FooterComponent implements OnInit {
   }
 
   private loadSummary(): void {
-    this.visitService.getVisitSummary().subscribe({
+    this.visitService.getVisitSummary()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
       next: (data) => {
         this.summary = data;
       },

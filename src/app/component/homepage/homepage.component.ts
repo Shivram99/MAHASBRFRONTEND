@@ -1,5 +1,5 @@
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { LanguageService } from '../../core/services/language.service';
+import { Component, DestroyRef, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { VisitTrackerService } from '../../services/sitevisitor/visit-tracker.service';
 import { VisitSummary } from '../../interface/visit-summary';
 import { isPlatformBrowser } from '@angular/common';
@@ -14,24 +14,22 @@ export class HomepageComponent implements OnInit {
   private isBrowser: boolean;
   summary: VisitSummary = { totalVisits: 0, todayVisits: 0 };
   constructor(
-    private languageService: LanguageService,
     private visitService: VisitTrackerService,
+    private destroyRef: DestroyRef,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
   ngOnInit(): void {
-    // Subscribe to language changes
-    this.languageService.getLanguageObservable().subscribe(language => {
-      // Update homepage content based on the new language
-    });
     if (!this.isBrowser) {
       return;
     }
 
     if (!this.visitService.hasVisited()) {
-      this.visitService.recordVisit().subscribe({
+      this.visitService.recordVisit()
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
         next: () => {
           this.visitService.markVisited();
           this.loadSummary();
@@ -47,7 +45,9 @@ export class HomepageComponent implements OnInit {
   }
 
   private loadSummary(): void {
-    this.visitService.getVisitSummary().subscribe({
+    this.visitService.getVisitSummary()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
       next: (data) => {
         this.summary = data;
       },

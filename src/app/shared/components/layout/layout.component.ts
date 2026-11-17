@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SideMenuItem } from '../../../interface/side-menu-item';
 import { AuthService } from '../../../services/auth.service';
 import { NavigationEnd, Router } from '@angular/router';
@@ -37,15 +38,23 @@ activeLabel: string = 'Dashboard';
   menus: MenuDTO[] = [];
 
 
-  constructor(private authService: AuthService,private router: Router,public menuService: MenuService) { 
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    public menuService: MenuService,
+    private destroyRef: DestroyRef
+  ) { 
     this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
+      filter(event => event instanceof NavigationEnd),
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe((event) => {
       this.currentUrl = this.normalizeRoute((event as NavigationEnd).urlAfterRedirects);
       this.syncActiveMenuState();
     });
      this.menuService.loadMyMenus();
-    this.menuService.menus$.subscribe(m => {
+    this.menuService.menus$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(m => {
       this.menus = m;
       this.syncActiveMenuState();
     });
@@ -59,7 +68,9 @@ activeLabel: string = 'Dashboard';
     // this.menuItems = this.allMenuItems.filter(item =>
     //   item.roles.some(role => this.userRoles.includes(role))
     // );
-  this.authService.currentUser$.subscribe(user => this.user = user);
+  this.authService.currentUser$
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe(user => this.user = user);
   }
 activeParent: MenuDTO | null = null;
 activeChild: MenuDTO | null = null;

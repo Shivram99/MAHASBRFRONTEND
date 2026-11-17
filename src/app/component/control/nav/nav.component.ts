@@ -1,8 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { Observable, combineLatest } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { AuthService } from '../../../services/auth.service';
+
+interface NavLink {
+  label: string;
+  url: string | null;
+  routerLink: string | null;
+  class: string;
+  roles: string[];
+  publicOnly?: boolean;
+  authOnly?: boolean;
+  useResolvedHomeRoute?: boolean;
+}
 
 @Component({
   selector: 'app-nav',
@@ -10,20 +22,13 @@ import { AuthService } from '../../../services/auth.service';
   styleUrl: './nav.component.css',
   standalone: false
 })
-export class NavComponent {
+export class NavComponent implements OnInit {
   isLoggedIn$!: Observable<boolean>;
-  isLoggedIn = true;
   currentUrl = '/';
+  private currentUserRoles: string[] = ['ROLE_USER'];
+  private currentIsAuthenticated = false;
 
-  navLinks: {
-    label: string;
-    url: string | null;
-    routerLink: string | null;
-    class: string;
-    roles: string[];
-    publicOnly?: boolean;
-    authOnly?: boolean;
-  }[] = [
+  navLinks: NavLink[] = [
       { label: 'HOME', url: null, routerLink: '/', class: '', roles: ['ROLE_USER'], publicOnly: true },
       { label: 'ABOUT_US', url: null, routerLink: '/aboutus', class: '', roles: ['ROLE_USER'], publicOnly: true },
       { label: 'SEARCH_BRN', url: null, routerLink: '/search-brn', class: '', roles: ['ROLE_USER'], publicOnly: true },
@@ -32,6 +37,15 @@ export class NavComponent {
       { label: 'CIRCULAR', url: null, routerLink: '/circular', class: '', roles: ['ROLE_USER'], publicOnly: true },
       { label: 'Contact_Us', url: null, routerLink: '/contactus', class: '', roles: ['ROLE_USER'], publicOnly: true },
       { label: 'ReqForm.title', url: null, routerLink: '/requestForm', class: '', roles: ['ROLE_USER'], publicOnly: true },
+      /* {
+        label: 'HOME',
+        url: null,
+        routerLink: null,
+        class: '',
+        roles: [],
+        authOnly: true,
+        useResolvedHomeRoute: true
+      }, */
       {
         label: 'MENU.DASHBOARD',
         url: null,
@@ -50,78 +64,95 @@ export class NavComponent {
       }
     ];
 
-  filteredNavLinks: {
-    label: string;
-    url: string | null;
-    routerLink: string | null;
-    class: string;
-    roles: string[];
-    publicOnly?: boolean;
-    authOnly?: boolean;
-  }[] = [];
+  filteredNavLinks: NavLink[] = [];
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private destroyRef: DestroyRef
+  ) { }
 
   ngOnInit() {
     this.isLoggedIn$ = this.authService.getIsLoggedIn();
     this.currentUrl = this.normalizeUrl(this.router.url);
 
     combineLatest([
-      this.authService.getIsLoggedIn(),
+      this.isLoggedIn$,
       this.authService.getUserRolesObservable()
-    ]).subscribe(([isLoggedIn, userRoles]) => {
-      this.filterNavLinks(
-        isLoggedIn ? userRoles : ['ROLE_USER'],
-        isLoggedIn
-      );
+    ])
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(([isLoggedIn, userRoles]) => {
+      this.currentIsAuthenticated = isLoggedIn;
+      this.currentUserRoles = isLoggedIn ? userRoles : ['ROLE_USER'];
+      this.filterNavLinks(this.currentUserRoles, this.currentIsAuthenticated);
     });
 
     this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe((event) => {
         this.currentUrl = this.normalizeUrl((event as NavigationEnd).urlAfterRedirects);
+        this.filterNavLinks(this.currentUserRoles, this.currentIsAuthenticated);
       });
   }
 
   filterNavLinks(userRoles: string[], isAuthenticated: boolean): void {
-    const defaultHomeRoute = isAuthenticated ? this.authService.getResolvedHomeRoute(userRoles) : null;
+    const resolvedHomeRoute = isAuthenticated ? this.authService.getResolvedHomeRoute(userRoles) : null;
 
-    this.filteredNavLinks = this.navLinks
-      .filter((link) =>
-        this.shouldShowLink(link, userRoles, isAuthenticated)
-      )
-      .map((link) => link.label === 'HOME' && defaultHomeRoute
-        ? { ...link, routerLink: defaultHomeRoute, url: null }
-        : link
-      );
+    this.filteredNavLinks = this.navLinks.reduce<NavLink[]>((links, link) => {
+      if (!this.shouldShowLink(link, userRoles, isAuthenticated)) {
+        return links;
+      }
+
+      if (link.useResolvedHomeRoute) {
+        if (resolvedHomeRoute) {
+          links.push({ ...link, routerLink: resolvedHomeRoute, url: null });
+        }
+
+        return links;
+      }
+
+      links.push(link);
+      return links;
+    }, []);
   }
 
   private shouldShowLink(
-    link: { label: string; roles: string[]; routerLink: string | null; publicOnly?: boolean; authOnly?: boolean },
+    link: NavLink,
     userRoles: string[],
     isAuthenticated: boolean
   ): boolean {
-    if (link.publicOnly && isAuthenticated) {
-      return false;
+    if (link.publicOnly) {
+      return !isAuthenticated;
     }
 
-    if (link.authOnly && !isAuthenticated) {
-      return false;
+    if (link.authOnly) {
+      if (!isAuthenticated) {
+        return false;
+      }
+
+      const roleAllowed = this.hasRequiredRole(link, userRoles);
+
+      if (!roleAllowed) {
+        return false;
+      }
+
+      // Admin users should not see the common post-login dashboard entry
+      // in the horizontal menu when that dashboard is not part of their flow.
+      if (link.label === 'MENU.DASHBOARD' && userRoles.includes('ROLE_ADMIN')) {
+        return false;
+      }
+
+      return true;
     }
 
-    const roleAllowed = link.roles.length === 0 || link.roles.some((role) => userRoles.includes(role));
+    return this.hasRequiredRole(link, userRoles);
+  }
 
-    if (!roleAllowed) {
-      return false;
-    }
-
-    // Admin users should not see the common post-login dashboard entry
-    // in the horizontal menu when that dashboard is not part of their flow.
-    if (link.label === 'MENU.DASHBOARD' && userRoles.includes('ROLE_ADMIN')) {
-      return false;
-    }
-
-    return true;
+  private hasRequiredRole(link: NavLink, userRoles: string[]): boolean {
+    return link.roles.length === 0 || link.roles.some((role) => userRoles.includes(role));
   }
 
   logout() {

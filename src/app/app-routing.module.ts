@@ -1,22 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomepageComponent } from './component/homepage/homepage.component';
-import { DashboardComponent } from './component/dashboard/dashboard.component';
-import { AboutusComponent } from './component/aboutus/aboutus.component';
-import { ContactusComponent } from './component/contactus/contactus.component';
-import { LoginComponent } from './component/login/login.component';
-import { UnauthorizedComponent } from './component/unauthorized/unauthorized.component';
 import { ChangePasswordComponent } from './component/change-password/change-password.component';
-import { FaqComponent } from './component/faq/faq.component';
-import { ImportantDocumentComponent } from './component/important-document/important-document.component';
-import { SearchBrnComponent } from './component/search-brn/search-brn.component';
-import { FeedbackComponent } from './component/feedback/feedback.component';
-import { CircularComponent } from './component/circular/circular.component';
-import { CitizenDashboardComponent } from './component/citizen-dashboard/citizen-dashboard.component';
-import { DashboardDetailsComponent } from './component/dashboard-details/dashboard-details.component';
-import { DuplicatedeatilsComponent } from './component/duplicatedeatils/duplicatedeatils.component';
-import { RequestFormComponent } from './component/request-form/request-form.component';
-import { PublicRouteGuard } from './public-route.guard';
 import { authGuard } from './auth.guard';
 
 const adminRoles = ['ROLE_ADMIN', 'ROLE_MODERATOR', 'ROLE_DES_STATE', 'ROLE_DES_REGION', 'ROLE_DES_DISTRICT'];
@@ -24,35 +8,11 @@ const commonPostLoginRoles = ['ROLE_ADMIN', 'ROLE_DES_STATE', 'ROLE_DES_REGION',
 const developerRoles = ['ROLE_DEVELOPER'];
 
 const routes: Routes = [
-  {path:"",component:HomepageComponent, canActivate: [PublicRouteGuard]},
-  {path:"aboutus",component:AboutusComponent, canActivate: [PublicRouteGuard]},
-  {path:"search-brn",component:SearchBrnComponent, canActivate: [PublicRouteGuard]},
-  {path:"faq",component:FaqComponent, canActivate: [PublicRouteGuard]},
-  {path:"contactus",component:ContactusComponent, canActivate: [PublicRouteGuard]},
-  {path:"login",component:LoginComponent, canActivate: [PublicRouteGuard]},
-  {path:"important-document",component:ImportantDocumentComponent},
-  {path:"circular",component:CircularComponent, canActivate: [PublicRouteGuard]},
-  {path:"dashboard",component:DashboardComponent, canActivate: [PublicRouteGuard]},
-  {path:"requestForm",component:RequestFormComponent, canActivate: [PublicRouteGuard]},
-  {path:"citizen-dashboard",component:CitizenDashboardComponent,children: [
-    
-    {
-      path: 'dashboard-details/:brnNo',
-      component: DashboardDetailsComponent
-    },
-    {
-      path: 'duplicate-details',
-      component: DuplicatedeatilsComponent
-    },
-  ]},
-  {path:"feedback",component:FeedbackComponent},
-  
-  {path:"unauthorized",component:UnauthorizedComponent},
   {path:"common-post-login/changePassword",component:ChangePasswordComponent, canActivate: [authGuard], data: { expectedRole: commonPostLoginRoles }},
   { path: 'admin', canActivate: [authGuard], data: { expectedRole: adminRoles }, loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
   { path: 'developer', canActivate: [authGuard], data: { expectedRole: developerRoles }, loadChildren: () => import('./developer/developer.module').then(m => m.DeveloperModule) },
   { path: 'common-post-login', canActivate: [authGuard], data: { expectedRole: commonPostLoginRoles }, loadChildren: () => import('./common-post-login/common-post-login.module').then(m => m.CommonPostLoginModule) },
-  //  { path: 'error', component: ErrorComponent }, // <-- Make sure this exists
+  { path: '', loadChildren: () => import('./public/public.module').then(m => m.PublicModule) },
   { path: '**', redirectTo: 'unauthorized' },
 ];
 
@@ -61,8 +21,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { 
-
-
-
-  
 }

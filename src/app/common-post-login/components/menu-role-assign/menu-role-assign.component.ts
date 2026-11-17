@@ -64,7 +64,6 @@ roles: Role[] = [];
 
   /** Load menus already assigned to selected role */
   onRoleChange(): void {
-    debugger;
     if (!this.selectedRoleId) {
       this.assignedMenuIds = [];
       this.selectedMenuIds = [];

@@ -1,0 +1,47 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { AboutusComponent } from '../component/aboutus/aboutus.component';
+import { CircularComponent } from '../component/circular/circular.component';
+import { CitizenDashboardComponent } from '../component/citizen-dashboard/citizen-dashboard.component';
+import { ContactusComponent } from '../component/contactus/contactus.component';
+import { DashboardComponent } from '../component/dashboard/dashboard.component';
+import { DashboardDetailsComponent } from '../component/dashboard-details/dashboard-details.component';
+import { DuplicatedeatilsComponent } from '../component/duplicatedeatils/duplicatedeatils.component';
+import { FaqComponent } from '../component/faq/faq.component';
+import { FeedbackComponent } from '../component/feedback/feedback.component';
+import { HomepageComponent } from '../component/homepage/homepage.component';
+import { ImportantDocumentComponent } from '../component/important-document/important-document.component';
+import { LoginComponent } from '../component/login/login.component';
+import { RequestFormComponent } from '../component/request-form/request-form.component';
+import { SearchBrnComponent } from '../component/search-brn/search-brn.component';
+import { UnauthorizedComponent } from '../component/unauthorized/unauthorized.component';
+import { PublicRouteGuard } from '../public-route.guard';
+
+const routes: Routes = [
+  { path: '', component: HomepageComponent, canActivate: [PublicRouteGuard] },
+  { path: 'aboutus', component: AboutusComponent, canActivate: [PublicRouteGuard] },
+  { path: 'search-brn', component: SearchBrnComponent, canActivate: [PublicRouteGuard] },
+  { path: 'faq', component: FaqComponent, canActivate: [PublicRouteGuard] },
+  { path: 'contactus', component: ContactusComponent, canActivate: [PublicRouteGuard] },
+  { path: 'login', component: LoginComponent, canActivate: [PublicRouteGuard] },
+  { path: 'important-document', component: ImportantDocumentComponent },
+  { path: 'circular', component: CircularComponent, canActivate: [PublicRouteGuard] },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [PublicRouteGuard] },
+  { path: 'requestForm', component: RequestFormComponent, canActivate: [PublicRouteGuard] },
+  {
+    path: 'citizen-dashboard',
+    component: CitizenDashboardComponent,
+    children: [
+      { path: 'dashboard-details/:brnNo', component: DashboardDetailsComponent },
+      { path: 'duplicate-details', component: DuplicatedeatilsComponent }
+    ]
+  },
+  { path: 'feedback', component: FeedbackComponent },
+  { path: 'unauthorized', component: UnauthorizedComponent }
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class PublicRoutingModule {}
