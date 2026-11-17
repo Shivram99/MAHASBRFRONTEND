@@ -1,19 +1,22 @@
-<div class="darkblue p-2">
-  <div class="container position-relative d-flex align-items-center">
-    <div class="emblem text-center w-100">
+<div class="darkblue py-2">
+  <div class="container topbar-inner">
+    <!-- Empty left column: balances the right panel so the emblem stays centred when there is room -->
+    <div class="topbar-side topbar-spacer" aria-hidden="true"></div>
+
+    <div class="emblem">
       <img [src]="emblemImg" [alt]="'TOPBAR.EMBLEM_ALT' | translate">
     </div>
 
-    <div class="rightPannel position-absolute end-0" *ngIf="currentLanguage$ | async as currentLanguage">
-      <ul class="accessibility-menu posHome m-0">
+    <div class="topbar-side rightPannel">
+      <ul class="accessibility-menu posHome m-0" *ngIf="currentLanguage$ | async as currentLanguage">
         <ng-container *ngIf="currentUser$ | async as currentUser">
           <li class="user-info-group">
             <div class="logged-user-info">
-              <div class="user-fullname">
+              <div class="user-fullname" [title]="getDisplayedName(currentUser)">
                 {{ getDisplayedName(currentUser) }}
               </div>
 
-              <div class="user-role" *ngIf="getDisplayedRole(currentUser) as displayedRole">
+              <div class="user-role" *ngIf="getDisplayedRole(currentUser) as displayedRole" [title]="displayedRole">
                 {{ displayedRole }}
               </div>
             </div>
