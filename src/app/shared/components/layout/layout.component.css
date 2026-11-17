@@ -5,10 +5,15 @@
     margin-bottom: 15px;
 }
 
+.dashboardTabs {
+    gap: 1rem;
+}
+
 .dashboardTabs  #v-pills-tab {
     background: #2676C3;
-    width: 450px;
-    padding: 30px;
+    flex: 0 0 280px;
+    width: 280px;
+    padding: 20px;
     min-height: 57vh;
 }
 
@@ -76,22 +81,33 @@ background: #004056;
 .submenu-container {
     padding-left: 15px;
 }
+@media screen and (max-width:1199px){
+    .dashboardTabs #v-pills-tab {
+        flex-basis: 240px;
+        width: 240px;
+        padding: 16px;
+    }
+}
+
+@media screen and (max-width:991px){
+    .dashboardTabs {
+        flex-direction: column;
+    }
+    .dashboardTabs #v-pills-tab {
+        flex-basis: auto;
+        width: 100%;
+        min-height: auto;
+    }
+}
+
 @media screen and (max-width:767px){
     .bglightblue {
-    padding: 0;
-}
-.dashboardTabs {
-    flex-direction: column;
-}
-.dashboardTabs #v-pills-tab {
-    width: 100%;
-    min-height: auto;
-    margin-bottom: 16px;
-}
-.cust-butns {
-    justify-content: flex-end;
-    gap: 10px;
-}
+        padding: 0;
+    }
+    .cust-butns {
+        justify-content: flex-end;
+        gap: 10px;
+    }
 }
 
 

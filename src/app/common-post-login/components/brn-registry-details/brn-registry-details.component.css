@@ -1,5 +1,14 @@
+/* Layout responds to the width this page actually gets (beside the sidebar),
+   not the browser width. */
+:host {
+  display: block;
+  container-type: inline-size;
+  container-name: brn-page;
+}
+
 .brn-page-shell {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
 }
 
@@ -38,12 +47,15 @@
   font-size: 0.92rem;
 }
 
-.brn-filter-layout {
-  margin-bottom: 0;
+.brn-filter-fields {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: end;
 }
 
-.brn-filter-fields {
-  align-items: end;
+.brn-filter-cell {
+  min-width: 0;
 }
 
 .brn-filter-control {
@@ -68,31 +80,21 @@
   color: #dc3545;
 }
 
-.brn-filter-action {
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-}
-
 .brn-filter-action-row {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 0.9rem;
-  padding-top: 0.9rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
   border-top: 1px solid #e3edf4;
 }
 
 .brn-filter-action-group {
   display: grid;
-  grid-template-columns: minmax(240px, 280px) max-content;
+  grid-template-columns: minmax(200px, 1fr) auto;
   align-items: end;
-  justify-content: flex-end;
-  gap: 0.55rem;
-  width: 100%;
+  gap: 0.75rem;
 }
 
 .brn-action-input {
-  width: 100%;
+  min-width: 0;
 }
 
 .brn-action-input .form-control,
@@ -113,7 +115,8 @@
 }
 
 .brn-search-btn {
-  min-width: 138px;
+  min-width: 120px;
+  white-space: nowrap;
 }
 
 .results-panel {
@@ -194,7 +197,7 @@
 .brn-table-wrap {
   border: 1px solid #deebf2;
   border-radius: 0.9rem;
-  overflow: hidden;
+  overflow-x: auto;
 }
 
 .brn-results-table {
@@ -267,24 +270,17 @@
   text-align: center;
 }
 
-@media screen and (max-width: 1199px) {
-  .brn-filter-action-row {
-    justify-content: stretch;
-  }
-
-  .brn-filter-action {
-    justify-content: stretch;
-  }
-
-  .brn-filter-action-group {
-    grid-template-columns: minmax(220px, 1fr) max-content;
-    justify-content: stretch;
+/* Filters: 4 columns -> 2 columns -> 1 column as available width shrinks */
+@container brn-page (max-width: 819px) {
+  .brn-filter-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media screen and (max-width: 991px) {
+/* BRN input on its own row, three buttons share the row below */
+@container brn-page (max-width: 679px) {
   .brn-filter-action-group {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .brn-action-buttons {
@@ -296,18 +292,24 @@
     min-width: 0;
     width: 100%;
   }
-}
 
-@media screen and (max-width: 767px) {
   .card-panel {
     padding: 1rem;
   }
 
-  .brn-panel-heading,
   .results-toolbar,
-  .pagination-toolbar,
-  .page-size-control {
+  .pagination-toolbar {
     align-items: stretch;
+  }
+}
+
+/* Phones: everything stacks */
+@container brn-page (max-width: 479px) {
+  .brn-filter-fields,
+  .brn-action-buttons,
+  .results-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .results-actions,
@@ -315,15 +317,6 @@
     width: 100%;
   }
 
-  .brn-filter-action-group,
-  .brn-action-buttons,
-  .results-actions {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
-
-  .brn-search-btn,
-  .brn-action-input,
   .export-action-btn,
   .no-form-control {
     width: 100%;
