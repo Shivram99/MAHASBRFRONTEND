@@ -48,7 +48,12 @@ export class AuthInterceptor implements HttpInterceptor {
           this.injector.get(AuthService).handleBackendUnavailable('home');
         }
 
-        if (error.status === 403 && !skipAuthRedirect) {
+        if (error.status === 403 && error.error?.code === AuthService.PASSWORD_CHANGE_REQUIRED) {
+          // The backend blocks everything except change-password until the temporary password is changed.
+          const authService = this.injector.get(AuthService);
+          authService.markPasswordChangeRequired();
+          void authService.navigateToChangePassword();
+        } else if (error.status === 403 && !skipAuthRedirect) {
           void this.injector.get(AuthService).navigateToUnauthorized();
         }
 

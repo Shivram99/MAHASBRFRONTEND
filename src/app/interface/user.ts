@@ -2,7 +2,9 @@ export interface User {
   id?: number;
   username: string;
   email: string;
-  isFirstTimeLogin?: boolean; 
+  isFirstTimeLogin?: boolean;
+  /** Only present in the response to "create user"; shown to the admin once. */
+  temporaryPassword?: string;
   roles: string[];
   registryId?: number | null;
   districtId?: number | null;

@@ -8,7 +8,8 @@ const commonPostLoginRoles = ['ROLE_ADMIN', 'ROLE_DES_STATE', 'ROLE_DES_REGION',
 const developerRoles = ['ROLE_DEVELOPER'];
 
 const routes: Routes = [
-  {path:"common-post-login/changePassword",component:ChangePasswordComponent, canActivate: [authGuard], data: { expectedRole: commonPostLoginRoles }},
+  // Any logged-in user may change their own password (also MODERATOR/DEVELOPER, who must do it at first login).
+  {path:"common-post-login/changePassword",component:ChangePasswordComponent, canActivate: [authGuard]},
   { path: 'admin', canActivate: [authGuard], data: { expectedRole: adminRoles }, loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
   { path: 'developer', canActivate: [authGuard], data: { expectedRole: developerRoles }, loadChildren: () => import('./developer/developer.module').then(m => m.DeveloperModule) },
   { path: 'common-post-login', canActivate: [authGuard], data: { expectedRole: commonPostLoginRoles }, loadChildren: () => import('./common-post-login/common-post-login.module').then(m => m.CommonPostLoginModule) },

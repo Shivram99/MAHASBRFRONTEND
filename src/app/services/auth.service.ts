@@ -19,6 +19,11 @@ export type SessionValidationState = 'valid' | 'invalid' | 'unavailable';
   providedIn: 'root'
 })
 export class AuthService {
+  /** Where a user on a temporary password is sent; every other route is blocked until they change it. */
+  readonly changePasswordRoute = '/common-post-login/changePassword';
+  /** Error code the backend returns (HTTP 403) while the user still has to change their password. */
+  static readonly PASSWORD_CHANGE_REQUIRED = 'PASSWORD_CHANGE_REQUIRED';
+
   private readonly helper = new JwtHelperService();
   private readonly commonPostLoginProfileRoute = '/common-post-login/profile';
   private readonly activeRolePriority = [
@@ -251,7 +256,28 @@ export class AuthService {
     return this.getDefaultHomeRoute(roles) ?? this.getFallbackHomeRoute(roles);
   }
 
+  /** True while the logged-in user is still on the temporary password an admin gave them. */
+  requiresPasswordChange(): boolean {
+    return this.currentUserSubject.value?.isFirstTimeLogin === true;
+  }
+
+  /** Called when the backend answers PASSWORD_CHANGE_REQUIRED, e.g. if the stored flag was stale. */
+  markPasswordChangeRequired(): void {
+    const user = this.currentUserSubject.value;
+    if (user && user.isFirstTimeLogin !== true) {
+      this.setCurrentUserState({ ...user, isFirstTimeLogin: true });
+    }
+  }
+
+  navigateToChangePassword(): Promise<boolean> {
+    return this.router.navigateByUrl(this.changePasswordRoute);
+  }
+
   async navigateToPostLoginHome(roles: string[] = this.getUserRoles()): Promise<boolean> {
+    if (this.requiresPasswordChange()) {
+      return this.navigateToChangePassword();
+    }
+
     const defaultHomeRoute = this.getDefaultHomeRoute(roles);
 
     if (defaultHomeRoute) {

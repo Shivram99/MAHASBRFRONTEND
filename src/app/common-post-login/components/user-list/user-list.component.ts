@@ -33,6 +33,9 @@ export class UserListComponent implements OnInit {
   isSaving = false;
   submissionMessage = '';
   submissionMessageType: 'success' | 'danger' | '' = '';
+  /** Temporary password of the user just created. The backend returns it only once, so show it now. */
+  createdUserCredentials: { username: string; temporaryPassword: string } | null = null;
+  passwordCopied = false;
   readonly userForm: FormGroup;
   private visibleLocationFields = new Set<UserLocationField>();
 
@@ -77,6 +80,7 @@ export class UserListComponent implements OnInit {
   saveUser(): void {
     this.clearSubmissionMessage();
     this.clearServerErrors();
+    this.dismissCredentials();
 
     if (this.userForm.invalid) {
       this.userForm.markAllAsTouched();
@@ -90,11 +94,17 @@ export class UserListComponent implements OnInit {
 
     this.isSaving = true;
     request$.subscribe({
-      next: () => {
+      next: (savedUser: User) => {
         this.isSaving = false;
+        this.resetForm();
         this.submissionMessageType = 'success';
         this.submissionMessage = payload.id ? 'User updated successfully.' : 'User saved successfully.';
-        this.resetForm();
+        if (!payload.id && savedUser?.temporaryPassword) {
+          this.createdUserCredentials = {
+            username: savedUser.username,
+            temporaryPassword: savedUser.temporaryPassword
+          };
+        }
         this.loadUsers();
       },
       error: (error: UserServiceError) => {
@@ -102,6 +112,21 @@ export class UserListComponent implements OnInit {
         this.handleSubmissionError(error);
       }
     });
+  }
+
+  copyTemporaryPassword(): void {
+    const password = this.createdUserCredentials?.temporaryPassword;
+    if (!password || !navigator.clipboard) {
+      return;
+    }
+    navigator.clipboard.writeText(password)
+      .then(() => this.passwordCopied = true)
+      .catch((error) => console.error('Could not copy the temporary password', error));
+  }
+
+  dismissCredentials(): void {
+    this.createdUserCredentials = null;
+    this.passwordCopied = false;
   }
 
   editUser(user: User): void {

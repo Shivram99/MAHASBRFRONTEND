@@ -17,6 +17,14 @@ export class authGuard implements CanActivate {
 
     this.authService.validateSessionInBackground();
 
+    // Still on a temporary password: the change-password page is the only page allowed.
+    // The backend enforces the same rule, so this is about user experience, not security.
+    if (this.authService.requiresPasswordChange()) {
+      const changePasswordRoute = this.authService.changePasswordRoute;
+      const isChangePasswordPage = state.url.split('?')[0] === changePasswordRoute;
+      return isChangePasswordPage ? true : this.router.parseUrl(changePasswordRoute);
+    }
+
     if (expectedRoles.length === 0) {
       return true;
     }

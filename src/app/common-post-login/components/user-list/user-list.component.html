@@ -11,6 +11,20 @@
     {{ submissionMessage }}
   </div>
 
+  <div *ngIf="createdUserCredentials" class="alert alert-warning" role="alert">
+    <p class="mb-2">
+      <strong>Temporary password for {{ createdUserCredentials.username }}:</strong>
+      <code class="temp-password ms-2">{{ createdUserCredentials.temporaryPassword }}</code>
+    </p>
+    <p class="mb-2 small">
+      Give this to the user securely. It is shown <strong>only once</strong>. The user must change it at first login.
+    </p>
+    <button type="button" class="btn btn-sm btn-outline-dark me-2" (click)="copyTemporaryPassword()">
+      {{ passwordCopied ? 'Copied' : 'Copy password' }}
+    </button>
+    <button type="button" class="btn btn-sm btn-link" (click)="dismissCredentials()">Dismiss</button>
+  </div>
+
   <!-- Section: Basic Info -->
   <!-- <h5 class="mb-3 border-bottom pb-2 ">Basic Information</h5> -->
   <div class="row g-3 mb-3">
