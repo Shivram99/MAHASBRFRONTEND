@@ -1,0 +1,135 @@
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Registry API Settings</h2>
+    <button type="button" class="btn btn-primary" (click)="openCreate()" *ngIf="!showForm">+ Add API</button>
+  </div>
+  <p class="text-muted">
+    Only APIs that are switched <strong>on</strong> are called: every night at 2:00 AM, or when you press
+    <em>Run now</em>. Each run fetches only data since the last sync.
+  </p>
+
+  <div *ngIf="message" class="alert" [ngClass]="messageType === 'success' ? 'alert-success' : 'alert-danger'" role="alert">
+    {{ message }}
+  </div>
+
+  <form *ngIf="showForm" [formGroup]="form" (ngSubmit)="save()" novalidate
+    class="p-4 border rounded shadow-sm bg-white mb-4">
+    <h5>{{ editingId === null ? 'Add API' : 'Edit API' }}</h5>
+    <div class="row g-3">
+      <div class="col-md-4">
+        <label class="form-label" for="serviceName">Name</label>
+        <input id="serviceName" class="form-control" formControlName="serviceName" [class.is-invalid]="invalid('serviceName')">
+        <div class="invalid-feedback">Name is required.</div>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="serviceNameCode">Code</label>
+        <input id="serviceNameCode" class="form-control" formControlName="serviceNameCode" [class.is-invalid]="invalid('serviceNameCode')">
+        <div class="invalid-feedback">Letters, numbers, - and _ only.</div>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="registryId">Registry the data belongs to</label>
+        <select id="registryId" class="form-select" formControlName="registryId" [class.is-invalid]="invalid('registryId')">
+          <option [ngValue]="null" disabled>Select registry</option>
+          <option *ngFor="let r of registries" [ngValue]="r.id">{{ r.registryNameEn }}</option>
+        </select>
+        <div class="invalid-feedback">Select a registry.</div>
+      </div>
+
+      <div class="col-md-8">
+        <label class="form-label" for="authUrl">Login URL</label>
+        <input id="authUrl" class="form-control" formControlName="authUrl" placeholder="https://..." [class.is-invalid]="invalid('authUrl')">
+        <div class="invalid-feedback">Enter a full http(s):// address.</div>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="authUrlMethod">Login method</label>
+        <select id="authUrlMethod" class="form-select" formControlName="authUrlMethod">
+          <option>POST</option><option>GET</option>
+        </select>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label" for="username">Username</label>
+        <input id="username" class="form-control" formControlName="username" autocomplete="off" [class.is-invalid]="invalid('username')">
+        <div class="invalid-feedback">Username is required.</div>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="password">Password</label>
+        <input id="password" type="password" class="form-control" formControlName="password" autocomplete="new-password"
+          [placeholder]="editingPasswordSet ? 'Leave empty to keep the current password' : ''"
+          [class.is-invalid]="invalid('password')">
+        <div class="invalid-feedback">Password is required.</div>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="syncFromDate">First sync starts from</label>
+        <input id="syncFromDate" type="date" class="form-control" formControlName="syncFromDate">
+      </div>
+
+      <div class="col-md-8">
+        <label class="form-label" for="apiData">Data URL</label>
+        <input id="apiData" class="form-control" formControlName="apiData" placeholder="https://..." [class.is-invalid]="invalid('apiData')">
+        <div class="invalid-feedback">Enter a full http(s):// address.</div>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="apiDataMethod">Data method</label>
+        <select id="apiDataMethod" class="form-select" formControlName="apiDataMethod">
+          <option>POST</option><option>GET</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="mt-3">
+      <button type="submit" class="btn btn-success me-2" [disabled]="isSaving">
+        <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>Save
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="cancelForm()">Cancel</button>
+    </div>
+  </form>
+
+  <div class="table-responsive">
+    <table class="table table-bordered align-middle bg-white" *ngIf="apis.length > 0; else noApis">
+      <thead>
+        <tr>
+          <th>Registry</th>
+          <th>API</th>
+          <th class="text-center">Active</th>
+          <th>Last sync</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let api of apis; trackBy: trackById">
+          <td>{{ api.registryName || '-' }}</td>
+          <td>
+            <div class="fw-semibold">{{ api.serviceName }}</div>
+            <div class="small text-muted">{{ api.serviceNameCode }}</div>
+          </td>
+          <td class="text-center">
+            <div class="form-check form-switch d-inline-block">
+              <input class="form-check-input" type="checkbox" role="switch"
+                [checked]="api.active" [disabled]="busyId === api.id || api.running"
+                (change)="toggleActive(api)" [attr.aria-label]="'Switch ' + api.serviceName">
+            </div>
+          </td>
+          <td>
+            <span *ngIf="api.running" class="badge bg-info text-dark">
+              <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>Running
+            </span>
+            <span *ngIf="!api.running && api.lastRunStatus === 'SUCCESS'" class="badge bg-success">Success</span>
+            <span *ngIf="!api.running && api.lastRunStatus === 'FAILED'" class="badge bg-danger">Failed</span>
+            <span *ngIf="!api.lastRunStatus" class="text-muted">Never run</span>
+            <div class="small" *ngIf="api.lastRunAt">{{ api.lastRunAt | date:'dd-MM-yyyy HH:mm' }}</div>
+            <div class="small text-muted" *ngIf="api.lastSyncedTo">Synced up to {{ api.lastSyncedTo }}</div>
+            <div class="small" *ngIf="api.lastRunMessage">{{ api.lastRunMessage }}</div>
+          </td>
+          <td class="text-nowrap">
+            <button type="button" class="btn btn-outline-primary btn-sm me-1"
+              [disabled]="!api.active || api.running || busyId === api.id" (click)="runNow(api)">Run now</button>
+            <button type="button" class="btn btn-info btn-sm me-1" [disabled]="api.running" (click)="openEdit(api)">Edit</button>
+            <button type="button" class="btn btn-danger btn-sm" [disabled]="api.running" (click)="remove(api)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <ng-template #noApis><p>No registry APIs added yet.</p></ng-template>
+  </div>
+</div>

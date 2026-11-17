@@ -21,6 +21,7 @@ import { NICDivisionListComponent } from './components/nic/nicdivision-list/nicd
 import { NICGroupListComponent } from './components/nic/nicgroup-list/nicgroup-list.component';
 import { NICClassListComponent } from './components/nic/nicclass-list/nicclass-list.component';
 import { RoleListComponent } from './components/role-list/role-list.component';
+import { RegistryApiSettingsComponent } from './components/registry-api-settings/registry-api-settings.component';
 
 const routes: Routes = [{
   path: '', component: LayoutComponent, children: [
@@ -52,6 +53,7 @@ const routes: Routes = [{
   { path: 'class-list', component: NICClassListComponent },
 
   { path: 'role-list', component: RoleListComponent },
+  { path: 'registry-api-settings', component: RegistryApiSettingsComponent },
 
   
   ]

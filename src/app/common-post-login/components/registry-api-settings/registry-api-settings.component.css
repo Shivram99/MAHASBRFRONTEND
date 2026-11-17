@@ -1,0 +1,14 @@
+.form-switch .form-check-input {
+  width: 3rem;
+  height: 1.5rem;
+  cursor: pointer;
+}
+
+.form-switch .form-check-input:disabled {
+  cursor: not-allowed;
+}
+
+td .small {
+  max-width: 28rem;
+  overflow-wrap: anywhere;
+}

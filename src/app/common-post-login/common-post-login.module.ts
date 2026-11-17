@@ -28,6 +28,7 @@ import { PaginationComponent } from '../shared/components/pagination/pagination.
 import { NICGroupListComponent } from './components/nic/nicgroup-list/nicgroup-list.component';
 import { NICClassListComponent } from './components/nic/nicclass-list/nicclass-list.component';
 import { RoleListComponent } from './components/role-list/role-list.component';
+import { RegistryApiSettingsComponent } from './components/registry-api-settings/registry-api-settings.component';
 
 
 @NgModule({
@@ -54,7 +55,7 @@ import { RoleListComponent } from './components/role-list/role-list.component';
     NICGroupListComponent,
     NICClassListComponent,
     RoleListComponent,
-  
+    RegistryApiSettingsComponent,
   ],
   imports: [
     CommonModule,TranslateModule,
