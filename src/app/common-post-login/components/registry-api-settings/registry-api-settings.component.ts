@@ -37,14 +37,42 @@ export class RegistryApiSettingsComponent implements OnInit, OnDestroy {
       serviceName: ['', Validators.required],
       serviceNameCode: ['', [Validators.required, Validators.pattern(/^[A-Za-z0-9_-]+$/)]],
       registryId: [null as number | null, Validators.required],
+      authType: ['TOKEN', Validators.required],
       authUrl: ['', [Validators.required, Validators.pattern(/^https?:\/\/\S+$/)]],
       authUrlMethod: ['POST', Validators.required],
+      dateFromField: ['FromDate', [Validators.required, Validators.pattern(/^[A-Za-z_][A-Za-z0-9_]*$/)]],
+      dateToField: ['ToDate', [Validators.required, Validators.pattern(/^[A-Za-z_][A-Za-z0-9_]*$/)]],
+      dateFormat: ['yyyy-MM-dd', Validators.required],
+      skipSslVerify: [false],
       username: ['', Validators.required],
       password: [''],
       apiData: ['', [Validators.required, Validators.pattern(/^https?:\/\/\S+$/)]],
       apiDataMethod: ['POST', Validators.required],
       syncFromDate: ['2015-01-01']
     });
+  }
+
+  get isBasic(): boolean {
+    return this.form.get('authType')?.value === 'BASIC';
+  }
+
+  /** BASIC APIs have no separate login call, so the login URL/method are not needed. */
+  onAuthTypeChange(): void {
+    const authUrl = this.form.get('authUrl');
+    if (this.isBasic) {
+      authUrl?.clearValidators();
+    } else {
+      authUrl?.setValidators([Validators.required, Validators.pattern(/^https?:\/\/\S+$/)]);
+    }
+    authUrl?.updateValueAndValidity();
+  }
+
+  /** Fills in the settings used by the MCGM API (from its documentation). */
+  applyMcgmPreset(): void {
+    this.form.patchValue({
+      authType: 'BASIC', dateFromField: 'from_date', dateToField: 'to_date', dateFormat: 'yyyyMMdd'
+    });
+    this.onAuthTypeChange();
   }
 
   ngOnInit(): void {
@@ -69,7 +97,11 @@ export class RegistryApiSettingsComponent implements OnInit, OnDestroy {
   openCreate(): void {
     this.editingId = null;
     this.editingPasswordSet = false;
-    this.form.reset({ authUrlMethod: 'POST', apiDataMethod: 'POST', syncFromDate: '2015-01-01' });
+    this.form.reset({
+      authType: 'TOKEN', authUrlMethod: 'POST', apiDataMethod: 'POST', syncFromDate: '2015-01-01',
+      dateFromField: 'FromDate', dateToField: 'ToDate', dateFormat: 'yyyy-MM-dd', skipSslVerify: false
+    });
+    this.onAuthTypeChange();
     this.form.get('password')?.setValidators(Validators.required);
     this.form.get('password')?.updateValueAndValidity();
     this.form.get('serviceNameCode')?.enable();
@@ -84,14 +116,20 @@ export class RegistryApiSettingsComponent implements OnInit, OnDestroy {
       serviceName: api.serviceName,
       serviceNameCode: api.serviceNameCode,
       registryId: api.registryId,
-      authUrl: api.authUrl,
+      authType: api.authType || 'TOKEN',
+      authUrl: api.authUrl ?? '',
       authUrlMethod: api.authUrlMethod || 'POST',
+      dateFromField: api.dateFromField || 'FromDate',
+      dateToField: api.dateToField || 'ToDate',
+      dateFormat: api.dateFormat || 'yyyy-MM-dd',
+      skipSslVerify: !!api.skipSslVerify,
       username: api.username,
       password: '',
       apiData: api.apiData,
       apiDataMethod: api.apiDataMethod || 'POST',
       syncFromDate: api.syncFromDate ?? '2015-01-01'
     });
+    this.onAuthTypeChange();
     this.form.get('password')?.clearValidators();
     this.form.get('password')?.updateValueAndValidity();
     this.showForm = true;

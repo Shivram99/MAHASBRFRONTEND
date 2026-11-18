@@ -10,6 +10,11 @@ export interface RegistryApiAuthConfig {
   apiData: string;
   apiDataMethod: string;
   active: boolean;
+  authType?: 'TOKEN' | 'BASIC';
+  dateFromField?: string;
+  dateToField?: string;
+  dateFormat?: string;
+  skipSslVerify?: boolean;
   registryId: number | null;
   registryName?: string | null;
   syncFromDate?: string | null;
@@ -31,6 +36,11 @@ export interface RegistryApiAuthConfigRequest {
   apiData: string;
   apiDataMethod: string;
   active: boolean;
+  authType: 'TOKEN' | 'BASIC';
+  dateFromField: string;
+  dateToField: string;
+  dateFormat: string;
+  skipSslVerify: boolean;
   registryId: number | null;
   syncFromDate: string | null;
 }

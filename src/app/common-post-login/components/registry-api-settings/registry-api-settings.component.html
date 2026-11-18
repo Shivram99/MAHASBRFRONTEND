@@ -35,16 +35,46 @@
         <div class="invalid-feedback">Select a registry.</div>
       </div>
 
-      <div class="col-md-8">
-        <label class="form-label" for="authUrl">Login URL</label>
-        <input id="authUrl" class="form-control" formControlName="authUrl" placeholder="https://..." [class.is-invalid]="invalid('authUrl')">
-        <div class="invalid-feedback">Enter a full http(s):// address.</div>
+      <div class="col-12">
+        <label class="form-label" for="authType">Login type</label>
+        <div class="d-flex gap-2 align-items-center flex-wrap">
+          <select id="authType" class="form-select w-auto" formControlName="authType" (change)="onAuthTypeChange()">
+            <option value="TOKEN">Token (log in first, then use the token)</option>
+            <option value="BASIC">Basic authentication (username + password on every request)</option>
+          </select>
+          <button type="button" class="btn btn-outline-secondary btn-sm" (click)="applyMcgmPreset()">
+            Use MCGM settings
+          </button>
+        </div>
+      </div>
+
+      <ng-container *ngIf="!isBasic">
+        <div class="col-md-8">
+          <label class="form-label" for="authUrl">Login URL</label>
+          <input id="authUrl" class="form-control" formControlName="authUrl" placeholder="https://..." [class.is-invalid]="invalid('authUrl')">
+          <div class="invalid-feedback">Enter a full http(s):// address.</div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="authUrlMethod">Login method</label>
+          <select id="authUrlMethod" class="form-select" formControlName="authUrlMethod">
+            <option>POST</option><option>GET</option>
+          </select>
+        </div>
+      </ng-container>
+
+      <div class="col-md-4">
+        <label class="form-label" for="dateFromField">"From" date field name</label>
+        <input id="dateFromField" class="form-control" formControlName="dateFromField" placeholder="e.g. from_date" [class.is-invalid]="invalid('dateFromField')">
+        <div class="invalid-feedback">A field name like from_date, not a date.</div>
       </div>
       <div class="col-md-4">
-        <label class="form-label" for="authUrlMethod">Login method</label>
-        <select id="authUrlMethod" class="form-select" formControlName="authUrlMethod">
-          <option>POST</option><option>GET</option>
-        </select>
+        <label class="form-label" for="dateToField">"To" date field name</label>
+        <input id="dateToField" class="form-control" formControlName="dateToField" placeholder="e.g. to_date" [class.is-invalid]="invalid('dateToField')">
+        <div class="invalid-feedback">A field name like to_date, not a date.</div>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="dateFormat">Date format</label>
+        <input id="dateFormat" class="form-control" formControlName="dateFormat" placeholder="yyyyMMdd or yyyy-MM-dd" [class.is-invalid]="invalid('dateFormat')">
       </div>
 
       <div class="col-md-4">
@@ -62,6 +92,20 @@
       <div class="col-md-4">
         <label class="form-label" for="syncFromDate">First sync starts from</label>
         <input id="syncFromDate" type="date" class="form-control" formControlName="syncFromDate">
+      </div>
+
+      <div class="col-12">
+        <div class="form-check">
+          <input id="skipSslVerify" type="checkbox" class="form-check-input" formControlName="skipSslVerify">
+          <label class="form-check-label" for="skipSslVerify">
+            Don't check this server's HTTPS certificate (use only if the call fails with an SSL/certificate error)
+          </label>
+        </div>
+        <div class="alert alert-warning py-2 mt-2 mb-0 small" *ngIf="form.get('skipSslVerify')?.value">
+          <strong>Not secure.</strong> The connection stays encrypted, but the system can no longer tell whether it is
+          really talking to this registry, so its login could be exposed on an untrusted network.
+          Use this only on a trusted/private network, and only for this API.
+        </div>
       </div>
 
       <div class="col-md-8">
