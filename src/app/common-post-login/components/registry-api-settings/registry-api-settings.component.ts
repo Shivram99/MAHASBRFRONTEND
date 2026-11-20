@@ -6,6 +6,7 @@ import { RegistryApiAuthConfig, RegistryApiAuthConfigRequest } from '../../../in
 import { RegistryResponse } from '../../../model/registry-response';
 import { RegistryApiAuthService } from '../../../services/RegistryApiAuthhConfi/registry-api-auth.service';
 import { RegistryServiceService } from '../../../services/registry-master/registry-service.service';
+import { confirmAction } from '../../../shared/utils/notify';
 
 @Component({
   selector: 'app-registry-api-settings',
@@ -176,53 +177,84 @@ export class RegistryApiSettingsComponent implements OnInit, OnDestroy {
     if (api.id == null) {
       return;
     }
+    const id = api.id;
     const turnOn = !api.active;
-    if (turnOn && !confirm(`Switch on "${api.serviceName}"? It will be called every night.`)) {
-      return;
+    const change = () => {
+      this.busyId = id;
+      this.apiService.setActive(id, turnOn).subscribe({
+        next: (saved) => {
+          this.busyId = null;
+          this.replaceOrAdd(saved);
+          this.succeed(turnOn ? `${saved.serviceName} switched on.` : `${saved.serviceName} switched off.`);
+        },
+        error: (error) => {
+          this.busyId = null;
+          this.fail(error, 'Unable to change the switch.');
+        }
+      });
+    };
+
+    if (turnOn) {
+      void confirmAction({
+        title: `Switch on "${api.serviceName}"?`,
+        text: 'It will be called every night.',
+        confirmText: 'Yes, switch on'
+      }).then((yes) => yes && change());
+    } else {
+      change();
     }
-    this.busyId = api.id;
-    this.apiService.setActive(api.id, turnOn).subscribe({
-      next: (saved) => {
-        this.busyId = null;
-        this.replaceOrAdd(saved);
-        this.succeed(turnOn ? `${saved.serviceName} switched on.` : `${saved.serviceName} switched off.`);
-      },
-      error: (error) => {
-        this.busyId = null;
-        this.fail(error, 'Unable to change the switch.');
-      }
-    });
   }
 
   runNow(api: RegistryApiAuthConfig): void {
-    if (api.id == null || !confirm(`Run "${api.serviceName}" now? It fetches everything since the last sync.`)) {
+    if (api.id == null) {
       return;
     }
-    this.busyId = api.id;
-    this.apiService.runNow(api.id).subscribe({
-      next: (saved) => {
-        this.busyId = null;
-        this.replaceOrAdd({ ...saved, running: true });
-        this.succeed('Sync started. This page updates as it runs.');
-        this.updatePolling();
-      },
-      error: (error) => {
-        this.busyId = null;
-        this.fail(error, 'Unable to start the sync.');
+    const id = api.id;
+    void confirmAction({
+      title: `Run "${api.serviceName}" now?`,
+      text: 'It fetches everything since the last sync.',
+      confirmText: 'Yes, run now'
+    }).then((yes) => {
+      if (!yes) {
+        return;
       }
+      this.busyId = id;
+      this.apiService.runNow(id).subscribe({
+        next: (saved) => {
+          this.busyId = null;
+          this.replaceOrAdd({ ...saved, running: true });
+          this.succeed('Sync started. This page updates as it runs.');
+          this.updatePolling();
+        },
+        error: (error) => {
+          this.busyId = null;
+          this.fail(error, 'Unable to start the sync.');
+        }
+      });
     });
   }
 
   remove(api: RegistryApiAuthConfig): void {
-    if (api.id == null || !confirm(`Delete "${api.serviceName}"? Records already fetched are kept.`)) {
+    if (api.id == null) {
       return;
     }
-    this.apiService.delete(api.id).subscribe({
-      next: () => {
-        this.apis = this.apis.filter((a) => a.id !== api.id);
-        this.succeed('Deleted.');
-      },
-      error: (error) => this.fail(error, 'Unable to delete.')
+    const id = api.id;
+    void confirmAction({
+      title: `Delete "${api.serviceName}"?`,
+      text: 'Records already fetched are kept.',
+      confirmText: 'Yes, delete',
+      danger: true
+    }).then((yes) => {
+      if (!yes) {
+        return;
+      }
+      this.apiService.delete(id).subscribe({
+        next: () => {
+          this.apis = this.apis.filter((a) => a.id !== id);
+          this.succeed('Deleted.');
+        },
+        error: (error) => this.fail(error, 'Unable to delete.')
+      });
     });
   }
 

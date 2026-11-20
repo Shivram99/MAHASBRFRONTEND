@@ -151,7 +151,7 @@
             <div class="form-check form-switch d-inline-block">
               <input class="form-check-input" type="checkbox" role="switch"
                 [checked]="api.active" [disabled]="busyId === api.id || api.running"
-                (change)="toggleActive(api)" [attr.aria-label]="'Switch ' + api.serviceName">
+                (click)="$event.preventDefault(); toggleActive(api)" [attr.aria-label]="'Switch ' + api.serviceName">
             </div>
           </td>
           <td>

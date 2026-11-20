@@ -3,6 +3,7 @@ import { RegistryResponse } from '../../../model/registry-response';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RegistryServiceService } from '../../../services/registry-master/registry-service.service';
 import { TransliterationService } from '../../../shared/services/transliteration.service';
+import { confirmAction, notifyError, notifySuccess } from '../../../shared/utils/notify';
 
 @Component({
   selector: 'app-registry-master',
@@ -74,9 +75,23 @@ export class RegistryMasterComponent implements OnInit{
   }
 
   deleteRegistry(id: number): void {
-    if (confirm('Are you sure you want to delete this registry?')) {
-      this.registryService.delete(id).subscribe(() => this.loadRegistries());
-    }
+    void confirmAction({
+      title: 'Delete this registry?',
+      text: 'This cannot be undone.',
+      confirmText: 'Yes, delete',
+      danger: true
+    }).then((yes) => {
+      if (!yes) {
+        return;
+      }
+      this.registryService.delete(id).subscribe({
+        next: () => {
+          this.loadRegistries();
+          notifySuccess('Registry deleted.');
+        },
+        error: () => notifyError('The registry could not be deleted. Users or records may still use it.')
+      });
+    });
   }
 
   

@@ -22,6 +22,11 @@ private baseUrl = "";
     return this.http.get<Circular[]>(`${this.baseUrl}/api/circulars`);
   }
 
+  /** Show (true) or hide (false) a circular on the public site. */
+  setActive(id: number, active: boolean): Observable<Circular> {
+    return this.http.patch<Circular>(`${this.baseUrl}/api/circulars/${id}/active`, { active });
+  }
+
   deleteCircular(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/api/circulars/${id}`);
   }

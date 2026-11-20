@@ -1,13 +1,17 @@
-<div class="d-flex ticker-bg mb-5">
+<div class="d-flex ticker-bg mb-5" *ngIf="newsItems.length > 0">
   <div class="tickerHead">{{ 'newsTicker.heading' | translate }}</div>
-  
-  <div class="ticker-container d-flex">
-    <div class="ticker-wrapper" 
-         [style.transform]="tickerTransform" 
+
+  <div #tickerContainer class="ticker-container d-flex">
+    <div class="ticker-wrapper"
+         [style.transform]="tickerTransform"
          [style.transition]="isTransitioning ? 'transform 0.5s ease' : 'none'">
-      <div class="ticker-content" *ngFor="let item of displayItems">
-        {{ item }}
-      </div>
+      <ng-container *ngFor="let item of displayItems">
+        <a #tickerItem class="ticker-content" *ngIf="item.link; else plainItem"
+           [href]="item.link" target="_blank" rel="noopener" [title]="item.text">{{ item.text }}</a>
+        <ng-template #plainItem>
+          <span #tickerItem class="ticker-content">{{ item.text }}</span>
+        </ng-template>
+      </ng-container>
     </div>
   </div>
 

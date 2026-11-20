@@ -8,6 +8,7 @@ import { ErrorHandlerService } from '../../../services/errorHandler/error-handle
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MarathiInputService } from '../../../services/marathi-input.service';
 import { environment } from '../../../../environments/environment';
+import { notifyError } from '../../../shared/utils/notify';
 @Component({
   selector: 'app-add-circular',
   standalone: false,
@@ -15,6 +16,10 @@ import { environment } from '../../../../environments/environment';
   styleUrl: './add-circular.component.css'
 })
 export class AddCircularComponent {
+
+  /** The page shows either the list (default) or the add/edit form, never both. */
+  view: 'list' | 'form' = 'list';
+  togglingId: number | null = null;
 
   circularForm!: FormGroup;
   selectedFile!: File;
@@ -99,6 +104,7 @@ export class AddCircularComponent {
         next: () => {
           Swal.fire('Success', 'Circular updated successfully', 'success');
           this.resetForm();
+          this.view = 'list';
           this.loadCirculars();
         },
         error: (err) => {
@@ -112,6 +118,7 @@ export class AddCircularComponent {
         next: () => {
           Swal.fire('Success', 'Circular created successfully', 'success');
           this.resetForm();
+          this.view = 'list';
           this.loadCirculars();
         },
         error: (err) => {
@@ -124,7 +131,20 @@ export class AddCircularComponent {
 
   previousFileUrl: string | null = null;
 
+  /** "Add Circular" button: open an empty form. */
+  openAdd(): void {
+    this.resetForm();
+    this.view = 'form';
+  }
+
+  /** Leave the form without saving and go back to the list. */
+  backToList(): void {
+    this.resetForm();
+    this.view = 'list';
+  }
+
   editCircular(circular: Circular) {
+    this.view = 'form';
     this.editMode = true;
     this.editingCircularId = circular.id!;
 
@@ -169,26 +189,46 @@ export class AddCircularComponent {
     });
   }
 
-  deleteCircular(id: number): void {
+  /** A circular is active unless it has been switched off. */
+  isActive(circular: Circular): boolean {
+    return circular.active !== false;
+  }
+
+  /**
+   * Switch a circular on or off. Instead of deleting it, an admin hides it: only active
+   * circulars appear on the home page and on the public Circulars page.
+   */
+  toggleActive(circular: Circular): void {
+    if (circular.id == null || this.togglingId !== null) {
+      return;
+    }
+    const activate = !this.isActive(circular);
+
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'This circular will be permanently deleted.',
-      icon: 'warning',
+      title: activate ? 'Make this circular active?' : 'Make this circular inactive?',
+      text: activate
+        ? 'It will be shown on the home page and the Circulars page.'
+        : 'It will be hidden from the home page and the Circulars page. You can activate it again later.',
+      icon: 'question',
       showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel',
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6'
+      confirmButtonText: activate ? 'Yes, activate' : 'Yes, deactivate',
+      cancelButtonText: 'Cancel'
     }).then((result) => {
-      if (result.isConfirmed) {
-        this.circularService.deleteCircular(id).subscribe({
-          next: () => {
-            Swal.fire({ icon: 'success', title: 'Deleted!', text: 'Circular deleted successfully.', timer: 1500, showConfirmButton: false });
-            this.loadCirculars();
-          },
-          error: (error) => Swal.fire('Error', this.errorHandler.getErrorMessage(error), 'error')
-        });
+      if (!result.isConfirmed) {
+        return;
       }
+      this.togglingId = circular.id;
+      this.circularService.setActive(circular.id, activate).subscribe({
+        next: (saved) => {
+          this.togglingId = null;
+          this.circulars = this.circulars.map((c) => (c.id === circular.id ? { ...c, active: saved.active } : c));
+          this.filterCirculars();
+        },
+        error: (error) => {
+          this.togglingId = null;
+          Swal.fire('Error', this.errorHandler.getErrorMessage(error), 'error');
+        }
+      });
     });
   }
 
@@ -238,9 +278,7 @@ export class AddCircularComponent {
   }
 
   cancelEdit() {
-    this.editMode = false;
-    this.previousFileUrl = null;
-    this.circularForm.reset();
+    this.backToList();
   }
 
 
@@ -298,7 +336,7 @@ export class AddCircularComponent {
     this.circularService.getCircularFile(fileName).subscribe({
       next: (blob: Blob) => {
         if (!blob || blob.size === 0) {
-          alert('PDF is empty or not found!');
+          notifyError('The PDF is empty or could not be found.', 'Cannot open PDF');
           return;
         }
 
@@ -309,7 +347,7 @@ export class AddCircularComponent {
       },
       error: (err) => {
         console.error('Failed to load PDF', err);
-        alert('Failed to load PDF');
+        notifyError('The PDF could not be loaded. Please try again.', 'Cannot open PDF');
       }
     });
   }

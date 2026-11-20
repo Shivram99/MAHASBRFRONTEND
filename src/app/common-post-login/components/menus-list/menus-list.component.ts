@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Menu } from '../../../interface/menu';
 import { MenuService } from '../../../services/menu.service';
 import { Router } from '@angular/router';
+import { confirmAction, notifyError, notifySuccess } from '../../../shared/utils/notify';
 
 @Component({
   selector: 'app-menus-list',
@@ -97,11 +98,25 @@ isExpanded(menu: Menu): boolean {
 
   /** Delete menu */
   delete(id: number): void {
-    if (!confirm('Are you sure you want to delete this menu?')) return;
-
-    this.menuService.deleteMenu(id).subscribe({
-      next: () => this.loadMenus(),
-      error: (err) => console.error('Delete failed', err)
+    void confirmAction({
+      title: 'Delete this menu?',
+      text: 'It will be removed for every role that has it.',
+      confirmText: 'Yes, delete',
+      danger: true
+    }).then((yes) => {
+      if (!yes) {
+        return;
+      }
+      this.menuService.deleteMenu(id).subscribe({
+        next: () => {
+          this.loadMenus();
+          notifySuccess('Menu deleted.');
+        },
+        error: (err) => {
+          console.error('Delete failed', err);
+          notifyError('The menu could not be deleted. Remove its sub-menus first, then try again.');
+        }
+      });
     });
   }
 

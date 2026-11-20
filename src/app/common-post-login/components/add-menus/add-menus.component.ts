@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { debounceTime, forkJoin } from 'rxjs';
 import { MarathiInputService } from '../../../services/marathi-input.service';
+import { notifyError, notifySuccess } from '../../../shared/utils/notify';
 
 @Component({
   selector: 'app-add-menus',
@@ -92,7 +93,7 @@ export class AddMenusComponent implements OnInit {
       },
       error: (err) => {
         console.error('Failed to load menus', err);
-        alert('Failed to load data');
+        notifyError('Unable to load the menus. Please refresh the page and try again.');
       },
       complete: () => this.isLoading = false
     });
@@ -182,13 +183,13 @@ export class AddMenusComponent implements OnInit {
 
     obs.subscribe({
       next: () => {
-        alert(this.isEdit ? 'Menu updated successfully' : 'Menu created successfully');
+        notifySuccess(this.isEdit ? 'Menu updated successfully.' : 'Menu created successfully.');
         // this.router.navigate(['../menu-list'], { relativeTo: this.route });// adjust route to your list page
         this.router.navigate(['/common-post-login/menu-list']);
       },
       error: (err) => {
         console.error('Save failed', err);
-        alert(err?.error?.message || 'Save failed');
+        notifyError(err?.error?.message || 'The menu could not be saved. Please try again.', 'Save failed');
         this.isSubmitting = false;
       },
       complete: () => this.isSubmitting = false

@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import { environment } from '../../../environments/environment';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Modal } from 'bootstrap';
+import { notifyError } from '../../shared/utils/notify';
 @Component({
     selector: 'app-circular',
     templateUrl: './circular.component.html',
@@ -57,7 +58,7 @@ export class CircularComponent {
     this.circularService.getCircularFile(fileName).subscribe({
       next: (blob: Blob) => {
         if (!blob || blob.size === 0) {
-          alert('PDF is empty or not found!');
+          notifyError('The PDF is empty or could not be found.', 'Cannot open PDF');
           return;
         }
 
@@ -70,7 +71,7 @@ export class CircularComponent {
       },
       error: (err) => {
         console.error('Failed to load PDF', err);
-        alert('Failed to load PDF');
+        notifyError('The PDF could not be loaded. Please try again.', 'Cannot open PDF');
       }
     });
   }

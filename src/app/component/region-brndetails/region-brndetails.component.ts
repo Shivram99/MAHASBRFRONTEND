@@ -7,6 +7,7 @@ import { DataService } from '../../services/dashboard/data-service.service';
 import { DetailsPageDTO } from '../../interface/details-page-dto';
 import { RegionBrnDetailsService } from '../../services/region-brn-details.service';
 import { catchError, throwError } from 'rxjs';
+import { notifyError } from '../../shared/utils/notify';
 
 @Component({
     selector: 'app-region-brndetails',
@@ -96,7 +97,7 @@ export class RegionBRNDetailsComponent {
 
       // Optionally show a toast/snackbar alert
       console.error('Global Error:', error);
-      alert(errorMsg);
+      notifyError(errorMsg);
 
       return throwError(() => new Error(errorMsg));
     })

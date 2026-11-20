@@ -6,4 +6,6 @@ export interface Circular {
   fileUrl: string;
   message?: string;
   status?: string;
+  /** Only active circulars are shown on the public site. */
+  active?: boolean;
 }

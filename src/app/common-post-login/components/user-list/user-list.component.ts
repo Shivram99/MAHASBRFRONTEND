@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { User } from '../../../interface/user';
 import { UserService, UserServiceError } from '../../../services/user.service';
 import { Role } from '../../../model/user';
+import { confirmAction, notifyError, notifySuccess } from '../../../shared/utils/notify';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { RegistryResponse } from '../../../model/registry-response';
@@ -154,12 +155,26 @@ export class UserListComponent implements OnInit {
   }
 
   deleteUser(id: number): void {
-    if (confirm('Are you sure you want to delete this user?')) {
+    void confirmAction({
+      title: 'Delete this user?',
+      text: 'This cannot be undone.',
+      confirmText: 'Yes, delete',
+      danger: true
+    }).then((yes) => {
+      if (!yes) {
+        return;
+      }
       this.userService.deleteUser(id).subscribe({
-        next: () => this.loadUsers(),
-        error: err => console.error('Error deleting user', err)
+        next: () => {
+          this.loadUsers();
+          notifySuccess('User deleted.');
+        },
+        error: err => {
+          console.error('Error deleting user', err);
+          notifyError('The user could not be deleted. They may still be linked to other records.');
+        }
       });
-    }
+    });
   }
 
   resetForm(): void {

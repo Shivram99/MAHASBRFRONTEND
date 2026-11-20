@@ -10,6 +10,7 @@ import { Role } from '../../../model/role';
 import { AssignMenuDTO } from '../../../interface/assign-menu-dto';
 import { forkJoin } from 'rxjs';
 import { ApiResponse } from '../../../interface/api-response';
+import { notifySuccess, notifyWarning } from '../../../shared/utils/notify';
 
 @Component({
   selector: 'app-menu-role-assign',
@@ -101,7 +102,7 @@ roles: Role[] = [];
   /** Assign selected menus to role */
   save(): void {
     if (!this.selectedRoleId) {
-      alert('Please select a role');
+      notifyWarning('Please select a role first.');
       return;
     }
 
@@ -115,7 +116,7 @@ roles: Role[] = [];
     this.permissionService.assignMenusToRole(dto)
       .subscribe({
         next: () => {
-          alert('Menus assigned successfully.');
+          notifySuccess('Menus assigned successfully.');
           this.onRoleChange();
         },
         error: err => console.error(err),
@@ -126,7 +127,7 @@ roles: Role[] = [];
   /** Remove selected menus from role */
   remove(): void {
   if (!this.selectedRoleId) {
-    alert('Role not selected');
+    notifyWarning('Please select a role first.');
     return;
   }
 
@@ -139,7 +140,7 @@ roles: Role[] = [];
 
   this.permissionService.removeMenusFromRole(dto).subscribe({
     next: () => {
-      alert('Menus removed successfully.');
+      notifySuccess('Menus removed successfully.');
       this.onRoleChange();  // reload assigned menus
       this.isSubmitting = false;
     },
