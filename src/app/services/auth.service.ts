@@ -186,7 +186,7 @@ export class AuthService {
           }
 
           if (error.status === 0 || error.status >= 500) {
-            this.handleBackendUnavailable(null);
+            // Backend down or erroring: keep the session, the user can retry.
             return of('unavailable' as const);
           }
 

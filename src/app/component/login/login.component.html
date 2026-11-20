@@ -13,13 +13,13 @@
       </div>
 
 
-      <div class="loginform p-5 ">
-        <div class="row  mx-auto">
-          <div class="col-md-6">
-            <img src="../../../assets/images/mobileLogin.jpg" />
-
+      <div class="loginform p-3 p-md-5">
+        <div class="row g-3 g-md-4 mx-auto align-items-center">
+          <!-- The picture is decoration: hidden on phones so the form is visible straight away -->
+          <div class="col-md-6 d-none d-md-block text-center">
+            <img src="../../../assets/images/mobileLogin.jpg" alt="" class="img-fluid login-image" />
           </div>
-          <div class="col-md-6">
+          <div class="col-12 col-md-6">
             <form (ngSubmit)="login()" [formGroup]="loginForm" autocomplete="on">
               
                <p *ngIf="errorMessage" class="text-danger">{{ errorMessage }}</p>

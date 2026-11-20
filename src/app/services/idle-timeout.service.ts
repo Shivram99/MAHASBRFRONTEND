@@ -1,64 +1,107 @@
-import { Injectable } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Idle, DEFAULT_INTERRUPTSOURCES } from '@ng-idle/core';
-import { Keepalive } from '@ng-idle/keepalive';
+import Swal from 'sweetalert2';
 import { AuthService } from './auth.service';
+import { notifyWarning } from '../shared/utils/notify';
 
+/**
+ * Logs the user out after a period of inactivity.
+ *
+ * - Starts by itself whenever someone is logged in (also after a page refresh) and stops at logout.
+ * - After IDLE_SECONDS without mouse, keyboard or touch activity a popup warns the user and counts
+ *   down WARNING_SECONDS; any activity, or "Stay logged in", cancels it. If nothing happens the user
+ *   is logged out.
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class IdleTimeoutService {
 
-  private isLoggedIn:boolean = false;
-  private readonly idleTime: number = 15 * 60 * 60 ; // 3 minutes in seconds
-  private readonly timeoutPeriod: number = 300; 
+  /** Inactivity before the warning appears. */
+  static readonly IDLE_SECONDS = 15 * 60;
+  /** How long the warning counts down before the user is logged out. */
+  static readonly WARNING_SECONDS = 60;
 
-  constructor(private idle: Idle, 
-              private keepalive: Keepalive, 
-              private authService: AuthService) {
+  private isLoggedIn = false;
+  private warningOpen = false;
+  private readonly isBrowser: boolean;
 
-    this.idle.setIdle(this.idleTime); // Set idle time to 3 minutes
-    this.idle.setTimeout(this.timeoutPeriod); // Set timeout period after idle
-    this.idle.setInterrupts(DEFAULT_INTERRUPTSOURCES); // Set default interrupt sources (mouse, keyboard, touch, etc.)
-
-    // Subscribe to idle timeout events
-    this.idle.onTimeout.subscribe(() => {
-      console.log("User is inactive. Logging out.");
-      this.logout();
-    });
-
-    // Subscribe to idle end event (when user becomes active again)
-    this.idle.onIdleEnd.subscribe(() => {
-      console.log("User is active again. Resetting the idle timer.");
-      this.reset();
-    });
-
-    // Subscribe to timeout warning event
-    this.idle.onTimeoutWarning.subscribe((countdown: number) => {
-      let minutes = Math.floor(countdown / 60); // calculate minutes
-      let seconds = countdown % 60; // calculate remaining seconds
-      console.log(`You will be logged out in ${minutes} minute(s) and ${seconds} second(s)`);
-    });
-
-    // Start watching for idle state
-    if (this.isLoggedIn) {
-    this.idle.watch();
+  constructor(private idle: Idle,
+              private authService: AuthService,
+              @Inject(PLATFORM_ID) platformId: object) {
+    this.isBrowser = isPlatformBrowser(platformId);
+    if (!this.isBrowser) {
+      return;
     }
-    this.authService.getIsLoggedIn().subscribe(isLoggedIn => {
-      this.isLoggedIn = isLoggedIn;
+
+    this.idle.setIdle(IdleTimeoutService.IDLE_SECONDS);
+    this.idle.setTimeout(IdleTimeoutService.WARNING_SECONDS);
+    this.idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
+
+    this.idle.onTimeoutWarning.subscribe((secondsLeft: number) => this.showWarning(secondsLeft));
+    this.idle.onIdleEnd.subscribe(() => this.closeWarning());
+    this.idle.onTimeout.subscribe(() => this.timeOut());
+
+    // Follow the login state: watch while logged in, stop when logged out.
+    this.authService.getIsLoggedIn().subscribe((loggedIn) => {
+      this.isLoggedIn = loggedIn;
+      if (loggedIn) {
+        this.idle.watch();
+      } else {
+        this.idle.stop();
+        this.closeWarning();
+      }
     });
-  
   }
 
-  reset() {
-    if (this.isLoggedIn) {
-    this.idle.watch(); // Start or reset the idle watch
-    console.log("Idle timer reset. Watching for user inactivity.");
+  /** Restarts the inactivity timer (e.g. right after login). */
+  reset(): void {
+    if (this.isBrowser && this.isLoggedIn) {
+      this.idle.watch();
     }
   }
 
-  logout() {
-    this.authService.logout();
-    this.idle.stop(); // Stop watching for idle state
-    console.log("Logged out due to inactivity.");
+  private showWarning(secondsLeft: number): void {
+    if (!this.warningOpen) {
+      this.warningOpen = true;
+      void Swal.fire({
+        icon: 'warning',
+        title: 'Are you still there?',
+        html: `You will be logged out in <b id="idle-countdown">${this.format(secondsLeft)}</b> because of inactivity.`,
+        confirmButtonText: 'Stay logged in',
+        allowOutsideClick: false
+      }).then((result) => {
+        this.warningOpen = false;
+        if (result.isConfirmed) {
+          this.reset();
+        }
+      });
+    } else {
+      const countdown = Swal.getHtmlContainer()?.querySelector('#idle-countdown');
+      if (countdown) {
+        countdown.textContent = this.format(secondsLeft);
+      }
+    }
+  }
+
+  private closeWarning(): void {
+    if (this.warningOpen) {
+      this.warningOpen = false;
+      Swal.close();
+    }
+  }
+
+  private timeOut(): void {
+    this.closeWarning();
+    this.idle.stop();
+    this.authService.logout();   // also invalidates the token on the server
+    void notifyWarning('You were logged out because there was no activity. Please log in again.', 'Session ended');
+  }
+
+  private format(totalSeconds: number): string {
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
   }
 }

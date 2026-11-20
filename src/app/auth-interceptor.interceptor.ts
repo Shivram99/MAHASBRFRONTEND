@@ -44,9 +44,8 @@ export class AuthInterceptor implements HttpInterceptor {
           this.injector.get(AuthService).handleInvalidSession('login');
         }
 
-        if ((error.status === 0 || error.status >= 500) && token && !isSignInRequest && !skipAuthRedirect) {
-          this.injector.get(AuthService).handleBackendUnavailable('home');
-        }
+        // A server error (5xx) or a dropped connection is not a sign the session is invalid, so the
+        // user stays logged in. Only a 401 (above) ends the session.
 
         if (error.status === 403 && error.error?.code === AuthService.PASSWORD_CHANGE_REQUIRED) {
           // The backend blocks everything except change-password until the temporary password is changed.
